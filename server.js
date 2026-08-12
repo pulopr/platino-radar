@@ -3,6 +3,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const path = require('path');
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 // --- Umbrales del veredicto (los que definimos) ---
 function calcularEstado(jugadores) {
   if (jugadores >= 1000) return { estado: 'vivo', etiqueta: 'Vivo' };
@@ -67,7 +69,7 @@ app.get('/api/caratula/:appid', async (req, res) => {
 });
 
 // --- Servir archivos estáticos (tus HTML) desde la carpeta "public" ---
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.listen(PORT, () => {
   console.log(`Servidor Platino Radar en http://localhost:${PORT}`);
