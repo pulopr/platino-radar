@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // --- Umbrales del veredicto (los que definimos) ---
 function calcularEstado(jugadores) {
