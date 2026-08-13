@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dark Souls Remastered · ¿Sigue vivo?</title>
+<title>Platino Radar · ¿Merece la pena ese platino?</title>
 <style>
   :root{
     --bg:#0a1420; --bg-2:#0b1a2e;
@@ -17,332 +17,225 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{
     background:
-      radial-gradient(1100px 560px at 50% -8%, #123a6b 0%, transparent 60%),
+      radial-gradient(1100px 560px at 50% -10%, #123a6b 0%, transparent 60%),
       linear-gradient(168deg, #0c1d33 0%, #0a1627 45%, #091628 100%);
     background-attachment:fixed;
     color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
-    min-height:100dvh;display:flex;flex-direction:column;align-items:center;
-    padding:clamp(18px,4vw,48px) clamp(14px,4vw,32px);line-height:1.5;
+    min-height:100dvh;line-height:1.5;
+    padding:0 clamp(14px,4vw,32px);
   }
-  /* Móvil: columna estrecha. Escritorio: se ensancha (media query abajo). */
-  .wrap{width:100%;max-width:540px}
-  .back{color:var(--ink-soft);font-size:.82rem;text-decoration:none;display:inline-block;margin-bottom:16px}
-  .back:hover{color:var(--ink)}
+  .container{width:100%;max-width:1120px;margin:0 auto}
 
-  /* Cabecera del juego */
-  .head{display:flex;gap:16px;align-items:center;margin-bottom:22px}
-  .cover{
-    width:64px;height:86px;border-radius:12px;flex:none;overflow:hidden;
-    display:grid;place-items:center;font-size:1.1rem;font-weight:800;color:#5a6a82;
-    background:linear-gradient(145deg,#e2e9f2 0%,#b4c1d4 42%,#8496b0 100%);
-    box-shadow:inset 0 2px 5px rgba(255,255,255,.4),0 6px 14px rgba(0,0,0,.4);
+  header{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:18px 0 22px;position:sticky;top:0;
+    background:linear-gradient(180deg,#0c1d33 65%,transparent);z-index:5;
   }
-  .cover img{width:100%;height:100%;object-fit:cover;display:block}
-  .title{font-size:clamp(1.4rem,5.5vw,1.9rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;
-    background:linear-gradient(180deg,var(--plata-bril),var(--plata) 55%,var(--plata-med));
+  .brand{display:flex;align-items:center;gap:11px;min-width:0}
+  .logo{
+    width:40px;height:40px;border-radius:11px;flex:none;display:grid;place-items:center;
+    background:linear-gradient(145deg,#e2e9f2,#aebdd4 45%,#8496b0);
+    box-shadow:inset 0 1px 3px rgba(255,255,255,.6),0 3px 8px rgba(0,0,0,.35);
+    font-size:1.25rem;
+  }
+  .brand-name{font-weight:800;letter-spacing:-.01em;font-size:1.1rem;white-space:nowrap;
+    background:linear-gradient(180deg,var(--plata-bril),var(--plata-med));
     -webkit-background-clip:text;background-clip:text;color:transparent;}
-  .plat{color:var(--ink-soft);font-size:.82rem;margin-top:4px;display:flex;gap:8px;flex-wrap:wrap}
-  .chip{border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-size:.72rem}
+  .brand-name .q{color:var(--azul-claro);-webkit-text-fill-color:var(--azul-claro)}
+  .nav{display:flex;align-items:center;gap:8px;flex:none}
+  .btn{
+    font-weight:700;font-size:.84rem;padding:9px 15px;border-radius:10px;cursor:pointer;
+    border:1px solid var(--line);background:var(--panel);color:var(--ink);white-space:nowrap;
+  }
+  .btn:hover{border-color:var(--azul-claro)}
+  .avatar{
+    width:38px;height:38px;border-radius:50%;flex:none;cursor:pointer;
+    background:linear-gradient(145deg,#3a5a86,#22344d);border:1px solid var(--line);
+    display:grid;place-items:center;font-weight:800;color:var(--plata-bril);font-size:.9rem;
+  }
+  .hidden{display:none !important}
 
-  .section-label{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--plata-sombra);
-    font-weight:700;margin:0 0 10px 2px}
-
-  /* Bloque nivel DECISIÓN (protagonista, azul vivo) */
-  .decision{
-    position:relative;
-    overflow:visible; /* CORREGIDO: Permite que el tooltip sobresalga sin cortarse */
-    background:
-      linear-gradient(125deg, rgba(255,255,255,.13) 0%, transparent 20%, transparent 80%, rgba(255,255,255,.05) 100%),
-      linear-gradient(160deg, #0a6ec9 0%, #084b9e 45%, #0a3f86 100%);
-    border:1px solid #2b8ae8;border-radius:18px;padding:clamp(18px,4vw,26px);
-    box-shadow:0 24px 60px -26px rgba(0,80,180,.7), 0 2px 0 rgba(255,255,255,.25) inset, 0 -1px 0 rgba(0,20,60,.4) inset;
-    margin-bottom:14px;
-    z-index: 10; /* Eleva toda la tarjeta en la página */
-  }
-  .decision::after{
-    content:"";position:absolute;top:-50%;left:-25%;width:75%;height:200%;pointer-events:none;
-    background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent);transform:rotate(18deg);
-    border-radius:18px;
-  }
-  .decision > *{position:relative;}
-  
-  /* CORREGIDO: Dar máxima prioridad a la fila superior donde habita el tooltip */
-  .state-top{
-    display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;
-    position:relative;
-    z-index:100; 
-  }
-  
-  .state-main{flex:1;min-width:180px;position:relative;z-index:100;}
-  .badge-wrap{position:relative;display:inline-flex;align-items:center;gap:9px;z-index:100}
-  
-  .badge{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:1.25rem;
-    padding:9px 17px;border-radius:999px;border:1px solid rgba(255,255,255,.5)}
-  .badge.vivo{color:#0a3f86;background:linear-gradient(180deg,#7dffc4,#3fd98f);
-    box-shadow:0 2px 0 rgba(255,255,255,.4) inset, 0 6px 16px -8px rgba(0,0,0,.4)}
-  .badge.moribundo{color:#5a4410;background:linear-gradient(180deg,#f5d67e,#e8c05a);
-    box-shadow:0 2px 0 rgba(255,255,255,.4) inset, 0 6px 16px -8px rgba(0,0,0,.4)}
-  .badge.muerto{color:#fff;background:linear-gradient(180deg,#f0805a,#e8683a);
-    box-shadow:0 2px 0 rgba(255,255,255,.3) inset, 0 6px 16px -8px rgba(0,0,0,.4)}
-  .dot{width:12px;height:12px;border-radius:50%;background:currentColor;
-    box-shadow:0 0 0 3px rgba(10,63,134,.15)}
-  .info-btn{
-    width:24px;height:24px;border-radius:50%;flex:none;cursor:pointer;
-    background:rgba(4,20,45,.4);border:1.5px solid rgba(255,255,255,.5);color:#fff;
-    font-size:.85rem;font-weight:800;font-style:italic;font-family:Georgia,serif;
-    display:grid;place-items:center;transition:.15s;padding:0;line-height:1;
-  }
-  .info-btn:hover{border-color:#fff;background:rgba(4,20,45,.7)}
-
-  /* TOOLTIP CORREGIDO */
-  .tooltip{
-    position:absolute;top:calc(100% + 12px);left:0;
-    z-index:99999 !important; /* CORREGIDO: Capa superior absoluta */
-    width:min(320px,80vw);
-    background-color:#0a1b30 !important; /* CORREGIDO: Fondo 100% opaco */
-    border:1px solid #2b5a8f;border-radius:12px;padding:15px;
-    box-shadow:0 18px 40px rgba(0,0,0,0.9); /* Sombra intensa para resaltar */
-    font-weight:400;font-size:.84rem;color:var(--ink-soft);letter-spacing:0;
-    opacity:0;visibility:hidden;transform:translateY(-4px);transition:.15s;
-  }
-  .tooltip.show{opacity:1;visibility:visible;transform:translateY(0)}
-  .tooltip::before{content:"";position:absolute;bottom:100%;left:20px;
-    border:7px solid transparent;border-bottom-color:#2b5a8f}
-  .tip-title{color:var(--ink);font-weight:700;font-size:.88rem;margin-bottom:14px}
-  .tip-row+.tip-row{margin-top:14px}
-  .tip-head{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-  .tip-head b{color:var(--plata);font-size:.9rem}
-  .tip-dot{width:10px;height:10px;border-radius:50%;flex:none}
-  .tip-dot.vivo{background:var(--vivo)} .tip-dot.mor{background:var(--moribundo)} .tip-dot.mue{background:var(--muerto)}
-  .tip-desc{padding-left:18px;line-height:1.45;color:var(--ink-soft)}
-
-  /* --- Bloque de jugadores: el NÚMERO manda (también en móvil) --- */
-  .state-expl{color:#d3e6ff;font-size:.9rem;margin-top:12px;max-width:44ch}
-  .players-box{text-align:right;flex:none}
-  .players{
-    font-size:2.4rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;
-    background:linear-gradient(180deg,#ffffff,#c8e4ff);
+  .hero{text-align:center;padding:clamp(24px,6vw,52px) 0 clamp(22px,5vw,36px)}
+  .hero h1{
+    font-size:clamp(1.8rem,6vw,2.9rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:12px;
+    background:linear-gradient(180deg,var(--plata-bril),var(--plata) 55%,var(--plata-med));
     -webkit-background-clip:text;background-clip:text;color:transparent;
-    filter:drop-shadow(0 1px 2px rgba(0,30,80,.5));
   }
-  .players-lab{color:#a9c8ee;font-size:.72rem;letter-spacing:.04em;margin-top:4px}
-  .live{color:#7dffc4;font-size:.62rem;font-weight:700;margin-top:5px;letter-spacing:.03em}
-
-  .online-type{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.18);
-    display:flex;gap:10px;align-items:flex-start;font-size:.86rem;color:#d3e6ff;
-    position:relative;z-index:1; /* CORREGIDO: Capa inferior para que el tooltip pase por encima */
+  .hero p{color:var(--ink-soft);font-size:clamp(.92rem,2.5vw,1.08rem);max-width:52ch;margin:0 auto 28px}
+  .search{
+    display:flex;align-items:center;gap:10px;max-width:560px;margin:0 auto;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:6px 6px 6px 16px;box-shadow:0 14px 40px -24px #000;
   }
+  .search:focus-within{border-color:var(--azul-claro)}
+  .search svg{flex:none;opacity:.6}
+  .search input{
+    flex:1;background:none;border:none;outline:none;color:var(--ink);
+    font-size:1rem;padding:11px 0;font-family:inherit;min-width:0;
+  }
+  .search input::placeholder{color:var(--plata-sombra)}
+  .search .go{
+    background:linear-gradient(180deg,#0a6ec9,#084b9e);color:#fff;border:1px solid #2b8ae8;font-weight:700;
+    padding:11px 20px;border-radius:10px;cursor:pointer;font-size:.92rem;white-space:nowrap;
+    box-shadow:0 2px 0 rgba(255,255,255,.2) inset,0 6px 16px -8px rgba(0,80,180,.6);
+  }
+  .search .go:hover{filter:brightness(1.1)}
 
-  /* Tedio */
-  .tedio{position:relative;overflow:hidden;
-    background:linear-gradient(158deg,var(--panel),var(--panel-2));
-    border:1px solid var(--line);border-radius:18px;padding:clamp(18px,4vw,24px);margin-bottom:22px;
-    box-shadow:0 24px 55px -32px #000, 0 1px 0 rgba(250,252,254,.10) inset}
-  .tedio-row{display:flex;gap:14px}
-  .tedio-col{flex:1;text-align:center;padding:6px 4px}
-  .tedio-col+.tedio-col{border-left:1px solid var(--line)}
-  .tedio-who{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--plata-sombra);font-weight:700;margin-bottom:8px}
-  .pips{display:flex;gap:4px;justify-content:center;margin-bottom:6px}
-  .pip{width:15px;height:15px;border-radius:4px;background:#1c3a5c}
-  .pip.on{background:linear-gradient(180deg,var(--plata-bril),var(--plata-med))}
-  .pip.on.hot{background:linear-gradient(180deg,#f0b46a,var(--moribundo))}
-  .tedio-num{font-size:.82rem;color:var(--ink-soft)}
-  .tedio-note{color:var(--ink-soft);font-size:.82rem;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-style:italic}
-  .vote{margin-top:12px;text-align:center}
-  .vote button{background:transparent;border:1px solid var(--azul-claro);color:var(--azul-claro);
-    font-weight:700;font-size:.8rem;padding:8px 16px;border-radius:9px;cursor:pointer}
-  .vote button:hover{background:rgba(43,138,232,.12)}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:16px 2px 18px}
+  .sec-title{font-size:1.1rem;font-weight:800;letter-spacing:-.01em}
+  .sec-sub{color:var(--plata-sombra);font-size:.8rem}
+  .grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,2.5vw,20px);
+    padding-bottom:44px;
+  }
+  @media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+  .game{
+    cursor:pointer;text-align:left;background:none;border:none;padding:0;color:inherit;
+    font-family:inherit;display:flex;flex-direction:column;gap:9px;text-decoration:none;
+  }
+  .cover{
+    position:relative;aspect-ratio:600/900;border-radius:13px;overflow:hidden;
+    background:linear-gradient(145deg,#1e3a5c,#141f2b);
+    border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--plata-sombra);font-weight:800;
+    transition:transform .15s, box-shadow .15s;
+  }
+  .game:hover .cover{transform:translateY(-4px);box-shadow:0 16px 30px -18px #000;border-color:var(--azul-claro)}
+  .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .state-tag{
+    position:absolute;top:8px;left:8px;font-size:.66rem;font-weight:800;
+    padding:3px 9px;border-radius:7px;
+    background:rgba(6,18,38,.82);border:1px solid currentColor;
+  }
+  .state-tag.vivo{color:var(--vivo)} .state-tag.moribundo{color:var(--moribundo)} .state-tag.muerto{color:var(--muerto)}
+  .g-name{font-size:.9rem;font-weight:700;line-height:1.25}
+  .g-meta{font-size:.74rem;color:var(--plata-sombra)}
 
-  /* Planificación */
-  .plan{background:linear-gradient(158deg,var(--panel),var(--panel-2));
-    border:1px solid var(--line);border-radius:16px;padding:clamp(16px,4vw,22px);
-    box-shadow:0 16px 40px -30px #000, 0 1px 0 rgba(250,252,254,.06) inset}
-  .plan-item{display:flex;gap:12px;align-items:flex-start;font-size:.88rem}
-  .plan-item+.plan-item{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
-  .warn-ic{flex:none;font-size:1.1rem}
-  .plan-item b{color:var(--plata)}
-  .plan-item span{color:var(--ink-soft)}
-  .hard{margin-top:16px;display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;color:var(--plata-sombra)}
-  .hard b{color:var(--ink-soft)}
+  .cargando,.vacio{text-align:center;padding:40px 20px;color:var(--ink-soft);grid-column:1/-1}
+  .spinner{width:26px;height:26px;border:3px solid var(--line);border-top-color:var(--azul-claro);
+    border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
+  @keyframes spin{to{transform:rotate(360deg)}}
 
-  .foot{margin-top:24px;font-size:.7rem;color:var(--plata-sombra);text-align:center;line-height:1.7}
+  footer{border-top:1px solid var(--line);padding:22px 0 32px;text-align:center;
+    color:var(--plata-sombra);font-size:.74rem;line-height:1.7}
 
-  /* ====== LAYOUT DE ESCRITORIO ====== */
+  /* Escritorio: mismo margen lateral que la ficha */
   @media (min-width:800px){
-    body{padding:clamp(28px,4vw,56px) clamp(24px,5vw,60px);font-size:1.06rem}
-    .wrap{max-width:1120px}
-    .title{font-size:2.7rem}
-    .cover{width:104px;height:140px}
-    .plat{font-size:.9rem}
-    .chip{font-size:.8rem;padding:2px 9px}
-    .section-label{font-size:.74rem;margin-bottom:12px}
-    /* tedio y planificación en paralelo */
-    .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
-    .cols .section-label{margin-top:0}
-    .tedio{margin-bottom:0;height:100%}
-    .decision{padding:30px 34px;margin-bottom:16px}
-    .players{font-size:3rem}
-    .players-lab{font-size:.76rem}
-    .live{font-size:.72rem}
-    .badge{font-size:1.5rem;padding:11px 22px}
-    .state-expl{font-size:1.1rem;max-width:52ch}
-    .online-type{font-size:.98rem}
-    .tedio-who{font-size:.76rem}
-    .tedio-num{font-size:.92rem}
-    .pip{width:18px;height:18px}
-    .tedio-note{font-size:.92rem}
-    .plan-item{font-size:.98rem}
-    .hard{font-size:.86rem}
-    .foot{font-size:.78rem;margin-top:32px}
-  }
-  @media (max-width:799px){
-    .cols-label-plan{margin-top:8px}
-    /* El bloque de jugadores se mantiene arriba a la derecha, junto al badge */
-    .state-top{flex-wrap:nowrap;align-items:flex-start}
-    .state-main{min-width:0}
-    .players-box{text-align:right;flex:none;margin-top:0;padding-top:0;border-top:none}
-    .players{font-size:2rem}
-    .players-lab{font-size:.7rem}
-    .live{font-size:.6rem;white-space:nowrap}
-    .state-expl{font-size:.86rem}
+    body{padding:0 clamp(24px,5vw,60px);font-size:1.06rem}
   }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <a href="#" class="back">← Volver a la búsqueda</a>
+  <div class="container">
 
-    <div class="head">
-      <div class="cover">
-        <img src="/api/caratula/570940" alt="Carátula de Dark Souls Remastered"
-             onerror="this.style.display='none';this.parentNode.textContent='DS';">
+    <header>
+      <div class="brand">
+        <div class="logo">🏆</div>
+        <div class="brand-name">Platino Radar</div>
       </div>
-      <div>
-        <div class="title">Dark Souls Remastered</div>
-        <div class="plat"><span class="chip">Steam · PC</span><span class="chip">También en PS4</span></div>
+      <nav class="nav">
+        <div id="logged-out">
+          <button class="btn" onclick="toggle(true)">Iniciar sesión</button>
+        </div>
+        <div id="logged-in" class="hidden" style="display:flex;align-items:center;gap:8px">
+          <button class="btn">Mi perfil</button>
+          <div class="avatar" onclick="toggle(false)" title="Cerrar sesión (demo)">A</div>
+        </div>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1>¿Merece la pena ese platino?</h1>
+      <p>Antes de meterte horas en un juego, comprueba si sigue vivo para lo online y cómo de tedioso es su platino.</p>
+      <div class="search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7f9bc0" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/>
+        </svg>
+        <input type="text" id="buscador" placeholder="Busca un juego… (p. ej. Dark Souls)">
+        <button class="go" onclick="buscar()">Buscar</button>
       </div>
+    </section>
+
+    <div class="sec-head">
+      <div class="sec-title">Recomendados para platinar</div>
+      <div class="sec-sub">Selección del autor</div>
+    </div>
+    <div class="grid" id="grid">
+      <div class="cargando"><div class="spinner"></div>Cargando recomendaciones…</div>
     </div>
 
-    <!-- NIVEL DECISIÓN -->
-    <div class="section-label">¿Merece la pena entrar?</div>
-    <div class="decision">
-      <div class="state-top">
-        <div class="state-main">
-          <div class="badge-wrap">
-            <div class="badge vivo"><span class="dot"></span><span class="badge-txt">Vivo</span></div>
-            <button class="info-btn" aria-label="Qué significan los estados" onclick="toggleInfo(event)">i</button>
-            <div class="tooltip" id="tip">
-              <div class="tip-title">¿Qué significa cada estado?</div>
-              <div class="tip-row">
-                <div class="tip-head"><span class="tip-dot vivo"></span><b>Vivo</b></div>
-                <div class="tip-desc">El platino no depende de otros jugadores (es offline o se puede con un amigo), o el juego tiene comunidad de sobra (+1.000 conectados).</div>
-              </div>
-              <div class="tip-row">
-                <div class="tip-head"><span class="tip-dot mor"></span><b>Moribundo</b></div>
-                <div class="tip-desc">Necesita gente online y quedan pocos (100–1.000). Aún es posible, pero cuanto antes mejor.</div>
-              </div>
-              <div class="tip-row">
-                <div class="tip-head"><span class="tip-dot mue"></span><b>Muerto</b></div>
-                <div class="tip-desc">Necesita gente online y apenas queda nadie (menos de 100). Los trofeos multijugador serán muy difíciles.</div>
-              </div>
-            </div>
-          </div>
-          <p class="state-expl">El platino se consigue <b style="color:#fff">al 100&nbsp;% en solitario</b>. No dependes de que haya nadie conectado.</p>
-        </div>
-        <div class="players-box">
-          <div class="players">—</div>
-          <div class="players-lab">jugando ahora</div>
-          <div class="live">● EN VIVO · STEAM</div>
-        </div>
-      </div>
-      <div class="online-type">
-        <span class="ic">🤝</span>
-        <div><b>Online opcional (con amigos):</b> puedes platinarlo solo, pero coordinarte con un amigo hace mucho más rápido el farmeo de objetos de pacto, que es lo más pesado.</div>
-      </div>
-    </div>
-
-    <!-- TEDIO + PLANIFICACIÓN (en paralelo en escritorio) -->
-    <div class="cols">
-      <div>
-        <div class="section-label">¿Cómo de tedioso es?</div>
-        <div class="tedio">
-          <div class="tedio-row">
-            <div class="tedio-col">
-              <div class="tedio-who">Según el autor</div>
-              <div class="pips">
-                <span class="pip on hot"></span><span class="pip on hot"></span><span class="pip on hot"></span><span class="pip on hot"></span><span class="pip"></span>
-              </div>
-              <div class="tedio-num">4 / 5</div>
-            </div>
-            <div class="tedio-col">
-              <div class="tedio-who">Según la comunidad</div>
-              <div class="pips">
-                <span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
-              </div>
-              <div class="tedio-num" style="color:var(--plata-sombra)">Sin votos aún</div>
-            </div>
-          </div>
-          <p class="tedio-note">"Pesado por el farmeo y las 2,5 vueltas al juego, pero se hace satisfactorio cuando lo completas con una buena estrategia."</p>
-          <div class="vote"><button>Vota lo tedioso que te pareció</button></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="section-label cols-label-plan">Para planificar la partida</div>
-        <div class="plan">
-          <div class="plan-item">
-            <span class="warn-ic">⚠️</span>
-            <div><b>Muchos trofeos perdibles.</b> <span>Unos 26 requisitos dependen del ciclo de partida. El más traicionero: el pacto Darkwraith se bloquea si colocas el Lordvessel con Frampt primero. Consulta una guía antes de avanzar.</span></div>
-          </div>
-          <div class="plan-item">
-            <span class="warn-ic">🗺️</span>
-            <div><b>Planifica los pactos y el orden.</b> <span>Requiere dos partidas completas y media (NG++) en el mismo personaje. Decide la ruta de pactos desde el principio para no rejugar de más.</span></div>
-          </div>
-          <div class="hard">
-            <span><b>Dificultad:</b> 8/10</span>
-            <span><b>Duración:</b> ~70–120 h</span>
-            <span><b>Trofeos online obligatorios:</b> Ninguno</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <p class="foot">
-      Datos de jugadores en vivo desde Steam · Valoración de tedio y avisos aportados por el autor.<br>
-      El recuento indica si el juego está activo, no cuántos buscan un trofeo concreto.
-    </p>
+    <footer>
+      Datos de jugadores en vivo desde Steam · Valoraciones aportadas por el autor.
+    </footer>
   </div>
 
 <script>
-  const tip = document.getElementById("tip");
-  const btn = document.querySelector(".info-btn");
-  function toggleInfo(e){ e.stopPropagation(); tip.classList.toggle("show"); }
-  document.addEventListener("click", (e)=>{
-    if(!tip.contains(e.target) && e.target !== btn) tip.classList.remove("show");
-  });
-  btn.addEventListener("mouseenter", ()=>tip.classList.add("show"));
-  document.querySelector(".badge-wrap").addEventListener("mouseleave", ()=>tip.classList.remove("show"));
+// --- Cargar los juegos destacados desde el servidor ---
+async function cargarDestacados(){
+  const grid = document.getElementById('grid');
+  try {
+    const r = await fetch('/api/destacados');
+    if(!r.ok) throw new Error('respuesta no ok');
+    const juegos = await r.json();
 
-  // --- Número real de jugadores desde el servidor ---
-  const APPID = 570940;
-  async function cargarJugadores(){
-    try {
-      const r = await fetch(`/api/jugadores/${APPID}`);
-      if(!r.ok) throw new Error('respuesta no ok');
-      const data = await r.json();
-
-      document.querySelector('.players').textContent = data.jugadores.toLocaleString('es-ES');
-
-      const badge = document.querySelector('.badge');
-      badge.classList.remove('vivo','moribundo','muerto');
-      badge.classList.add(data.estado);
-      badge.querySelector('.badge-txt').textContent = data.etiqueta;
-    } catch(e){
-      console.error('No se pudo cargar el número de jugadores:', e);
-      document.querySelector('.players').textContent = 'n/d';
+    if(!juegos.length){
+      grid.innerHTML = '<div class="vacio">Todavía no hay juegos destacados.</div>';
+      return;
     }
+
+    grid.innerHTML = juegos.map(j => {
+      const iniciales = j.nombre.split(' ').slice(0,2).map(w => w[0]).join('');
+      const jugadores = j.jugadores !== null
+        ? `${j.jugadores.toLocaleString('es-ES')} jugando`
+        : j.plataforma;
+      return `
+        <a class="game" href="/juego.html?id=${j.appid}">
+          <div class="cover">
+            <span class="state-tag ${j.estado}">${j.etiqueta}</span>
+            <img src="/api/caratula/${j.appid}" alt="${j.nombre}"
+                 onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','${iniciales}');">
+          </div>
+          <div class="g-name">${j.nombre}</div>
+          <div class="g-meta">${jugadores}</div>
+        </a>`;
+    }).join('');
+
+  } catch(e){
+    console.error(e);
+    grid.innerHTML = '<div class="vacio">No se han podido cargar las recomendaciones.</div>';
   }
-  cargarJugadores();
+}
+
+// --- Buscador (de momento, busca entre los juegos con ficha) ---
+async function buscar(){
+  const texto = document.getElementById('buscador').value.trim().toLowerCase();
+  if(!texto) return;
+
+  try {
+    const r = await fetch('/api/destacados');
+    const juegos = await r.json();
+    const encontrado = juegos.find(j => j.nombre.toLowerCase().includes(texto));
+    if(encontrado){
+      window.location.href = `/juego.html?id=${encontrado.appid}`;
+    } else {
+      alert('Todavía no hay ficha para ese juego. De momento solo están los recomendados.');
+    }
+  } catch(e){
+    console.error(e);
+  }
+}
+
+// Permitir buscar con Enter
+document.getElementById('buscador').addEventListener('keydown', e => {
+  if(e.key === 'Enter') buscar();
+});
+
+function toggle(loggedIn){
+  document.getElementById('logged-out').classList.toggle('hidden', loggedIn);
+  document.getElementById('logged-in').classList.toggle('hidden', !loggedIn);
+}
+
+cargarDestacados();
 </script>
 </body>
 </html>

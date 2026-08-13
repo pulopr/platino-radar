@@ -82,6 +82,47 @@ app.get('/api/juego/:appid', async (req, res) => {
   res.json({ appid: Number(appid), jugadores, ...veredicto, ...juego });
 });
 
+// --- Endpoint: juegos destacados para la portada ---
+app.get('/api/destacados', async (req, res) => {
+  let juegos;
+  try {
+    juegos = JSON.parse(fs.readFileSync(path.join(__dirname, 'juegos.json'), 'utf8'));
+  } catch (e) {
+    console.error('Error leyendo juegos.json:', e.message);
+    return res.status(500).json({ error: 'No se pudieron leer los datos de juegos' });
+  }
+
+  // Filtrar los marcados como destacados
+  const destacados = Object.entries(juegos)
+    .filter(([, j]) => j.destacado)
+    .slice(0, 6); // máximo 6 en portada
+
+  // Consultar jugadores y calcular estado de cada uno, en paralelo
+  const resultado = await Promise.all(destacados.map(async ([appid, j]) => {
+    const jugadores = await consultarJugadores(appid);
+
+    let veredicto;
+    if (j.estado_forzado) {
+      const etiquetas = { vivo: 'Vivo', moribundo: 'Moribundo', muerto: 'Muerto' };
+      veredicto = { estado: j.estado_forzado, etiqueta: etiquetas[j.estado_forzado] };
+    } else if (j.tipo_online === 'offline' || j.tipo_online === 'con_amigos') {
+      veredicto = { estado: 'vivo', etiqueta: 'Vivo' };
+    } else {
+      veredicto = calcularEstado(jugadores ?? 0);
+    }
+
+    return {
+      appid: Number(appid),
+      nombre: j.nombre,
+      plataforma: (j.plataformas && j.plataformas[0]) || '',
+      jugadores,
+      ...veredicto
+    };
+  }));
+
+  res.json(resultado);
+});
+
 // --- Proxy de carátulas de Steam (esquiva bloqueos tipo Brave) ---
 app.get('/api/caratula/:appid', async (req, res) => {
   const { appid } = req.params;

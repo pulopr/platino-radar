@@ -1,6 +1,7 @@
 {
   "570940": {
     "nombre": "Dark Souls Remastered",
+    "destacado": true,
     "plataformas": ["Steam · PC", "También en PS4"],
     "tipo_online": "con_amigos",
     "estado_forzado": null,
@@ -26,6 +27,7 @@
   },
   "814380": {
     "nombre": "Sekiro: Shadows Die Twice",
+    "destacado": true,
     "plataformas": ["Steam · PC", "También en PS4"],
     "tipo_online": "offline",
     "estado_forzado": null,
