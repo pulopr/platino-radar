@@ -25,7 +25,13 @@
     padding:clamp(18px,4vw,48px) clamp(14px,4vw,32px);line-height:1.5;
   }
   .wrap{width:100%;max-width:540px}
-  .back{color:var(--ink-soft);font-size:.82rem;text-decoration:none;display:inline-block;margin-bottom:16px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;
+    margin-bottom:20px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;text-decoration:none;transition:opacity .15s}
+  .brand:hover{opacity:.85}
+  .logo-img{height:64px;width:auto;display:block}
+  @media(min-width:800px){.logo-img{height:88px}}
+  .back{color:var(--ink-soft);font-size:.82rem;text-decoration:none;display:inline-block}
   .back:hover{color:var(--ink)}
 
   .head{display:flex;gap:16px;align-items:center;margin-bottom:22px}
@@ -100,6 +106,7 @@
     -webkit-background-clip:text;background-clip:text;color:transparent;
     filter:drop-shadow(0 1px 2px rgba(0,30,80,.5));}
   .players-lab{color:#a9c8ee;font-size:.72rem;letter-spacing:.04em;margin-top:4px}
+  .sin-steam{font-size:1.1rem;font-weight:800;line-height:1.15;color:#c8e4ff;text-align:right}
   .live{color:#7dffc4;font-size:.62rem;font-weight:700;margin-top:5px;letter-spacing:.03em}
   .online-type{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.18);
     display:flex;gap:10px;align-items:flex-start;font-size:.86rem;color:#d3e6ff;position:relative;z-index:1}
@@ -117,6 +124,7 @@
   .pips{display:flex;gap:4px;justify-content:center;margin-bottom:6px}
   .pip{width:15px;height:15px;border-radius:4px;background:#1c3a5c}
   .pip.on{background:linear-gradient(180deg,#f0b46a,var(--moribundo))}
+  .pip.media{background:linear-gradient(90deg,#e8c05a 50%,#1c3a5c 50%)}
   .tedio-num{font-size:.82rem;color:var(--ink-soft)}
   .tedio-note{color:var(--ink-soft);font-size:.82rem;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-style:italic}
   .vote{margin-top:12px;text-align:center}
@@ -205,8 +213,17 @@ function error(titulo, mensaje){
 
 function pips(valor){
   let html = '';
-  for(let i=1;i<=5;i++) html += `<span class="pip ${i<=valor?'on':''}"></span>`;
+  for(let i=1;i<=5;i++){
+    if(valor >= i)          html += `<span class="pip on"></span>`;
+    else if(valor >= i-0.5) html += `<span class="pip media"></span>`;
+    else                    html += `<span class="pip"></span>`;
+  }
   return html;
+}
+
+// Formatea números con coma decimal (4.5 → 4,5)
+function num(v){
+  return (v ?? 0).toString().replace('.', ',');
 }
 
 function render(j){
@@ -223,7 +240,10 @@ function render(j){
   const iniciales = j.nombre.split(' ').slice(0,2).map(w => w[0]).join('');
 
   wrap.innerHTML = `
-    <a href="/" class="back">← Volver a la búsqueda</a>
+    <header class="topbar">
+      <a class="brand" href="/"><img src="/logo.png" alt="Platino Radar" class="logo-img"></a>
+      <a href="/" class="back">← Volver a la búsqueda</a>
+    </header>
 
     <div class="head">
       <div class="cover">
@@ -262,9 +282,12 @@ function render(j){
           <p class="state-expl">${j.explicacion_estado || ''}</p>
         </div>
         <div class="players-box">
-          <div class="players">${j.jugadores !== null ? j.jugadores.toLocaleString('es-ES') : 'n/d'}</div>
-          <div class="players-lab">jugando ahora</div>
-          <div class="live">● EN VIVO · STEAM</div>
+          ${j.sin_steam
+            ? `<div class="sin-steam">Exclusivo<br>PlayStation</div>
+               <div class="players-lab">sin datos de Steam</div>`
+            : `<div class="players">${j.jugadores !== null ? j.jugadores.toLocaleString('es-ES') : 'n/d'}</div>
+               <div class="players-lab">jugando ahora</div>
+               <div class="live">● EN VIVO · STEAM</div>`}
         </div>
       </div>
       ${j.nota_online ? `<div class="online-type"><span class="ic">🤝</span><div>${j.nota_online}</div></div>` : ''}
@@ -278,7 +301,7 @@ function render(j){
             <div class="tedio-col">
               <div class="tedio-who">Según el autor</div>
               <div class="pips">${pips(j.tedio_autor || 0)}</div>
-              <div class="tedio-num">${j.tedio_autor || '—'} / 5</div>
+              <div class="tedio-num">${num(j.tedio_autor)} / 5</div>
             </div>
             <div class="tedio-col">
               <div class="tedio-who">Según la comunidad</div>

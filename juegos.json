@@ -25,6 +25,143 @@
     "duracion": "~70–120 h",
     "trofeos_online": "Ninguno"
   },
+
+  "335300": {
+    "nombre": "Dark Souls II: Scholar of the First Sin",
+    "destacado": true,
+    "plataformas": ["Steam · PC", "También en PS4"],
+    "tipo_online": "con_amigos",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino se consigue <b>en solitario</b>. La dificultad está en el juego en sí, no en depender de otros jugadores.",
+    "nota_online": "<b>Online opcional (con amigos):</b> si un amigo tiene los objetos de juramento, puede dejártelos en tu partida y te ahorras bastante farmeo.",
+    "tedio_autor": 4.5,
+    "tedio_comentario": "No implica mucho farmeo de objetos de juramentos: la dificultad del platino reside prácticamente en la dificultad del juego en sí.",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "Misiones perdibles.",
+        "texto": "Tiene misiones necesarias que se pueden perder si avanzas mal. Conviene seguir una guía desde el principio para no bloquear ningún trofeo."
+      },
+      {
+        "icono": "🤝",
+        "titulo": "Aprovecha a los amigos.",
+        "texto": "Si conoces a alguien con los objetos de juramento, puede dejártelos en tu partida y ahorrarte horas de farmeo."
+      }
+    ],
+    "dificultad": "8/10",
+    "duracion": "~80–110 h",
+    "trofeos_online": "Ninguno obligatorio"
+  },
+
+  "374320": {
+    "nombre": "Dark Souls III",
+    "destacado": true,
+    "plataformas": ["Steam · PC", "También en PS4"],
+    "tipo_online": "con_amigos",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino se puede conseguir <b>en solitario</b>, pero el farmeo de objetos de pacto offline es lo que lo vuelve muy pesado.",
+    "nota_online": "<b>Online muy recomendable (con amigos):</b> conseguir los objetos de pacto offline puede hacerse insufrible. Jugando con un amigo te ahorras la mayor parte del farmeo.",
+    "tedio_autor": 5,
+    "tedio_comentario": "En dificultad de juego no es de los más complicados (hay builds que limpian jefes desde el principio). La auténtica dificultad está en los objetos de pacto: offline se hace muy tedioso.",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "Los objetos de pacto son el muro.",
+        "texto": "Es lo que dispara el tedio del platino. Planifica si vas a hacerlo offline (muy largo) o coordinado con alguien."
+      },
+      {
+        "icono": "⚔️",
+        "titulo": "Elige bien la build.",
+        "texto": "Hay builds que facilitan mucho los jefes desde el principio, así que la parte de combate no debería frenarte."
+      }
+    ],
+    "dificultad": "7/10",
+    "duracion": "~90–130 h",
+    "trofeos_online": "Ninguno obligatorio"
+  },
+
+  "1245620": {
+    "nombre": "Elden Ring",
+    "destacado": true,
+    "plataformas": ["Steam · PC", "También en PS4/PS5"],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. La dificultad está en el propio juego, no en depender de otros jugadores.",
+    "nota_online": "<b>Sin dependencia online:</b> todo se consigue en solitario, así que da igual cuánta gente esté conectada.",
+    "tedio_autor": 3,
+    "tedio_comentario": "Un platino muy relajado. Los coleccionables no se hacen pesados porque se integran muy bien en la exploración, y las misiones no son difíciles de seguir.",
+    "planificacion": [
+      {
+        "icono": "💾",
+        "titulo": "Ten una buena estrategia de copias de seguridad.",
+        "texto": "Es lo más importante aquí: con backups bien hechos evitas tener que repetir la partida más de una vez."
+      },
+      {
+        "icono": "🗺️",
+        "titulo": "Explora con calma.",
+        "texto": "Los coleccionables caen solos mientras exploras, así que no hace falta farmearlos aparte."
+      }
+    ],
+    "dificultad": "7/10",
+    "duracion": "~100–130 h",
+    "trofeos_online": "Ninguno"
+  },
+
+  "1501750": {
+    "nombre": "Lords of the Fallen",
+    "destacado": true,
+    "plataformas": ["Steam · PC", "También en PS5"],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>offline</b>, pero muy exigente: hay que conseguir prácticamente todos los objetos del juego.",
+    "nota_online": "<b>Sin dependencia online:</b> se consigue en solitario, aunque la cantidad de coleccionables lo hace largo.",
+    "tedio_autor": 5,
+    "tedio_comentario": "Muy tedioso por la cantidad de coleccionables (prácticamente todos los objetos del juego) y por unas misiones de personajes complicadas y muy fáciles de perder.",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "Misiones muy fáciles de arruinar.",
+        "texto": "Las misiones de los personajes son complicadas y se pierden con facilidad. Un error puede obligarte a empezar una partida de cero."
+      },
+      {
+        "icono": "📖",
+        "titulo": "Sigue una guía desde el minuto uno.",
+        "texto": "Es muy conveniente para formar una buena estrategia y no perder horas ni bloquear trofeos."
+      }
+    ],
+    "dificultad": "8/10",
+    "duracion": "~80–110 h",
+    "trofeos_online": "Ninguno"
+  },
+
+  "bloodborne": {
+    "nombre": "Bloodborne",
+    "destacado": false,
+    "sin_steam": true,
+    "plataformas": ["PS4 · Exclusivo PlayStation"],
+    "tipo_online": "offline",
+    "estado_forzado": "vivo",
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario.",
+    "tedio_autor": 3.5,
+    "tedio_comentario": "Un platino muy divertido: no obliga a farmear en exceso y puedes centrarte en la build que más te guste y en ver los distintos finales. Se pone algo tedioso al llegar a las mazmorras.",
+    "planificacion": [
+      {
+        "icono": "🏰",
+        "titulo": "Las mazmorras son la parte pesada.",
+        "texto": "Es donde el platino se vuelve tedioso. Conviene seguir una buena guía para no perder mucho tiempo dando vueltas."
+      },
+      {
+        "icono": "⚔️",
+        "titulo": "Disfruta de la build y los finales.",
+        "texto": "El resto del platino se consigue jugando con buena estrategia para ver los distintos finales del juego."
+      }
+    ],
+    "dificultad": "7/10",
+    "duracion": "~60–90 h",
+    "trofeos_online": "Ninguno"
+  },
+
   "814380": {
     "nombre": "Sekiro: Shadows Die Twice",
     "destacado": true,

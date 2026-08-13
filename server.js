@@ -6,7 +6,7 @@ const fs = require('fs');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- Umbrales del veredicto (los que definimos) ---
+// --- Umbrales del veredicto ---
 function calcularEstado(jugadores) {
   if (jugadores >= 1000) return { estado: 'vivo', etiqueta: 'Vivo' };
   if (jugadores >= 100)  return { estado: 'moribundo', etiqueta: 'Moribundo' };
@@ -26,6 +26,25 @@ async function consultarJugadores(appid) {
   }
 }
 
+// --- Lee el archivo de juegos ---
+function leerJuegos() {
+  return JSON.parse(fs.readFileSync(path.join(__dirname, 'juegos.json'), 'utf8'));
+}
+
+// --- Calcula el veredicto de un juego según su tipo de online ---
+function calcularVeredicto(juego, jugadores) {
+  if (juego.estado_forzado) {
+    const etiquetas = { vivo: 'Vivo', moribundo: 'Moribundo', muerto: 'Muerto' };
+    return { estado: juego.estado_forzado, etiqueta: etiquetas[juego.estado_forzado] };
+  }
+  // Offline o "con amigos": no depende de que haya multitud conectada
+  if (juego.tipo_online === 'offline' || juego.tipo_online === 'con_amigos') {
+    return { estado: 'vivo', etiqueta: 'Vivo' };
+  }
+  // requiere_multitud: manda el número de jugadores
+  return calcularEstado(jugadores ?? 0);
+}
+
 // --- Endpoint: número de jugadores en vivo de un juego de Steam ---
 app.get('/api/jugadores/:appid', async (req, res) => {
   const { appid } = req.params;
@@ -38,21 +57,20 @@ app.get('/api/jugadores/:appid', async (req, res) => {
     return res.status(404).json({ error: 'No hay datos de jugadores para ese juego' });
   }
 
-  const veredicto = calcularEstado(jugadores);
-  res.json({ appid: Number(appid), jugadores, ...veredicto });
+  res.json({ appid: Number(appid), jugadores, ...calcularEstado(jugadores) });
 });
 
 // --- Endpoint: datos completos de un juego (ficha) ---
 app.get('/api/juego/:appid', async (req, res) => {
   const { appid } = req.params;
-  if (!/^\d+$/.test(appid)) {
-    return res.status(400).json({ error: 'appid no válido' });
+  // Permite ids numéricos (Steam) o alfanuméricos (juegos sin Steam)
+  if (!/^[a-z0-9_-]+$/i.test(appid)) {
+    return res.status(400).json({ error: 'id no válido' });
   }
 
-  // Leer los datos del juego desde juegos.json
   let juegos;
   try {
-    juegos = JSON.parse(fs.readFileSync(path.join(__dirname, 'juegos.json'), 'utf8'));
+    juegos = leerJuegos();
   } catch (e) {
     console.error('Error leyendo juegos.json:', e.message);
     return res.status(500).json({ error: 'No se pudieron leer los datos de juegos' });
@@ -63,70 +81,70 @@ app.get('/api/juego/:appid', async (req, res) => {
     return res.status(404).json({ error: 'Juego no encontrado en la base de datos' });
   }
 
-  // Consultar jugadores en vivo
-  const jugadores = await consultarJugadores(appid);
+  // Solo consultamos Steam si el juego está en Steam
+  const jugadores = juego.sin_steam ? null : await consultarJugadores(appid);
 
-  // Calcular el estado según el tipo de online del platino
-  let veredicto;
-  if (juego.estado_forzado) {
-    const etiquetas = { vivo: 'Vivo', moribundo: 'Moribundo', muerto: 'Muerto' };
-    veredicto = { estado: juego.estado_forzado, etiqueta: etiquetas[juego.estado_forzado] };
-  } else if (juego.tipo_online === 'offline' || juego.tipo_online === 'con_amigos') {
-    // No depende de que haya multitud conectada → siempre Vivo
-    veredicto = { estado: 'vivo', etiqueta: 'Vivo' };
-  } else {
-    // requiere_multitud → manda el número de jugadores
-    veredicto = calcularEstado(jugadores ?? 0);
-  }
-
-  res.json({ appid: Number(appid), jugadores, ...veredicto, ...juego });
+  res.json({ appid, jugadores, ...calcularVeredicto(juego, jugadores), ...juego });
 });
 
 // --- Endpoint: juegos destacados para la portada ---
 app.get('/api/destacados', async (req, res) => {
   let juegos;
   try {
-    juegos = JSON.parse(fs.readFileSync(path.join(__dirname, 'juegos.json'), 'utf8'));
+    juegos = leerJuegos();
   } catch (e) {
     console.error('Error leyendo juegos.json:', e.message);
     return res.status(500).json({ error: 'No se pudieron leer los datos de juegos' });
   }
 
-  // Filtrar los marcados como destacados
   const destacados = Object.entries(juegos)
     .filter(([, j]) => j.destacado)
-    .slice(0, 6); // máximo 6 en portada
+    .slice(0, 12);
 
-  // Consultar jugadores y calcular estado de cada uno, en paralelo
+  // Consultamos todos en paralelo para que sea rápido
   const resultado = await Promise.all(destacados.map(async ([appid, j]) => {
-    const jugadores = await consultarJugadores(appid);
-
-    let veredicto;
-    if (j.estado_forzado) {
-      const etiquetas = { vivo: 'Vivo', moribundo: 'Moribundo', muerto: 'Muerto' };
-      veredicto = { estado: j.estado_forzado, etiqueta: etiquetas[j.estado_forzado] };
-    } else if (j.tipo_online === 'offline' || j.tipo_online === 'con_amigos') {
-      veredicto = { estado: 'vivo', etiqueta: 'Vivo' };
-    } else {
-      veredicto = calcularEstado(jugadores ?? 0);
-    }
-
+    const jugadores = j.sin_steam ? null : await consultarJugadores(appid);
     return {
-      appid: Number(appid),
+      appid,
       nombre: j.nombre,
       plataforma: (j.plataformas && j.plataformas[0]) || '',
+      sin_steam: !!j.sin_steam,
       jugadores,
-      ...veredicto
+      ...calcularVeredicto(j, jugadores)
     };
   }));
 
   res.json(resultado);
 });
 
+// --- Endpoint: búsqueda de juegos por nombre ---
+app.get('/api/buscar', (req, res) => {
+  const q = (req.query.q || '').trim().toLowerCase();
+  if (!q) return res.json([]);
+
+  let juegos;
+  try {
+    juegos = leerJuegos();
+  } catch (e) {
+    return res.status(500).json({ error: 'No se pudieron leer los datos de juegos' });
+  }
+
+  const resultados = Object.entries(juegos)
+    .filter(([, j]) => j.nombre.toLowerCase().includes(q))
+    .slice(0, 10)
+    .map(([appid, j]) => ({
+      appid,
+      nombre: j.nombre,
+      plataforma: (j.plataformas && j.plataformas[0]) || ''
+    }));
+
+  res.json(resultados);
+});
+
 // --- Proxy de carátulas de Steam (esquiva bloqueos tipo Brave) ---
 app.get('/api/caratula/:appid', async (req, res) => {
   const { appid } = req.params;
-  if (!/^\d+$/.test(appid)) return res.status(400).send('appid no válido');
+  if (!/^\d+$/.test(appid)) return res.status(404).send('Sin carátula de Steam');
 
   const fuentes = [
     `https://steamcdn-a.akamaihd.net/steam/apps/${appid}/library_600x900_2x.jpg`,
