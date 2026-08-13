@@ -1,0 +1,47 @@
+{
+  "570940": {
+    "nombre": "Dark Souls Remastered",
+    "plataformas": ["Steam · PC", "También en PS4"],
+    "tipo_online": "con_amigos",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino se consigue <b>al 100 % en solitario</b>. No dependes de que haya nadie conectado.",
+    "nota_online": "<b>Online opcional (con amigos):</b> puedes platinarlo solo, pero coordinarte con un amigo hace mucho más rápido el farmeo de objetos de pacto, que es lo más pesado.",
+    "tedio_autor": 4,
+    "tedio_comentario": "Pesado por el farmeo y las 2,5 vueltas al juego, pero se hace satisfactorio cuando lo completas con una buena estrategia.",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "Muchos trofeos perdibles.",
+        "texto": "Unos 26 requisitos dependen del ciclo de partida. El más traicionero: el pacto Darkwraith se bloquea si colocas el Lordvessel con Frampt primero. Consulta una guía antes de avanzar."
+      },
+      {
+        "icono": "🗺️",
+        "titulo": "Planifica los pactos y el orden.",
+        "texto": "Requiere dos partidas completas y media (NG++) en el mismo personaje. Decide la ruta de pactos desde el principio para no rejugar de más."
+      }
+    ],
+    "dificultad": "8/10",
+    "duracion": "~70–120 h",
+    "trofeos_online": "Ninguno"
+  },
+  "814380": {
+    "nombre": "Sekiro: Shadows Die Twice",
+    "plataformas": ["Steam · PC", "También en PS4"],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No hay ningún trofeo que dependa de otros jugadores.",
+    "nota_online": "<b>Sin componente online:</b> todo el platino se consigue en solitario, así que da igual cuánta gente esté jugando.",
+    "tedio_autor": 3,
+    "tedio_comentario": "Pendiente de valorar por el autor.",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "Finales múltiples.",
+        "texto": "Requiere varias partidas para conseguir todos los finales. Planifica el orden para minimizar repeticiones."
+      }
+    ],
+    "dificultad": "9/10",
+    "duracion": "~60–80 h",
+    "trofeos_online": "Ninguno"
+  }
+}

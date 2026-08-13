@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const path = require('path');
+const fs = require('fs');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -12,36 +13,73 @@ function calcularEstado(jugadores) {
   return { estado: 'muerto', etiqueta: 'Muerto' };
 }
 
+// --- Consulta el número de jugadores en vivo en Steam ---
+async function consultarJugadores(appid) {
+  try {
+    const r = await fetch(`https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=${appid}`);
+    if (!r.ok) return null;
+    const datos = await r.json();
+    return typeof datos?.response?.player_count === 'number' ? datos.response.player_count : null;
+  } catch (err) {
+    console.error('Error consultando Steam:', err.message);
+    return null;
+  }
+}
+
 // --- Endpoint: número de jugadores en vivo de un juego de Steam ---
 app.get('/api/jugadores/:appid', async (req, res) => {
   const { appid } = req.params;
-
-  // Validación básica: appid debe ser numérico
   if (!/^\d+$/.test(appid)) {
     return res.status(400).json({ error: 'appid no válido' });
   }
 
-  const url = `https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=${appid}`;
-
-  try {
-    const respuesta = await fetch(url);
-    if (!respuesta.ok) {
-      return res.status(502).json({ error: 'Steam no respondió correctamente' });
-    }
-    const datos = await respuesta.json();
-    const jugadores = datos?.response?.player_count;
-
-    if (typeof jugadores !== 'number') {
-      return res.status(404).json({ error: 'No hay datos de jugadores para ese juego' });
-    }
-
-    const veredicto = calcularEstado(jugadores);
-    res.json({ appid: Number(appid), jugadores, ...veredicto });
-
-  } catch (err) {
-    console.error('Error consultando Steam:', err.message);
-    res.status(500).json({ error: 'Error interno al consultar Steam' });
+  const jugadores = await consultarJugadores(appid);
+  if (jugadores === null) {
+    return res.status(404).json({ error: 'No hay datos de jugadores para ese juego' });
   }
+
+  const veredicto = calcularEstado(jugadores);
+  res.json({ appid: Number(appid), jugadores, ...veredicto });
+});
+
+// --- Endpoint: datos completos de un juego (ficha) ---
+app.get('/api/juego/:appid', async (req, res) => {
+  const { appid } = req.params;
+  if (!/^\d+$/.test(appid)) {
+    return res.status(400).json({ error: 'appid no válido' });
+  }
+
+  // Leer los datos del juego desde juegos.json
+  let juegos;
+  try {
+    juegos = JSON.parse(fs.readFileSync(path.join(__dirname, 'juegos.json'), 'utf8'));
+  } catch (e) {
+    console.error('Error leyendo juegos.json:', e.message);
+    return res.status(500).json({ error: 'No se pudieron leer los datos de juegos' });
+  }
+
+  const juego = juegos[appid];
+  if (!juego) {
+    return res.status(404).json({ error: 'Juego no encontrado en la base de datos' });
+  }
+
+  // Consultar jugadores en vivo
+  const jugadores = await consultarJugadores(appid);
+
+  // Calcular el estado según el tipo de online del platino
+  let veredicto;
+  if (juego.estado_forzado) {
+    const etiquetas = { vivo: 'Vivo', moribundo: 'Moribundo', muerto: 'Muerto' };
+    veredicto = { estado: juego.estado_forzado, etiqueta: etiquetas[juego.estado_forzado] };
+  } else if (juego.tipo_online === 'offline' || juego.tipo_online === 'con_amigos') {
+    // No depende de que haya multitud conectada → siempre Vivo
+    veredicto = { estado: 'vivo', etiqueta: 'Vivo' };
+  } else {
+    // requiere_multitud → manda el número de jugadores
+    veredicto = calcularEstado(jugadores ?? 0);
+  }
+
+  res.json({ appid: Number(appid), jugadores, ...veredicto, ...juego });
 });
 
 // --- Proxy de carátulas de Steam (esquiva bloqueos tipo Brave) ---
@@ -67,9 +105,6 @@ app.get('/api/caratula/:appid', async (req, res) => {
   }
   res.status(404).send('Carátula no encontrada');
 });
-
-// --- Servir archivos estáticos (tus HTML) desde la carpeta "public" ---
-
 
 app.listen(PORT, () => {
   console.log(`Servidor Platino Radar en http://localhost:${PORT}`);
