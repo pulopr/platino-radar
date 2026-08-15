@@ -99,7 +99,7 @@ app.get('/api/destacados', async (req, res) => {
 
   const destacados = Object.entries(juegos)
     .filter(([, j]) => j.destacado)
-    .slice(0, 12);
+    .slice(0, 6);
 
   // Consultamos todos en paralelo para que sea rápido
   const resultado = await Promise.all(destacados.map(async ([appid, j]) => {
@@ -141,22 +141,43 @@ app.get('/api/buscar', (req, res) => {
   res.json(resultados);
 });
 
-// --- Proxy de carátulas de Steam (esquiva bloqueos tipo Brave) ---
+// --- Proxy de carátulas (Steam, URL externa o archivo local del JSON) ---
 app.get('/api/caratula/:appid', async (req, res) => {
   const { appid } = req.params;
-  if (!/^\d+$/.test(appid)) return res.status(404).send('Sin carátula de Steam');
+  if (!/^[a-z0-9_-]+$/i.test(appid)) return res.status(400).send('id no válido');
 
-  const fuentes = [
-    `https://steamcdn-a.akamaihd.net/steam/apps/${appid}/library_600x900_2x.jpg`,
-    `https://steamcdn-a.akamaihd.net/steam/apps/${appid}/header.jpg`,
-  ];
+  const fuentes = [];
+
+  // Si el juego tiene carátula propia definida en juegos.json, esa manda
+  try {
+    const juego = leerJuegos()[appid];
+    if (juego?.caratula) fuentes.push(juego.caratula);
+  } catch (e) { /* si falla, seguimos con Steam */ }
+
+  // Si es un appid numérico, añadimos Steam como respaldo
+  if (/^\d+$/.test(appid)) {
+    fuentes.push(
+      `https://steamcdn-a.akamaihd.net/steam/apps/${appid}/library_600x900_2x.jpg`,
+      `https://steamcdn-a.akamaihd.net/steam/apps/${appid}/header.jpg`
+    );
+  }
 
   for (const url of fuentes) {
+    // Ruta local: la servimos directamente desde public
+    if (url.startsWith('/')) {
+      const ruta = path.join(__dirname, 'public', url);
+      if (fs.existsSync(ruta)) {
+        res.set('Cache-Control', 'public, max-age=86400');
+        return res.sendFile(ruta);
+      }
+      continue;
+    }
+    // URL externa: la descargamos y la reenviamos
     try {
       const r = await fetch(url);
       if (r.ok) {
         res.set('Content-Type', r.headers.get('content-type') || 'image/jpeg');
-        res.set('Cache-Control', 'public, max-age=86400'); // cachea 1 día
+        res.set('Cache-Control', 'public, max-age=86400');
         const buffer = Buffer.from(await r.arrayBuffer());
         return res.send(buffer);
       }

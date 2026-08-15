@@ -136,7 +136,8 @@
 
   "bloodborne": {
     "nombre": "Bloodborne",
-    "destacado": false,
+    "caratula": "/img/bloodborne.avif",
+    "destacado": true,
     "sin_steam": true,
     "plataformas": ["PS4 · Exclusivo PlayStation"],
     "tipo_online": "offline",
