@@ -99,7 +99,7 @@ app.get('/api/destacados', async (req, res) => {
 
   const destacados = Object.entries(juegos)
     .filter(([, j]) => j.destacado)
-    .slice(0, 6);
+    .slice(0, 12);
 
   // Consultamos todos en paralelo para que sea rápido
   const resultado = await Promise.all(destacados.map(async ([appid, j]) => {
@@ -165,8 +165,10 @@ app.get('/api/caratula/:appid', async (req, res) => {
   for (const url of fuentes) {
     // Ruta local: la servimos directamente desde public
     if (url.startsWith('/')) {
-      const ruta = path.join(__dirname, 'public', url);
-      if (fs.existsSync(ruta)) {
+      const base = path.join(__dirname, 'public');
+      const ruta = path.join(base, url);
+      // Evita salir de /public (path traversal)
+      if (ruta.startsWith(base) && fs.existsSync(ruta)) {
         res.set('Cache-Control', 'public, max-age=86400');
         return res.sendFile(ruta);
       }
