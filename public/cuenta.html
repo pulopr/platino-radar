@@ -82,6 +82,14 @@
   .aviso.error{background:rgba(232,104,58,.12);border:1px solid var(--error);color:#ffb59c}
   .aviso.ok{background:rgba(63,217,143,.12);border:1px solid var(--vivo);color:#9cffce}
 
+  .consent{display:flex;align-items:flex-start;gap:10px;margin:20px 0 6px;
+    background:rgba(10,110,201,.10);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .consent input[type=checkbox]{width:18px;height:18px;flex:none;margin-top:2px;
+    accent-color:var(--azul-claro);cursor:pointer}
+  .consent label{font-size:.8rem;color:var(--ink-soft);font-weight:400;
+    letter-spacing:0;margin:0;line-height:1.5;cursor:pointer}
+  .consent a{color:var(--azul-claro);text-decoration:none}
+  .consent a:hover{text-decoration:underline}
   .pie{text-align:center;margin-top:20px;font-size:.8rem;color:var(--plata-sombra)}
   .pie a{color:var(--azul-claro);text-decoration:none}
   .pie a:hover{text-decoration:underline}
@@ -134,11 +142,19 @@
         <div class="ayuda" id="ayuda-pass"></div>
       </div>
 
+      <div class="consent">
+        <input type="checkbox" id="reg-acepto">
+        <label for="reg-acepto">He leído y acepto el
+          <a href="/legal.html#privacidad" target="_blank" rel="noopener">tratamiento de mis datos personales</a>
+          y las <a href="/legal.html#condiciones" target="_blank" rel="noopener">condiciones de uso</a>.
+        </label>
+      </div>
+
       <button class="boton" id="btn-registro" onclick="registrarse()">Crear cuenta</button>
       <div class="aviso" id="aviso-registro"></div>
     </div>
 
-    <p class="pie"><a href="/">← Volver al inicio</a></p>
+    <p class="pie"><a href="/">← Volver al inicio</a> · <a href="/legal.html">Aviso legal y privacidad</a></p>
   </div>
 
 <script type="module">
@@ -146,7 +162,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 // ⚠️ PEGA AQUÍ TU CLAVE PUBLISHABLE DE SUPABASE
 const SUPABASE_URL = 'https://wxymjcuzccnbfskvibab.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_sQIhdhE-LToPa69HIYljSQ_ImrwHw1u';
+const SUPABASE_KEY = 'PEGA_AQUI_TU_CLAVE_PUBLISHABLE';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -266,6 +282,9 @@ window.registrarse = async function(){
   if(!/^[a-z0-9_-]+$/i.test(usuario)) return mostrarAviso('aviso-registro', 'El nombre solo puede tener letras, números, guion y guion bajo.', 'error');
   if(!email.includes('@')) return mostrarAviso('aviso-registro', 'Introduce un correo válido.', 'error');
   if(pass.length < 8) return mostrarAviso('aviso-registro', 'La contraseña debe tener al menos 8 caracteres.', 'error');
+  if(!document.getElementById('reg-acepto').checked){
+    return mostrarAviso('aviso-registro', 'Debes aceptar el tratamiento de datos y las condiciones de uso para crear la cuenta.', 'error');
+  }
 
   btn.disabled = true;
   btn.textContent = 'Creando cuenta…';
