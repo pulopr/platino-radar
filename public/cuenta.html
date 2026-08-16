@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/logo.png">
+<title>Acceder · Platino Radar</title>
+<style>
+  :root{
+    --bg:#0a1420; --bg-2:#0b1a2e;
+    --panel:#122744; --panel-2:#15325a;
+    --line:#265a95;
+    --plata:#dbe6f2; --plata-bril:#ffffff; --plata-med:#b8cae0; --plata-sombra:#7f9bc0;
+    --ink:#eef4fb; --ink-soft:#a7c0e0;
+    --azul-claro:#2b8ae8;
+    --vivo:#3fd98f; --error:#e8683a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1100px 560px at 50% -10%, #123a6b 0%, transparent 60%),
+      linear-gradient(168deg, #0c1d33 0%, #0a1627 45%, #091628 100%);
+    background-attachment:fixed;
+    color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    min-height:100dvh;line-height:1.5;
+    display:flex;flex-direction:column;align-items:center;
+    padding:clamp(18px,4vw,40px) clamp(14px,4vw,24px);
+  }
+  .logo-link{display:block;margin-bottom:8px;transition:opacity .15s}
+  .logo-link:hover{opacity:.85}
+  .logo-img{height:80px;width:auto;display:block}
+  @media(min-width:800px){.logo-img{height:100px}}
+
+  .card{
+    width:100%;max-width:420px;
+    background:linear-gradient(158deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);border-radius:18px;
+    padding:clamp(22px,5vw,32px);
+    box-shadow:0 24px 55px -30px #000, 0 1px 0 rgba(250,252,254,.10) inset;
+  }
+  /* Pestañas */
+  .tabs{display:flex;gap:6px;margin-bottom:24px;background:#0a1b30;padding:5px;border-radius:12px}
+  .tab{
+    flex:1;padding:10px;border:none;border-radius:9px;cursor:pointer;
+    background:transparent;color:var(--plata-sombra);font-weight:700;font-size:.9rem;
+    font-family:inherit;transition:.15s;
+  }
+  .tab.on{background:linear-gradient(180deg,#0a6ec9,#084b9e);color:#fff;
+    box-shadow:0 2px 0 rgba(255,255,255,.18) inset}
+
+  h1{font-size:1.3rem;font-weight:800;margin-bottom:6px}
+  .sub{color:var(--ink-soft);font-size:.88rem;margin-bottom:22px}
+
+  .campo{margin-bottom:16px}
+  label{display:block;font-size:.78rem;font-weight:700;color:var(--plata-sombra);
+    margin-bottom:6px;letter-spacing:.03em}
+  input{
+    width:100%;background:#0a1b30;border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--ink);font-size:.95rem;font-family:inherit;outline:none;
+    transition:border-color .15s;
+  }
+  input:focus{border-color:var(--azul-claro)}
+  input::placeholder{color:#54708f}
+  .ayuda{font-size:.74rem;color:var(--plata-sombra);margin-top:5px}
+  .ayuda.ok{color:var(--vivo)}
+  .ayuda.mal{color:var(--error)}
+
+  .boton{
+    width:100%;background:linear-gradient(180deg,#0a6ec9,#084b9e);color:#fff;
+    border:1px solid #2b8ae8;font-weight:700;font-size:.95rem;
+    padding:13px;border-radius:11px;cursor:pointer;font-family:inherit;margin-top:6px;
+    box-shadow:0 2px 0 rgba(255,255,255,.2) inset,0 8px 20px -10px rgba(0,80,180,.7);
+    transition:filter .15s;
+  }
+  .boton:hover:not(:disabled){filter:brightness(1.1)}
+  .boton:disabled{opacity:.6;cursor:not-allowed}
+
+  .aviso{
+    margin-top:16px;padding:12px 14px;border-radius:10px;font-size:.86rem;display:none;
+  }
+  .aviso.show{display:block}
+  .aviso.error{background:rgba(232,104,58,.12);border:1px solid var(--error);color:#ffb59c}
+  .aviso.ok{background:rgba(63,217,143,.12);border:1px solid var(--vivo);color:#9cffce}
+
+  .pie{text-align:center;margin-top:20px;font-size:.8rem;color:var(--plata-sombra)}
+  .pie a{color:var(--azul-claro);text-decoration:none}
+  .pie a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+  <a href="/" class="logo-link"><img src="/logo.png" alt="Platino Radar" class="logo-img"></a>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab on" id="tab-login" onclick="cambiarPestana('login')">Iniciar sesión</button>
+      <button class="tab" id="tab-registro" onclick="cambiarPestana('registro')">Crear cuenta</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="panel-login">
+      <h1>Bienvenido de vuelta</h1>
+      <p class="sub">Accede con tu correo o tu nombre de usuario.</p>
+
+      <div class="campo">
+        <label for="login-usuario">Correo o nombre de usuario</label>
+        <input type="text" id="login-usuario" placeholder="tucorreo@ejemplo.com" autocomplete="username">
+      </div>
+      <div class="campo">
+        <label for="login-pass">Contraseña</label>
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <button class="boton" id="btn-login" onclick="iniciarSesion()">Entrar</button>
+      <div class="aviso" id="aviso-login"></div>
+    </div>
+
+    <!-- REGISTRO -->
+    <div id="panel-registro" style="display:none">
+      <h1>Crea tu cuenta</h1>
+      <p class="sub">Registra tus platinos y vota lo tedioso que te parecieron.</p>
+
+      <div class="campo">
+        <label for="reg-usuario">Nombre de usuario</label>
+        <input type="text" id="reg-usuario" placeholder="cazadordeplatinos" autocomplete="username">
+        <div class="ayuda" id="ayuda-usuario">Mínimo 3 caracteres. Letras, números, guion y guion bajo.</div>
+      </div>
+      <div class="campo">
+        <label for="reg-email">Correo electrónico</label>
+        <input type="email" id="reg-email" placeholder="tucorreo@ejemplo.com" autocomplete="email">
+      </div>
+      <div class="campo">
+        <label for="reg-pass">Contraseña</label>
+        <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+        <div class="ayuda" id="ayuda-pass"></div>
+      </div>
+
+      <button class="boton" id="btn-registro" onclick="registrarse()">Crear cuenta</button>
+      <div class="aviso" id="aviso-registro"></div>
+    </div>
+
+    <p class="pie"><a href="/">← Volver al inicio</a></p>
+  </div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+// ⚠️ PEGA AQUÍ TU CLAVE PUBLISHABLE DE SUPABASE
+const SUPABASE_URL = 'https://wxymjcuzccnbfskvibab.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_sQIhdhE-LToPa69HIYljSQ_ImrwHw1u';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Si ya hay sesión, al inicio
+const { data: { session } } = await supabase.auth.getSession();
+if (session) window.location.href = '/';
+
+// --- Utilidades de interfaz ---
+function mostrarAviso(id, texto, tipo){
+  const el = document.getElementById(id);
+  el.textContent = texto;
+  el.className = `aviso show ${tipo}`;
+}
+function ocultarAviso(id){
+  document.getElementById(id).className = 'aviso';
+}
+
+window.cambiarPestana = function(cual){
+  const esLogin = cual === 'login';
+  document.getElementById('panel-login').style.display = esLogin ? 'block' : 'none';
+  document.getElementById('panel-registro').style.display = esLogin ? 'none' : 'block';
+  document.getElementById('tab-login').classList.toggle('on', esLogin);
+  document.getElementById('tab-registro').classList.toggle('on', !esLogin);
+};
+
+// --- INICIAR SESIÓN ---
+window.iniciarSesion = async function(){
+  const entrada = document.getElementById('login-usuario').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const btn = document.getElementById('btn-login');
+
+  ocultarAviso('aviso-login');
+  if(!entrada || !pass){
+    return mostrarAviso('aviso-login', 'Rellena ambos campos.', 'error');
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Entrando…';
+
+  try {
+    // Traducimos nombre de usuario → correo (si hace falta)
+    const r = await fetch('/api/resolver-usuario', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ usuario: entrada })
+    });
+
+    if(!r.ok){
+      throw new Error('Credenciales incorrectas');
+    }
+    const { email } = await r.json();
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
+    if(error) throw new Error('Credenciales incorrectas');
+
+    window.location.href = '/';
+
+  } catch(e){
+    mostrarAviso('aviso-login', e.message || 'No se ha podido iniciar sesión.', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+  }
+};
+
+// --- COMPROBAR NOMBRE DE USUARIO MIENTRAS SE ESCRIBE ---
+let tempUsuario;
+document.getElementById('reg-usuario').addEventListener('input', e => {
+  clearTimeout(tempUsuario);
+  const nombre = e.target.value.trim();
+  const ayuda = document.getElementById('ayuda-usuario');
+
+  if(nombre.length < 3){
+    ayuda.className = 'ayuda';
+    ayuda.textContent = 'Mínimo 3 caracteres. Letras, números, guion y guion bajo.';
+    return;
+  }
+
+  tempUsuario = setTimeout(async () => {
+    try {
+      const r = await fetch(`/api/usuario-libre?nombre=${encodeURIComponent(nombre)}`);
+      const d = await r.json();
+      if(d.libre){
+        ayuda.className = 'ayuda ok';
+        ayuda.textContent = '✓ Disponible';
+      } else {
+        ayuda.className = 'ayuda mal';
+        ayuda.textContent = d.motivo || '✗ Ese nombre ya está cogido';
+      }
+    } catch(e){ /* silencioso */ }
+  }, 400);
+});
+
+// --- Fuerza de la contraseña ---
+document.getElementById('reg-pass').addEventListener('input', e => {
+  const p = e.target.value;
+  const ayuda = document.getElementById('ayuda-pass');
+  if(!p){ ayuda.className = 'ayuda'; ayuda.textContent = ''; return; }
+  if(p.length < 8){
+    ayuda.className = 'ayuda mal';
+    ayuda.textContent = 'Demasiado corta (mínimo 8 caracteres)';
+  } else {
+    ayuda.className = 'ayuda ok';
+    ayuda.textContent = '✓ Longitud correcta';
+  }
+});
+
+// --- REGISTRARSE ---
+window.registrarse = async function(){
+  const usuario = document.getElementById('reg-usuario').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const btn = document.getElementById('btn-registro');
+
+  ocultarAviso('aviso-registro');
+
+  if(usuario.length < 3) return mostrarAviso('aviso-registro', 'El nombre de usuario debe tener al menos 3 caracteres.', 'error');
+  if(!/^[a-z0-9_-]+$/i.test(usuario)) return mostrarAviso('aviso-registro', 'El nombre solo puede tener letras, números, guion y guion bajo.', 'error');
+  if(!email.includes('@')) return mostrarAviso('aviso-registro', 'Introduce un correo válido.', 'error');
+  if(pass.length < 8) return mostrarAviso('aviso-registro', 'La contraseña debe tener al menos 8 caracteres.', 'error');
+
+  btn.disabled = true;
+  btn.textContent = 'Creando cuenta…';
+
+  try {
+    // Comprobamos que el nombre siga libre
+    const rLibre = await fetch(`/api/usuario-libre?nombre=${encodeURIComponent(usuario)}`);
+    const dLibre = await rLibre.json();
+    if(!dLibre.libre) throw new Error(dLibre.motivo || 'Ese nombre de usuario ya está cogido.');
+
+    // Creamos la cuenta
+    const { data, error } = await supabase.auth.signUp({ email, password: pass });
+    if(error) throw new Error(error.message);
+
+    // Creamos el perfil asociado
+    if(data.user){
+      const { error: errPerfil } = await supabase
+        .from('perfiles')
+        .insert({ id: data.user.id, nombre_usuario: usuario });
+      if(errPerfil) console.error('Error creando perfil:', errPerfil.message);
+    }
+
+    mostrarAviso('aviso-registro', '¡Cuenta creada! Entrando…', 'ok');
+    setTimeout(() => window.location.href = '/', 1200);
+
+  } catch(e){
+    mostrarAviso('aviso-registro', e.message || 'No se ha podido crear la cuenta.', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Crear cuenta';
+  }
+};
+
+// Enter para enviar
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if(e.key === 'Enter') window.iniciarSesion();
+});
+document.getElementById('reg-pass').addEventListener('keydown', e => {
+  if(e.key === 'Enter') window.registrarse();
+});
+</script>
+</body>
+</html>

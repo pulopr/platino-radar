@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/logo.png">
+<title>Perfil · Platino Radar</title>
+<style>
+  :root{
+    --bg:#0a1420; --bg-2:#0b1a2e;
+    --panel:#122744; --panel-2:#15325a;
+    --line:#265a95;
+    --plata:#dbe6f2; --plata-bril:#ffffff; --plata-med:#b8cae0; --plata-sombra:#7f9bc0;
+    --ink:#eef4fb; --ink-soft:#a7c0e0;
+    --azul-ps:#0070d1; --azul-claro:#2b8ae8;
+    --vivo:#3fd98f; --moribundo:#e8c05a; --muerto:#e8683a; --oro:#ffd97a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1100px 560px at 50% -10%, #123a6b 0%, transparent 60%),
+      linear-gradient(168deg, #0c1d33 0%, #0a1627 45%, #091628 100%);
+    background-attachment:fixed;
+    color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    min-height:100dvh;line-height:1.5;padding:0 clamp(14px,4vw,32px);
+  }
+  .container{width:100%;max-width:1120px;margin:0 auto}
+  @media (min-width:800px){ body{padding:0 clamp(24px,5vw,60px);font-size:1.06rem} }
+
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 0 18px;position:sticky;top:0;
+    background:linear-gradient(180deg,#0c1d33 70%,transparent);z-index:5}
+  .brand{display:flex;align-items:center;text-decoration:none;transition:opacity .15s}
+  .brand:hover{opacity:.85}
+  .logo-img{height:64px;width:auto;display:block}
+  @media(min-width:800px){.logo-img{height:88px}}
+  .nav{display:flex;align-items:center;gap:8px;flex:none}
+  .btn{font-weight:700;font-size:.84rem;padding:9px 15px;border-radius:10px;cursor:pointer;
+    border:1px solid var(--line);background:var(--panel);color:var(--ink);white-space:nowrap;
+    font-family:inherit}
+  a.btn{text-decoration:none;display:inline-block}
+  .btn:hover{border-color:var(--azul-claro)}
+  .avatar{width:38px;height:38px;border-radius:50%;flex:none;cursor:pointer;font-family:inherit;padding:0;
+    background:linear-gradient(145deg,#3a5a86,#22344d);border:1px solid var(--line);
+    display:grid;place-items:center;font-weight:800;color:var(--plata-bril);font-size:.9rem}
+  .hidden{display:none !important}
+
+  /* Cabecera del perfil */
+  .profile{
+    position:relative;overflow:hidden;
+    background:
+      linear-gradient(125deg, rgba(255,255,255,.13) 0%, transparent 20%, transparent 80%, rgba(255,255,255,.05) 100%),
+      linear-gradient(160deg, #0a6ec9 0%, #084b9e 45%, #0a3f86 100%);
+    border:1px solid #2b8ae8;border-radius:18px;
+    padding:clamp(18px,4vw,28px);margin-bottom:26px;
+    box-shadow:0 24px 60px -26px rgba(0,80,180,.7), 0 2px 0 rgba(255,255,255,.25) inset;
+  }
+  .profile::after{content:"";position:absolute;top:-50%;left:-25%;width:75%;height:200%;pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:rotate(18deg)}
+  .profile > *{position:relative;z-index:1}
+  .profile-top{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .user-avatar{
+    width:78px;height:78px;border-radius:50%;flex:none;display:grid;place-items:center;
+    font-size:2rem;font-weight:800;color:#0a3f86;
+    background:linear-gradient(145deg,#e2e9f2,#aebdd4 45%,#8496b0);
+    box-shadow:inset 0 2px 5px rgba(255,255,255,.5),0 6px 14px rgba(0,0,0,.4);
+  }
+  .user-main{flex:1;min-width:170px}
+  .user-name{font-size:clamp(1.4rem,4.5vw,1.9rem);font-weight:800;color:#fff;line-height:1.1}
+  .user-since{color:#c5ddf7;font-size:.82rem;margin-top:4px}
+  .psn-chip{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:.75rem;
+    background:rgba(4,20,45,.35);border:1px solid rgba(255,255,255,.22);
+    border-radius:999px;padding:4px 11px;color:#d3e6ff}
+  .psn-chip.ok{color:#7dffc4;border-color:rgba(125,255,196,.5)}
+  .level-box{flex:none;text-align:center;background:rgba(4,20,45,.35);
+    border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:14px 20px;min-width:130px}
+  .plat-count{font-size:2rem;font-weight:800;line-height:1;
+    background:linear-gradient(180deg,#ffffff,#c8e4ff);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .plat-label{font-size:.68rem;color:#c5ddf7;letter-spacing:.06em;text-transform:uppercase;margin-top:5px}
+  .level-name{margin-top:9px;font-size:.84rem;font-weight:700;color:var(--oro)}
+  .progress{margin-top:20px}
+  .progress-head{display:flex;justify-content:space-between;font-size:.75rem;color:#c5ddf7;margin-bottom:7px}
+  .bar{height:9px;background:rgba(4,20,45,.5);border:1px solid rgba(255,255,255,.2);
+    border-radius:99px;overflow:hidden}
+  .bar span{display:block;height:100%;background:linear-gradient(90deg,#7dffc4,#ffffff);
+    border-radius:99px;transition:width .5s}
+
+  /* Sección de platinos */
+  .sec-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 2px 16px}
+  .sec-title{font-size:1.1rem;font-weight:800}
+  .add-btn{background:linear-gradient(180deg,#0a6ec9,#084b9e);color:#fff;border:1px solid #2b8ae8;
+    font-weight:700;font-size:.84rem;padding:10px 16px;border-radius:10px;cursor:pointer;
+    font-family:inherit;box-shadow:0 2px 0 rgba(255,255,255,.2) inset}
+  .add-btn:hover{filter:brightness(1.1)}
+
+  .plat-list{display:flex;flex-direction:column;gap:11px;padding-bottom:44px}
+  .plat-item{display:flex;align-items:center;gap:15px;
+    background:linear-gradient(158deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);border-radius:14px;padding:13px 15px;
+    box-shadow:0 16px 40px -32px #000}
+  .mini-cover{width:48px;height:64px;border-radius:8px;flex:none;overflow:hidden;
+    background:linear-gradient(145deg,#1e3a5c,#141f2b);border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--plata-sombra);font-weight:800;font-size:.7rem}
+  .mini-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .plat-info{flex:1;min-width:0}
+  .plat-name{font-weight:700;font-size:.96rem;line-height:1.2;color:var(--ink);text-decoration:none}
+  .plat-name:hover{color:var(--azul-claro)}
+  .plat-sub{color:var(--vivo);font-size:.75rem;margin-top:4px;display:flex;align-items:center;gap:5px}
+  .tedio-vote{flex:none;text-align:right}
+  .tedio-lab{font-size:.64rem;color:var(--plata-sombra);letter-spacing:.05em;
+    text-transform:uppercase;margin-bottom:5px}
+  .pips{display:flex;gap:3px;justify-content:flex-end}
+  .pip{width:14px;height:14px;border-radius:4px;background:#1c3a5c;transition:.1s}
+  .pip.on{background:linear-gradient(180deg,#f0b46a,var(--moribundo))}
+  .pip.media{background:linear-gradient(90deg,#e8c05a 50%,#1c3a5c 50%)}
+  .pip.editable{cursor:pointer}
+  .pip.editable:hover{transform:scale(1.18)}
+  .sin-voto{font-size:.72rem;color:var(--azul-claro);font-weight:600;cursor:pointer}
+  .sin-voto:hover{text-decoration:underline}
+  .quitar{background:none;border:none;color:var(--plata-sombra);cursor:pointer;
+    font-size:1.1rem;padding:4px 6px;flex:none;font-family:inherit;line-height:1}
+  .quitar:hover{color:var(--muerto)}
+
+  .cargando,.vacio{text-align:center;padding:44px 20px;color:var(--ink-soft)}
+  .vacio p{margin-bottom:14px}
+  .spinner{width:28px;height:28px;border:3px solid var(--line);border-top-color:var(--azul-claro);
+    border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* Ventana para añadir platino */
+  .modal{position:fixed;inset:0;background:rgba(4,12,24,.8);z-index:100;
+    display:none;align-items:flex-start;justify-content:center;padding:60px 16px}
+  .modal.show{display:flex}
+  .modal-card{width:100%;max-width:460px;
+    background:linear-gradient(158deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);border-radius:16px;padding:22px;
+    box-shadow:0 30px 70px -20px #000}
+  .modal-card h2{font-size:1.1rem;margin-bottom:6px}
+  .modal-card .sub{color:var(--ink-soft);font-size:.86rem;margin-bottom:16px}
+  .modal-card input{width:100%;background:#0a1b30;border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--ink);font-size:.95rem;font-family:inherit;outline:none}
+  .modal-card input:focus{border-color:var(--azul-claro)}
+  .res-lista{margin-top:14px;max-height:280px;overflow-y:auto}
+  .res-item{display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding:12px 14px;border-radius:10px;cursor:pointer;font-size:.92rem}
+  .res-item:hover{background:#12294a}
+  .res-plat{color:var(--plata-sombra);font-size:.75rem}
+  .res-ya{color:var(--vivo);font-size:.72rem}
+  .cerrar{margin-top:16px;width:100%;background:transparent;border:1px solid var(--line);
+    color:var(--ink-soft);padding:11px;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600}
+  .cerrar:hover{border-color:var(--azul-claro);color:var(--ink)}
+
+  footer{border-top:1px solid var(--line);padding:22px 0 32px;text-align:center;
+    color:var(--plata-sombra);font-size:.74rem;line-height:1.7}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a class="brand" href="/"><img src="/logo.png" alt="Platino Radar" class="logo-img"></a>
+      <nav class="nav">
+        <div id="logged-out"></div>
+        <div id="logged-in" class="hidden"></div>
+      </nav>
+    </header>
+
+    <div id="contenido">
+      <div class="cargando"><div class="spinner"></div>Cargando perfil…</div>
+    </div>
+
+    <footer>Datos de jugadores en vivo desde Steam · Platino Radar</footer>
+  </div>
+
+  <!-- Ventana para añadir platino -->
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <h2>Añadir un platino</h2>
+      <p class="sub">Busca el juego que has platinado.</p>
+      <input type="text" id="buscar-juego" placeholder="Escribe el nombre del juego…" autocomplete="off">
+      <div class="res-lista" id="res-lista"></div>
+      <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+
+<script type="module">
+import { pintarCabecera, usuarioActual, supabase,
+         platinosDe, guardarPlatino, borrarPlatino, nivelPorPlatinos } from '/auth.js';
+
+const params = new URLSearchParams(window.location.search);
+const usuarioPedido = params.get('u');   // /perfil.html?u=nombre
+
+let yo = null;          // usuario con sesión
+let perfilMostrado = null;
+let esMiPerfil = false;
+let misPlatinos = [];
+let catalogo = {};      // juegos disponibles, por id
+
+const contenido = document.getElementById('contenido');
+
+function pipsHTML(valor, editable, juegoId){
+  let html = '';
+  for(let i=1;i<=5;i++){
+    let clase = '';
+    if(valor >= i) clase = 'on';
+    else if(valor >= i-0.5) clase = 'media';
+    if(editable) clase += ' editable';
+    const attr = editable ? ` data-juego="${juegoId}" data-valor="${i}"` : '';
+    html += `<span class="pip ${clase}"${attr}></span>`;
+  }
+  return html;
+}
+
+function num(v){ return (v ?? 0).toString().replace('.', ','); }
+
+async function cargarCatalogo(){
+  try {
+    const r = await fetch('/api/buscar?q=');   // vacío devuelve []
+    // Cargamos el catálogo completo mediante destacados + búsqueda amplia
+    const rd = await fetch('/api/destacados');
+    const juegos = await rd.json();
+    juegos.forEach(j => catalogo[j.appid] = j);
+  } catch(e){ console.error(e); }
+}
+
+async function pintar(){
+  const nombre = perfilMostrado.nombre_usuario || 'Sin nombre';
+  const inicial = nombre.charAt(0).toUpperCase();
+  const total = misPlatinos.length;
+  const nv = nivelPorPlatinos(total);
+
+  const psnChip = perfilMostrado.psn_id
+    ? `<div class="psn-chip ${perfilMostrado.psn_verificado ? 'ok' : ''}">
+         ${perfilMostrado.psn_verificado ? '✓' : '○'} PSN: ${perfilMostrado.psn_id}
+       </div>`
+    : '';
+
+  const listaHTML = total
+    ? misPlatinos.map(p => {
+        const j = catalogo[p.juego_id];
+        const nombreJuego = j ? j.nombre : p.juego_id;
+        const ini = nombreJuego.split(' ').slice(0,2).map(w => w[0]).join('');
+        const voto = p.tedio_voto ? Number(p.tedio_voto) : 0;
+        return `
+          <div class="plat-item">
+            <div class="mini-cover">
+              <img src="/api/caratula/${p.juego_id}" alt="${nombreJuego}"
+                   onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','${ini}');">
+            </div>
+            <div class="plat-info">
+              <a class="plat-name" href="/juego.html?id=${p.juego_id}">${nombreJuego}</a>
+              <div class="plat-sub">🏆 Platino conseguido</div>
+            </div>
+            <div class="tedio-vote">
+              <div class="tedio-lab">${esMiPerfil ? 'Tu tedio' : 'Su tedio'}</div>
+              ${voto
+                ? `<div class="pips">${pipsHTML(voto, esMiPerfil, p.juego_id)}</div>
+                   <div class="tedio-lab" style="margin-top:4px">${num(voto)} / 5</div>`
+                : (esMiPerfil
+                    ? `<div class="pips">${pipsHTML(0, true, p.juego_id)}</div>
+                       <div class="sin-voto">Vota el tedio</div>`
+                    : `<div class="tedio-lab">Sin votar</div>`)}
+            </div>
+            ${esMiPerfil ? `<button class="quitar" data-borrar="${p.juego_id}" title="Quitar">✕</button>` : ''}
+          </div>`;
+      }).join('')
+    : `<div class="vacio">
+         <p>${esMiPerfil ? 'Todavía no has registrado ningún platino.' : 'Este usuario aún no ha registrado platinos.'}</p>
+         ${esMiPerfil ? '<button class="add-btn" id="btn-vacio">+ Añadir mi primer platino</button>' : ''}
+       </div>`;
+
+  contenido.innerHTML = `
+    <div class="profile">
+      <div class="profile-top">
+        <div class="user-avatar">${inicial}</div>
+        <div class="user-main">
+          <div class="user-name">${nombre}</div>
+          <div class="user-since">Cazador de platinos</div>
+          ${psnChip}
+        </div>
+        <div class="level-box">
+          <div class="plat-count">${total}</div>
+          <div class="plat-label">Platinos</div>
+          <div class="level-name">◆ Nivel ${nv.nivel} · ${nv.nombre}</div>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="progress-head">
+          <span>Nivel ${nv.nivel} · ${nv.nombre}</span>
+          <span>${total} / ${nv.siguiente} para el nivel ${nv.nivel + 1}</span>
+        </div>
+        <div class="bar"><span style="width:${nv.progreso}%"></span></div>
+      </div>
+    </div>
+
+    <div class="sec-head">
+      <div class="sec-title">${esMiPerfil ? 'Mis platinos' : `Platinos de ${nombre}`}</div>
+      ${esMiPerfil ? '<button class="add-btn" id="btn-add">+ Añadir platino</button>' : ''}
+    </div>
+    <div class="plat-list">${listaHTML}</div>`;
+
+  // Eventos
+  const btnAdd = document.getElementById('btn-add');
+  if(btnAdd) btnAdd.onclick = abrirModal;
+  const btnVacio = document.getElementById('btn-vacio');
+  if(btnVacio) btnVacio.onclick = abrirModal;
+
+  if(esMiPerfil){
+    document.querySelectorAll('.pip.editable').forEach(pip => {
+      pip.onclick = async () => {
+        const juego = pip.dataset.juego;
+        const valor = Number(pip.dataset.valor);
+        await guardarPlatino(yo.id, juego, valor);
+        misPlatinos = await platinosDe(yo.id);
+        pintar();
+      };
+    });
+    document.querySelectorAll('[data-borrar]').forEach(btn => {
+      btn.onclick = async () => {
+        if(!confirm('¿Quitar este platino de tu perfil?')) return;
+        await borrarPlatino(yo.id, btn.dataset.borrar);
+        misPlatinos = await platinosDe(yo.id);
+        pintar();
+      };
+    });
+  }
+}
+
+// --- Ventana de añadir platino ---
+window.cerrarModal = () => document.getElementById('modal').classList.remove('show');
+
+function abrirModal(){
+  document.getElementById('modal').classList.add('show');
+  document.getElementById('buscar-juego').focus();
+  buscarJuegos('');
+}
+
+let tempBusca;
+document.getElementById('buscar-juego').addEventListener('input', e => {
+  clearTimeout(tempBusca);
+  tempBusca = setTimeout(() => buscarJuegos(e.target.value.trim()), 250);
+});
+
+async function buscarJuegos(texto){
+  const lista = document.getElementById('res-lista');
+  try {
+    const url = texto ? `/api/buscar?q=${encodeURIComponent(texto)}` : '/api/destacados';
+    const r = await fetch(url);
+    const juegos = await r.json();
+
+    if(!juegos.length){
+      lista.innerHTML = '<div class="res-item" style="cursor:default">Sin resultados.</div>';
+      return;
+    }
+
+    const yaTengo = new Set(misPlatinos.map(p => p.juego_id));
+
+    lista.innerHTML = juegos.map(j => {
+      const tiene = yaTengo.has(String(j.appid));
+      return `
+        <div class="res-item" ${tiene ? '' : `data-add="${j.appid}"`} style="${tiene ? 'cursor:default;opacity:.6' : ''}">
+          <span>${j.nombre}</span>
+          ${tiene ? '<span class="res-ya">✓ Ya lo tienes</span>' : `<span class="res-plat">${j.plataforma || ''}</span>`}
+        </div>`;
+    }).join('');
+
+    lista.querySelectorAll('[data-add]').forEach(el => {
+      el.onclick = async () => {
+        await guardarPlatino(yo.id, el.dataset.add, null);
+        misPlatinos = await platinosDe(yo.id);
+        await cargarCatalogo();
+        cerrarModal();
+        pintar();
+      };
+    });
+
+  } catch(e){ console.error(e); }
+}
+
+// --- Arranque ---
+(async () => {
+  yo = await pintarCabecera();
+  await cargarCatalogo();
+
+  if(usuarioPedido){
+    // Perfil de otro usuario (o el mío por nombre)
+    const { data } = await supabase
+      .from('perfiles')
+      .select('id, nombre_usuario, psn_id, psn_verificado')
+      .ilike('nombre_usuario', usuarioPedido)
+      .maybeSingle();
+
+    if(!data){
+      contenido.innerHTML = `<div class="vacio"><p>No existe ningún usuario llamado "${usuarioPedido}".</p>
+        <a class="btn" href="/">← Volver al inicio</a></div>`;
+      return;
+    }
+    perfilMostrado = data;
+    esMiPerfil = yo && yo.id === data.id;
+    misPlatinos = await platinosDe(data.id);
+
+  } else {
+    // Mi propio perfil
+    if(!yo){ window.location.href = '/cuenta.html'; return; }
+    perfilMostrado = yo;
+    esMiPerfil = true;
+    misPlatinos = await platinosDe(yo.id);
+  }
+
+  pintar();
+})();
+</script>
+</body>
+</html>
