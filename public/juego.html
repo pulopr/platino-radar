@@ -35,6 +35,20 @@
   @media(min-width:800px){.logo-img{height:88px}}
   .back{color:var(--ink-soft);font-size:.82rem;text-decoration:none;display:inline-block}
   .back:hover{color:var(--ink)}
+  .nav{display:flex;align-items:center;gap:8px;flex:none}
+  .btn{font-weight:700;font-size:.84rem;padding:9px 15px;border-radius:10px;cursor:pointer;
+    border:1px solid var(--line);background:var(--panel);color:var(--ink);white-space:nowrap;
+    font-family:inherit}
+  a.btn{text-decoration:none;display:inline-block}
+  .btn:hover{border-color:var(--azul-claro)}
+  .avatar{width:38px;height:38px;border-radius:50%;flex:none;cursor:pointer;font-family:inherit;padding:0;
+    background:linear-gradient(145deg,#3a5a86,#22344d);border:1px solid var(--line);
+    display:grid;place-items:center;font-weight:800;color:var(--plata-bril);font-size:.9rem}
+  .hidden{display:none !important}
+  .btn-votar{display:inline-block;background:transparent;border:1px solid var(--azul-claro);
+    color:var(--azul-claro);font-weight:700;font-size:.8rem;padding:9px 17px;border-radius:9px;
+    text-decoration:none;transition:background .15s}
+  .btn-votar:hover{background:rgba(43,138,232,.12)}
 
   .head{display:flex;gap:16px;align-items:center;margin-bottom:22px}
   .cover{
@@ -129,6 +143,16 @@
   .pip.media{background:linear-gradient(90deg,#e8c05a 50%,#1c3a5c 50%)}
   .tedio-num{font-size:.82rem;color:var(--ink-soft)}
   .tedio-note{color:var(--ink-soft);font-size:.82rem;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-style:italic}
+  .pip.votable{cursor:pointer;transition:transform .1s}
+  .pip.votable:hover{transform:scale(1.2)}
+  .pip.mio{background:linear-gradient(180deg,#7dffc4,#3fd98f)}
+  .pip.mio.media{background:linear-gradient(90deg,#3fd98f 50%,#1c3a5c 50%)}
+  .mi-voto{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);text-align:center}
+  .mi-voto-lab{font-size:.72rem;color:var(--plata-sombra);letter-spacing:.05em;
+    text-transform:uppercase;margin-bottom:8px}
+  .mi-voto .pips{margin-bottom:6px}
+  .voto-info{font-size:.78rem;color:var(--ink-soft)}
+  .voto-info b{color:var(--vivo)}
   .vote{margin-top:12px;text-align:center}
   .vote button{background:transparent;border:1px solid var(--azul-claro);color:var(--azul-claro);
     font-weight:700;font-size:.8rem;padding:8px 16px;border-radius:9px;cursor:pointer}
@@ -197,7 +221,9 @@
     </div>
   </div>
 
-<script>
+<script type="module">
+import { pintarCabecera, usuarioActual, guardarPlatino, tedioComunidad, supabase } from '/auth.js';
+
 // Lee el id del juego de la URL: /juego.html?id=570940
 const params = new URLSearchParams(window.location.search);
 const APPID = params.get('id');
@@ -244,7 +270,10 @@ function render(j){
   wrap.innerHTML = `
     <header class="topbar">
       <a class="brand" href="/"><img src="/logo.png" alt="Platino Radar" class="logo-img"></a>
-      <a href="/" class="back">← Volver a la búsqueda</a>
+      <nav class="nav">
+        <div id="logged-out"></div>
+        <div id="logged-in" class="hidden"></div>
+      </nav>
     </header>
 
     <div class="head">
@@ -305,14 +334,14 @@ function render(j){
               <div class="pips">${pips(j.tedio_autor || 0)}</div>
               <div class="tedio-num">${num(j.tedio_autor)} / 5</div>
             </div>
-            <div class="tedio-col">
+            <div class="tedio-col" id="col-comunidad">
               <div class="tedio-who">Según la comunidad</div>
-              <div class="pips">${pips(0)}</div>
-              <div class="tedio-num" style="color:var(--plata-sombra)">Sin votos aún</div>
+              <div class="pips" id="pips-comunidad">${pips(0)}</div>
+              <div class="tedio-num" id="num-comunidad" style="color:var(--plata-sombra)">Sin votos aún</div>
             </div>
           </div>
           ${j.tedio_comentario ? `<p class="tedio-note">"${j.tedio_comentario}"</p>` : ''}
-          <div class="vote"><button>Vota lo tedioso que te pareció</button></div>
+          <div class="vote" id="zona-voto"></div>
         </div>
       </div>
 
@@ -348,9 +377,85 @@ function activarTooltip(){
   document.querySelector('.badge-wrap').addEventListener('mouseleave', ()=>tip.classList.remove('show'));
 }
 
-function toggleInfo(e){
+window.toggleInfo = function(e){
   e.stopPropagation();
   document.getElementById('tip').classList.toggle('show');
+};
+
+let yo = null;
+let miVoto = null;
+
+// --- Pinta la media de la comunidad ---
+async function pintarComunidad(){
+  const { media, votos } = await tedioComunidad(APPID);
+  const pipsEl = document.getElementById('pips-comunidad');
+  const numEl  = document.getElementById('num-comunidad');
+  if(!pipsEl || !numEl) return;
+
+  if(media === null){
+    pipsEl.innerHTML = pips(0);
+    numEl.textContent = 'Sin votos aún';
+    numEl.style.color = 'var(--plata-sombra)';
+  } else {
+    pipsEl.innerHTML = pips(media);
+    numEl.innerHTML = `${num(media)} / 5 <span style="color:var(--plata-sombra)">(${votos} voto${votos === 1 ? '' : 's'})</span>`;
+    numEl.style.color = 'var(--ink-soft)';
+  }
+}
+
+// --- Pinta la zona de voto del usuario ---
+async function pintarZonaVoto(){
+  const zona = document.getElementById('zona-voto');
+  if(!zona) return;
+
+  // Sin sesión: invitamos a entrar
+  if(!yo){
+    zona.innerHTML = `<a class="btn-votar" href="/cuenta.html">Vota lo tedioso que te pareció</a>`;
+    return;
+  }
+
+  // Con sesión: cuadritos pulsables
+  let html = '';
+  for(let i=1;i<=5;i++){
+    const clase = (miVoto && miVoto >= i) ? 'pip mio votable' : 'pip votable';
+    html += `<span class="${clase}" data-valor="${i}"></span>`;
+  }
+
+  zona.innerHTML = `
+    <div class="mi-voto">
+      <div class="mi-voto-lab">${miVoto ? 'Tu voto' : '¿Lo has platinado? Vota su tedio'}</div>
+      <div class="pips">${html}</div>
+      <div class="voto-info">${miVoto
+        ? `Votaste <b>${num(miVoto)}/5</b> · pulsa para cambiarlo`
+        : 'Al votar se añadirá a tus platinos'}</div>
+    </div>`;
+
+  zona.querySelectorAll('.pip.votable').forEach(pip => {
+    pip.onclick = async () => {
+      const valor = Number(pip.dataset.valor);
+      zona.querySelector('.voto-info').textContent = 'Guardando…';
+      const ok = await guardarPlatino(yo.id, APPID, valor);
+      if(ok){
+        miVoto = valor;
+        await pintarZonaVoto();
+        await pintarComunidad();
+      } else {
+        zona.querySelector('.voto-info').textContent = 'No se ha podido guardar el voto.';
+      }
+    };
+  });
+}
+
+// --- Lee si el usuario ya votó este juego ---
+async function cargarMiVoto(){
+  if(!yo) return;
+  const { data } = await supabase
+    .from('platinos')
+    .select('tedio_voto')
+    .eq('usuario_id', yo.id)
+    .eq('juego_id', APPID)
+    .maybeSingle();
+  miVoto = data?.tedio_voto ? Number(data.tedio_voto) : null;
 }
 
 async function cargar(){
@@ -365,6 +470,13 @@ async function cargar(){
     if(!r.ok) throw new Error('respuesta no ok');
     const datos = await r.json();
     render(datos);
+
+    // Sesión, voto propio y media de la comunidad
+    yo = await pintarCabecera();
+    await cargarMiVoto();
+    await pintarZonaVoto();
+    await pintarComunidad();
+
   } catch(e){
     console.error(e);
     error('Error al cargar', 'No se han podido obtener los datos. Inténtalo de nuevo en un momento.');

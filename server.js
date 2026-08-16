@@ -3,6 +3,17 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const path = require('path');
 const fs = require('fs');
+require('dotenv').config();
+const { createClient } = require('@supabase/supabase-js');
+
+// Cliente con clave secreta: SOLO se usa en el servidor, nunca en el navegador
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SECRET_KEY
+);
+
+// Para leer JSON en las peticiones POST
+app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -186,6 +197,72 @@ app.get('/api/caratula/:appid', async (req, res) => {
     } catch (e) { /* prueba la siguiente */ }
   }
   res.status(404).send('Carátula no encontrada');
+});
+
+// --- Traduce nombre de usuario → correo, para poder hacer login con usuario ---
+app.post('/api/resolver-usuario', async (req, res) => {
+  const { usuario } = req.body || {};
+  if (!usuario || typeof usuario !== 'string') {
+    return res.status(400).json({ error: 'Falta el usuario' });
+  }
+
+  // Si ya es un correo, lo devolvemos tal cual
+  if (usuario.includes('@')) {
+    return res.json({ email: usuario });
+  }
+
+  try {
+    // Buscamos el perfil por nombre de usuario
+    const { data: perfil, error } = await supabaseAdmin
+      .from('perfiles')
+      .select('id')
+      .ilike('nombre_usuario', usuario)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!perfil) {
+      // No revelamos si el usuario existe o no: mismo error genérico
+      return res.status(404).json({ error: 'Credenciales incorrectas' });
+    }
+
+    // Obtenemos el correo desde el sistema de autenticación
+    const { data: userData, error: errUser } =
+      await supabaseAdmin.auth.admin.getUserById(perfil.id);
+
+    if (errUser || !userData?.user?.email) {
+      return res.status(404).json({ error: 'Credenciales incorrectas' });
+    }
+
+    res.json({ email: userData.user.email });
+  } catch (e) {
+    console.error('Error resolviendo usuario:', e.message);
+    res.status(500).json({ error: 'Error interno' });
+  }
+});
+
+// --- Comprueba si un nombre de usuario está libre ---
+app.get('/api/usuario-libre', async (req, res) => {
+  const nombre = (req.query.nombre || '').trim();
+  if (nombre.length < 3) {
+    return res.json({ libre: false, motivo: 'Mínimo 3 caracteres' });
+  }
+  if (!/^[a-z0-9_-]+$/i.test(nombre)) {
+    return res.json({ libre: false, motivo: 'Solo letras, números, guion y guion bajo' });
+  }
+
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('perfiles')
+      .select('id')
+      .ilike('nombre_usuario', nombre)
+      .maybeSingle();
+
+    if (error) throw error;
+    res.json({ libre: !data });
+  } catch (e) {
+    console.error('Error comprobando usuario:', e.message);
+    res.status(500).json({ error: 'Error interno' });
+  }
 });
 
 app.listen(PORT, () => {
