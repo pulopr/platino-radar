@@ -157,7 +157,7 @@
 
     <section class="hero">
       <h1>¿Merece la pena ese platino?</h1>
-      <p>Antes de meterte horas en un juego, comprueba si sigue vivo para lo online y cómo de tedioso es su platino.</p>
+      <p>Antes de lanzarte a por un platino, comprueba si el juego sigue vivo para sus trofeos online y cómo de tedioso es conseguirlo.</p>
       <div class="search-wrap">
         <div class="search">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7f9bc0" stroke-width="2">
@@ -179,7 +179,7 @@
     </div>
 
     <footer>
-      Datos de jugadores en vivo desde Steam · Valoraciones aportadas por el autor.<br>
+      Valoraciones aportadas por el autor y la comunidad · El termómetro de actividad usa datos de Steam.<br>
       <a href="/legal.html" style="color:inherit">Aviso legal, privacidad y cookies</a>
     </footer>
   </div>
@@ -202,7 +202,7 @@ async function cargarDestacados(){
       const iniciales = j.nombre.split(' ').slice(0,2).map(w => w[0]).join('');
       const jugadores = j.sin_steam
         ? j.plataforma
-        : (j.jugadores !== null ? `${j.jugadores.toLocaleString('es-ES')} jugando` : j.plataforma);
+        : (j.jugadores !== null ? `${j.jugadores.toLocaleString('es-ES')} jugando ahora` : j.plataforma);
       return `
         <a class="game" href="/juego.html?id=${j.appid}">
           <div class="cover">

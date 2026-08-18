@@ -98,7 +98,7 @@ export async function pintarCabecera(){
 export async function platinosDe(usuarioId){
   const { data, error } = await supabase
     .from('platinos')
-    .select('juego_id, tedio_voto, conseguido_en')
+    .select('juego_id, tedio_voto, conseguido_en, destacado')
     .eq('usuario_id', usuarioId)
     .order('conseguido_en', { ascending: false });
 
@@ -123,6 +123,42 @@ export async function guardarPlatino(usuarioId, juegoId, tedioVoto = null){
     return false;
   }
   return true;
+}
+
+/**
+ * Marca o desmarca un platino como destacado en el expositor.
+ * Máximo 3 destacados por usuario.
+ * Devuelve { ok, motivo }.
+ */
+export async function destacarPlatino(usuarioId, juegoId, destacar){
+  if(destacar){
+    // Comprobamos que no supere el máximo
+    const { data, error: errCount } = await supabase
+      .from('platinos')
+      .select('juego_id')
+      .eq('usuario_id', usuarioId)
+      .eq('destacado', true);
+
+    if(errCount){
+      console.error('Error contando destacados:', errCount.message);
+      return { ok: false, motivo: 'Error al comprobar los destacados' };
+    }
+    if(data && data.length >= 3){
+      return { ok: false, motivo: 'Solo puedes destacar 3 platinos. Quita uno antes de añadir otro.' };
+    }
+  }
+
+  const { error } = await supabase
+    .from('platinos')
+    .update({ destacado: destacar })
+    .eq('usuario_id', usuarioId)
+    .eq('juego_id', juegoId);
+
+  if(error){
+    console.error('Error al destacar platino:', error.message);
+    return { ok: false, motivo: 'No se ha podido guardar el cambio' };
+  }
+  return { ok: true };
 }
 
 /** Elimina un platino del usuario. */

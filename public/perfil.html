@@ -87,6 +87,39 @@
   .bar span{display:block;height:100%;background:linear-gradient(90deg,#7dffc4,#ffffff);
     border-radius:99px;transition:width .5s}
 
+  /* Expositor de platinos destacados */
+  .expositor{margin-bottom:30px}
+  .exp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,2.5vw,18px)}
+  .exp-item{position:relative;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit}
+  .exp-cover{
+    position:relative;aspect-ratio:600/900;border-radius:13px;overflow:hidden;
+    background:linear-gradient(145deg,#1e3a5c,#141f2b);
+    border:1px solid var(--oro);
+    display:grid;place-items:center;color:var(--plata-sombra);font-weight:800;
+    box-shadow:0 10px 30px -14px rgba(255,217,122,.35);
+    transition:transform .15s;
+  }
+  .exp-item:hover .exp-cover{transform:translateY(-4px)}
+  .exp-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .exp-nombre{font-size:.84rem;font-weight:700;line-height:1.25}
+  .exp-quitar{
+    position:absolute;top:7px;right:7px;width:26px;height:26px;border-radius:50%;
+    background:rgba(6,18,38,.85);border:1px solid var(--line);color:var(--plata-sombra);
+    cursor:pointer;font-family:inherit;font-size:.85rem;display:grid;place-items:center;padding:0;
+  }
+  .exp-quitar:hover{color:var(--muerto);border-color:var(--muerto)}
+  .exp-vacio{
+    aspect-ratio:600/900;border-radius:13px;border:2px dashed var(--line);
+    display:grid;place-items:center;text-align:center;padding:14px;
+    color:var(--plata-sombra);font-size:.78rem;line-height:1.4;
+  }
+  .destacar-btn{
+    background:none;border:1px solid var(--line);color:var(--plata-sombra);cursor:pointer;
+    font-size:1rem;padding:5px 8px;border-radius:8px;flex:none;font-family:inherit;line-height:1;
+  }
+  .destacar-btn:hover{color:var(--oro);border-color:var(--oro)}
+  .destacar-btn.on{color:var(--oro);border-color:var(--oro);background:rgba(255,217,122,.12)}
+
   /* Sección de platinos */
   .sec-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 2px 16px}
   .sec-title{font-size:1.1rem;font-weight:800}
@@ -187,7 +220,7 @@
 
 <script type="module">
 import { pintarCabecera, usuarioActual, supabase,
-         platinosDe, guardarPlatino, borrarPlatino, nivelPorPlatinos } from '/auth.js';
+         platinosDe, guardarPlatino, borrarPlatino, destacarPlatino, nivelPorPlatinos } from '/auth.js';
 
 const params = new URLSearchParams(window.location.search);
 const usuarioPedido = params.get('u');   // /perfil.html?u=nombre
@@ -263,13 +296,55 @@ async function pintar(){
                        <div class="sin-voto">Vota el tedio</div>`
                     : `<div class="tedio-lab">Sin votar</div>`)}
             </div>
-            ${esMiPerfil ? `<button class="quitar" data-borrar="${p.juego_id}" title="Quitar">✕</button>` : ''}
+            ${esMiPerfil ? `
+              <button class="destacar-btn ${p.destacado ? 'on' : ''}" data-destacar="${p.juego_id}"
+                title="${p.destacado ? 'Quitar del expositor' : 'Destacar en el expositor'}">★</button>
+              <button class="quitar" data-borrar="${p.juego_id}" title="Quitar">✕</button>` : ''}
           </div>`;
       }).join('')
     : `<div class="vacio">
          <p>${esMiPerfil ? 'Todavía no has registrado ningún platino.' : 'Este usuario aún no ha registrado platinos.'}</p>
          ${esMiPerfil ? '<button class="add-btn" id="btn-vacio">+ Añadir mi primer platino</button>' : ''}
        </div>`;
+
+  // --- Expositor de destacados (máximo 3) ---
+  const destacados = misPlatinos.filter(p => p.destacado).slice(0, 3);
+  let expositorHTML = '';
+
+  if(destacados.length || esMiPerfil){
+    const tarjetas = destacados.map(p => {
+      const j = catalogo[p.juego_id];
+      const nombreJuego = j ? j.nombre : p.juego_id;
+      const ini = nombreJuego.split(' ').slice(0,2).map(w => w[0]).join('');
+      return `
+        <div class="exp-item">
+          <a class="exp-cover" href="/juego.html?id=${p.juego_id}">
+            <img src="/api/caratula/${p.juego_id}" alt="${nombreJuego}"
+                 onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','${ini}');">
+          </a>
+          ${esMiPerfil ? `<button class="exp-quitar" data-destacar="${p.juego_id}" title="Quitar del expositor">✕</button>` : ''}
+          <div class="exp-nombre">${nombreJuego}</div>
+        </div>`;
+    });
+
+    // Huecos vacíos solo en mi propio perfil
+    if(esMiPerfil){
+      for(let i = destacados.length; i < 3; i++){
+        tarjetas.push(`<div class="exp-vacio">Marca con ★ un platino de tu lista para destacarlo aquí</div>`);
+      }
+    }
+
+    if(destacados.length || esMiPerfil){
+      expositorHTML = `
+        <div class="expositor">
+          <div class="sec-head">
+            <div class="sec-title">${esMiPerfil ? 'Mi vitrina' : `Vitrina de ${nombre}`}</div>
+            <div class="sec-sub" style="color:var(--plata-sombra);font-size:.8rem">Los 3 platinos de los que más orgulloso está</div>
+          </div>
+          <div class="exp-grid">${tarjetas.join('')}</div>
+        </div>`;
+    }
+  }
 
   contenido.innerHTML = `
     <div class="profile">
@@ -295,6 +370,8 @@ async function pintar(){
       </div>
     </div>
 
+    ${expositorHTML}
+
     <div class="sec-head">
       <div class="sec-title">${esMiPerfil ? 'Mis platinos' : `Platinos de ${nombre}`}</div>
       ${esMiPerfil ? '<button class="add-btn" id="btn-add">+ Añadir platino</button>' : ''}
@@ -313,6 +390,16 @@ async function pintar(){
         const juego = pip.dataset.juego;
         const valor = Number(pip.dataset.valor);
         await guardarPlatino(yo.id, juego, valor);
+        misPlatinos = await platinosDe(yo.id);
+        pintar();
+      };
+    });
+    document.querySelectorAll('[data-destacar]').forEach(btn => {
+      btn.onclick = async () => {
+        const juego = btn.dataset.destacar;
+        const actual = misPlatinos.find(p => p.juego_id === juego);
+        const res = await destacarPlatino(yo.id, juego, !actual?.destacado);
+        if(!res.ok){ alert(res.motivo); return; }
         misPlatinos = await platinosDe(yo.id);
         pintar();
       };

@@ -116,6 +116,8 @@
   .tip-dot{width:10px;height:10px;border-radius:50%;flex:none}
   .tip-dot.vivo{background:var(--vivo)} .tip-dot.mor{background:var(--moribundo)} .tip-dot.mue{background:var(--muerto)}
   .tip-desc{padding-left:18px;line-height:1.45;color:var(--ink-soft)}
+  .tip-fuente{margin-top:14px;padding-top:12px;border-top:1px solid #1c3a5c;
+    font-size:.76rem;color:var(--plata-sombra);line-height:1.4}
 
   .state-expl{color:#d3e6ff;font-size:.9rem;margin-top:12px;max-width:44ch}
   .players-box{text-align:right;flex:none}
@@ -124,6 +126,8 @@
     -webkit-background-clip:text;background-clip:text;color:transparent;
     filter:drop-shadow(0 1px 2px rgba(0,30,80,.5));}
   .players-lab{color:#a9c8ee;font-size:.72rem;letter-spacing:.04em;margin-top:4px}
+  .ayuda-dato{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;
+    border:1px solid #a9c8ee;font-size:.6rem;font-weight:800;cursor:help;vertical-align:middle;margin-left:2px}
   .sin-steam{font-size:1.1rem;font-weight:800;line-height:1.15;color:#c8e4ff;text-align:right}
   .live{color:#7dffc4;font-size:.62rem;font-weight:700;margin-top:5px;letter-spacing:.03em}
   .online-type{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.18);
@@ -300,16 +304,17 @@ function render(j){
               <div class="tip-title">¿Qué significa cada estado?</div>
               <div class="tip-row">
                 <div class="tip-head"><span class="tip-dot vivo"></span><b>Vivo</b></div>
-                <div class="tip-desc">El platino no depende de otros jugadores (es offline o se puede con un amigo), o el juego tiene comunidad de sobra (+1.000 conectados).</div>
+                <div class="tip-desc">El platino no depende de otros jugadores (es offline o se puede con un amigo), o el juego mantiene una comunidad amplia y activa.</div>
               </div>
               <div class="tip-row">
                 <div class="tip-head"><span class="tip-dot mor"></span><b>Moribundo</b></div>
-                <div class="tip-desc">Necesita gente online y quedan pocos (100–1.000). Aún es posible, pero cuanto antes mejor.</div>
+                <div class="tip-desc">Necesita gente conectada y la comunidad está de capa caída. Aún es posible, pero cuanto antes lo intentes, mejor.</div>
               </div>
               <div class="tip-row">
                 <div class="tip-head"><span class="tip-dot mue"></span><b>Muerto</b></div>
-                <div class="tip-desc">Necesita gente online y apenas queda nadie (menos de 100). Los trofeos multijugador serán muy difíciles.</div>
+                <div class="tip-desc">Necesita gente conectada y apenas queda nadie. Los trofeos multijugador serán muy difíciles o imposibles.</div>
               </div>
+              <div class="tip-fuente">La actividad se estima con la cifra de jugadores en PC (Steam), ya que PlayStation no publica ese dato.</div>
             </div>
           </div>
           <p class="state-expl">${j.explicacion_estado || ''}</p>
@@ -317,10 +322,10 @@ function render(j){
         <div class="players-box">
           ${j.sin_steam
             ? `<div class="sin-steam">Exclusivo<br>PlayStation</div>
-               <div class="players-lab">sin datos de Steam</div>`
+               <div class="players-lab">sin termómetro disponible</div>`
             : `<div class="players">${j.jugadores !== null ? j.jugadores.toLocaleString('es-ES') : 'n/d'}</div>
-               <div class="players-lab">jugando ahora</div>
-               <div class="live">● EN VIVO · STEAM</div>`}
+               <div class="players-lab">jugando ahora <span class="ayuda-dato" title="Cifra de jugadores en PC (Steam). La usamos como termómetro de si la comunidad del juego sigue activa, porque PlayStation no publica este dato.">?</span></div>
+               <div class="live">● COMUNIDAD ACTIVA</div>`}
         </div>
       </div>
       ${j.nota_online ? `<div class="online-type"><span class="ic">🤝</span><div>${j.nota_online}</div></div>` : ''}
@@ -361,8 +366,9 @@ function render(j){
     </div>
 
     <p class="foot">
-      Datos de jugadores en vivo desde Steam · Valoración de tedio y avisos aportados por el autor.<br>
-      El recuento indica si el juego está activo, no cuántos buscan un trofeo concreto.<br>
+      Valoraciones de tedio y avisos aportados por el autor y la comunidad.<br>
+      El termómetro de actividad usa la cifra de jugadores en PC (Steam), ya que PlayStation no publica ese dato.
+      Indica si el juego sigue vivo, no cuántos buscan un trofeo concreto.<br>
       <a href="/legal.html" style="color:inherit">Aviso legal, privacidad y cookies</a>
     </p>`;
 
