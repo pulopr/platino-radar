@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/logo.png">
+<title>Nueva contraseña · Platino Radar</title>
+<style>
+  :root{
+    --bg:#0a1420; --panel:#122744; --panel-2:#15325a;
+    --line:#265a95;
+    --plata:#dbe6f2; --plata-bril:#ffffff; --plata-med:#b8cae0; --plata-sombra:#7f9bc0;
+    --ink:#eef4fb; --ink-soft:#a7c0e0;
+    --azul-claro:#2b8ae8;
+    --vivo:#3fd98f; --error:#e8683a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1100px 560px at 50% -10%, #123a6b 0%, transparent 60%),
+      linear-gradient(168deg, #0c1d33 0%, #0a1627 45%, #091628 100%);
+    background-attachment:fixed;
+    color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    min-height:100dvh;line-height:1.5;
+    display:flex;flex-direction:column;align-items:center;
+    padding:clamp(18px,4vw,40px) clamp(14px,4vw,24px);
+  }
+  .logo-link{display:block;margin-bottom:8px;transition:opacity .15s}
+  .logo-link:hover{opacity:.85}
+  .logo-img{height:80px;width:auto;display:block}
+  @media(min-width:800px){.logo-img{height:100px}}
+
+  .card{
+    width:100%;max-width:420px;
+    background:linear-gradient(158deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);border-radius:18px;
+    padding:clamp(22px,5vw,32px);
+    box-shadow:0 24px 55px -30px #000, 0 1px 0 rgba(250,252,254,.10) inset;
+  }
+  h1{font-size:1.3rem;font-weight:800;margin-bottom:6px}
+  .sub{color:var(--ink-soft);font-size:.88rem;margin-bottom:22px}
+
+  .campo{margin-bottom:16px}
+  label{display:block;font-size:.78rem;font-weight:700;color:var(--plata-sombra);
+    margin-bottom:6px;letter-spacing:.03em}
+  .campo-pass{position:relative}
+  input{
+    width:100%;background:#0a1b30;border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--ink);font-size:.95rem;font-family:inherit;outline:none;
+    transition:border-color .15s;
+  }
+  .campo-pass input{padding-right:46px}
+  input:focus{border-color:var(--azul-claro)}
+  input::placeholder{color:#54708f}
+  .ojo{
+    position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    background:none;border:none;cursor:pointer;padding:8px;color:var(--plata-sombra);
+    display:grid;place-items:center;border-radius:8px;transition:color .15s;
+  }
+  .ojo:hover{color:var(--ink)}
+  .ayuda{font-size:.74rem;color:var(--plata-sombra);margin-top:5px}
+  .ayuda.ok{color:var(--vivo)}
+  .ayuda.mal{color:var(--error)}
+
+  .boton{
+    width:100%;background:linear-gradient(180deg,#0a6ec9,#084b9e);color:#fff;
+    border:1px solid #2b8ae8;font-weight:700;font-size:.95rem;
+    padding:13px;border-radius:11px;cursor:pointer;font-family:inherit;margin-top:6px;
+    box-shadow:0 2px 0 rgba(255,255,255,.2) inset,0 8px 20px -10px rgba(0,80,180,.7);
+    transition:filter .15s;
+  }
+  .boton:hover:not(:disabled){filter:brightness(1.1)}
+  .boton:disabled{opacity:.6;cursor:not-allowed}
+
+  .aviso{margin-top:16px;padding:12px 14px;border-radius:10px;font-size:.86rem;display:none}
+  .aviso.show{display:block}
+  .aviso.error{background:rgba(232,104,58,.12);border:1px solid var(--error);color:#ffb59c}
+  .aviso.ok{background:rgba(63,217,143,.12);border:1px solid var(--vivo);color:#9cffce}
+
+  .pie{text-align:center;margin-top:20px;font-size:.8rem;color:var(--plata-sombra)}
+  .pie a{color:var(--azul-claro);text-decoration:none}
+  .pie a:hover{text-decoration:underline}
+
+  .cargando{text-align:center;padding:30px 0;color:var(--ink-soft)}
+  .spinner{width:26px;height:26px;border:3px solid var(--line);border-top-color:var(--azul-claro);
+    border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+  <a href="/" class="logo-link"><img src="/logo.png" alt="Platino Radar" class="logo-img"></a>
+
+  <div class="card" id="tarjeta">
+    <div class="cargando"><div class="spinner"></div>Comprobando el enlace…</div>
+  </div>
+
+<script type="module">
+import { supabase } from '/auth.js';
+
+const tarjeta = document.getElementById('tarjeta');
+
+function iconoOjo(visible){
+  return visible
+    ? `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+         <path d="M3 3l18 18"/>
+         <path d="M10.6 10.6a2 2 0 002.8 2.8"/>
+         <path d="M9.4 5.2A9.5 9.5 0 0112 5c5 0 9 4.5 9 7a11 11 0 01-2.6 3.6M6.2 6.4C3.9 8 2 10.4 2 12c0 2.5 4 7 10 7a9.8 9.8 0 003.6-.7"/>
+       </svg>`
+    : `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+         <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/>
+         <circle cx="12" cy="12" r="2.6"/>
+       </svg>`;
+}
+
+// Alterna visibilidad de un campo de contraseña
+window.verClave = function(id, btn){
+  const campo = document.getElementById(id);
+  const oculta = campo.type === 'password';
+  campo.type = oculta ? 'text' : 'password';
+  btn.innerHTML = iconoOjo(oculta);
+  btn.setAttribute('aria-label', oculta ? 'Ocultar contraseña' : 'Mostrar contraseña');
+  campo.focus();
+};
+
+function mostrarAviso(texto, tipo){
+  const el = document.getElementById('aviso');
+  el.textContent = texto;
+  el.className = `aviso show ${tipo}`;
+}
+
+function pintarFormulario(){
+  tarjeta.innerHTML = `
+    <h1>Elige una contraseña nueva</h1>
+    <p class="sub">Escribe la contraseña con la que quieras entrar a partir de ahora.</p>
+
+    <div class="campo">
+      <label for="clave1">Nueva contraseña</label>
+      <div class="campo-pass">
+        <input type="password" id="clave1" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+        <button class="ojo" onclick="verClave('clave1', this)" aria-label="Mostrar contraseña">${iconoOjo(false)}</button>
+      </div>
+      <div class="ayuda" id="ayuda1"></div>
+    </div>
+
+    <div class="campo">
+      <label for="clave2">Repite la contraseña</label>
+      <div class="campo-pass">
+        <input type="password" id="clave2" placeholder="Escríbela otra vez" autocomplete="new-password">
+        <button class="ojo" onclick="verClave('clave2', this)" aria-label="Mostrar contraseña">${iconoOjo(false)}</button>
+      </div>
+      <div class="ayuda" id="ayuda2"></div>
+    </div>
+
+    <button class="boton" id="btn-guardar">Guardar contraseña</button>
+    <div class="aviso" id="aviso"></div>
+    <p class="pie"><a href="/">← Volver al inicio</a></p>`;
+
+  // Validación mientras se escribe
+  const c1 = document.getElementById('clave1');
+  const c2 = document.getElementById('clave2');
+
+  c1.addEventListener('input', () => {
+    const a = document.getElementById('ayuda1');
+    if(!c1.value){ a.className='ayuda'; a.textContent=''; return; }
+    if(c1.value.length < 8){ a.className='ayuda mal'; a.textContent='Demasiado corta (mínimo 8 caracteres)'; }
+    else { a.className='ayuda ok'; a.textContent='✓ Longitud correcta'; }
+  });
+
+  c2.addEventListener('input', () => {
+    const a = document.getElementById('ayuda2');
+    if(!c2.value){ a.className='ayuda'; a.textContent=''; return; }
+    if(c2.value !== c1.value){ a.className='ayuda mal'; a.textContent='No coinciden'; }
+    else { a.className='ayuda ok'; a.textContent='✓ Coinciden'; }
+  });
+
+  document.getElementById('btn-guardar').onclick = guardar;
+  c2.addEventListener('keydown', e => { if(e.key === 'Enter') guardar(); });
+}
+
+async function guardar(){
+  const c1 = document.getElementById('clave1').value;
+  const c2 = document.getElementById('clave2').value;
+  const btn = document.getElementById('btn-guardar');
+
+  if(c1.length < 8) return mostrarAviso('La contraseña debe tener al menos 8 caracteres.', 'error');
+  if(c1 !== c2)     return mostrarAviso('Las dos contraseñas no coinciden.', 'error');
+
+  btn.disabled = true;
+  btn.textContent = 'Guardando…';
+
+  const { error } = await supabase.auth.updateUser({ password: c1 });
+
+  if(error){
+    mostrarAviso(error.message || 'No se ha podido cambiar la contraseña.', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Guardar contraseña';
+    return;
+  }
+
+  mostrarAviso('¡Contraseña actualizada! Entrando…', 'ok');
+  setTimeout(() => window.location.href = '/', 1400);
+}
+
+function enlaceInvalido(){
+  tarjeta.innerHTML = `
+    <h1>Enlace no válido</h1>
+    <p class="sub">Este enlace de recuperación ha caducado o ya se ha utilizado.
+    Solicita uno nuevo desde la pantalla de acceso.</p>
+    <a class="boton" href="/cuenta.html" style="display:block;text-align:center;text-decoration:none">
+      Ir a la pantalla de acceso
+    </a>
+    <p class="pie"><a href="/">← Volver al inicio</a></p>`;
+}
+
+// --- Arranque: comprobar que venimos de un enlace válido ---
+(async () => {
+  // Supabase procesa el token del enlace y crea una sesión temporal
+  supabase.auth.onAuthStateChange((evento) => {
+    if(evento === 'PASSWORD_RECOVERY') pintarFormulario();
+  });
+
+  // Damos un margen para que procese el enlace y comprobamos sesión
+  setTimeout(async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if(session) pintarFormulario();
+    else enlaceInvalido();
+  }, 900);
+})();
+</script>
+</body>
+</html>

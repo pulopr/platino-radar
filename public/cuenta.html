@@ -61,6 +61,15 @@
   }
   input:focus{border-color:var(--azul-claro)}
   input::placeholder{color:#54708f}
+  .campo-pass{position:relative}
+  .campo-pass input{padding-right:46px}
+  .ojo{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    background:none;border:none;cursor:pointer;padding:8px;color:var(--plata-sombra);
+    display:grid;place-items:center;border-radius:8px;transition:color .15s}
+  .ojo:hover{color:var(--ink)}
+  .olvido{text-align:right;margin-top:8px}
+  .olvido a{color:var(--azul-claro);font-size:.78rem;text-decoration:none;cursor:pointer}
+  .olvido a:hover{text-decoration:underline}
   .ayuda{font-size:.74rem;color:var(--plata-sombra);margin-top:5px}
   .ayuda.ok{color:var(--vivo)}
   .ayuda.mal{color:var(--error)}
@@ -115,7 +124,11 @@
       </div>
       <div class="campo">
         <label for="login-pass">Contraseña</label>
-        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+        <div class="campo-pass">
+          <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+          <button class="ojo" onclick="verClave('login-pass', this)" aria-label="Mostrar contraseña" type="button"></button>
+        </div>
+        <div class="olvido"><a onclick="pedirRecuperacion()">¿Has olvidado tu contraseña?</a></div>
       </div>
 
       <button class="boton" id="btn-login" onclick="iniciarSesion()">Entrar</button>
@@ -138,7 +151,10 @@
       </div>
       <div class="campo">
         <label for="reg-pass">Contraseña</label>
-        <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+        <div class="campo-pass">
+          <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+          <button class="ojo" onclick="verClave('reg-pass', this)" aria-label="Mostrar contraseña" type="button"></button>
+        </div>
         <div class="ayuda" id="ayuda-pass"></div>
       </div>
 
@@ -158,17 +174,79 @@
   </div>
 
 <script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-// ⚠️ PEGA AQUÍ TU CLAVE PUBLISHABLE DE SUPABASE
-const SUPABASE_URL = 'https://wxymjcuzccnbfskvibab.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_sQIhdhE-LToPa69HIYljSQ_ImrwHw1u';
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// El cliente de Supabase vive en un solo sitio: auth.js
+// (así la clave no está duplicada en varios archivos)
+import { supabase } from '/auth.js';
 
 // Si ya hay sesión, al inicio
 const { data: { session } } = await supabase.auth.getSession();
 if (session) window.location.href = '/';
+
+// --- Icono del ojo (ver/ocultar contraseña) ---
+function iconoOjo(visible){
+  return visible
+    ? `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+         <path d="M3 3l18 18"/>
+         <path d="M10.6 10.6a2 2 0 002.8 2.8"/>
+         <path d="M9.4 5.2A9.5 9.5 0 0112 5c5 0 9 4.5 9 7a11 11 0 01-2.6 3.6M6.2 6.4C3.9 8 2 10.4 2 12c0 2.5 4 7 10 7a9.8 9.8 0 003.6-.7"/>
+       </svg>`
+    : `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+         <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/>
+         <circle cx="12" cy="12" r="2.6"/>
+       </svg>`;
+}
+
+// Pintar los iconos al cargar
+document.querySelectorAll('.ojo').forEach(b => b.innerHTML = iconoOjo(false));
+
+window.verClave = function(id, btn){
+  const campo = document.getElementById(id);
+  const oculta = campo.type === 'password';
+  campo.type = oculta ? 'text' : 'password';
+  btn.innerHTML = iconoOjo(oculta);
+  btn.setAttribute('aria-label', oculta ? 'Ocultar contraseña' : 'Mostrar contraseña');
+  campo.focus();
+};
+
+// --- Recuperación de contraseña ---
+window.pedirRecuperacion = async function(){
+  const entrada = document.getElementById('login-usuario').value.trim();
+
+  if(!entrada){
+    return mostrarAviso('aviso-login',
+      'Escribe primero tu correo (o tu nombre de usuario) en el campo de arriba.', 'error');
+  }
+
+  ocultarAviso('aviso-login');
+  mostrarAviso('aviso-login', 'Enviando…', 'ok');
+
+  try {
+    // Si ha puesto el nombre de usuario, lo traducimos a correo
+    const r = await fetch('/api/resolver-usuario', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ usuario: entrada })
+    });
+
+    let email = entrada;
+    if(r.ok){
+      const d = await r.json();
+      email = d.email;
+    }
+
+    await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/nueva-clave.html`
+    });
+
+  } catch(e){
+    console.error(e);
+  }
+
+  // Mensaje idéntico exista o no la cuenta: evita descubrir correos registrados
+  mostrarAviso('aviso-login',
+    'Si esa cuenta existe, te hemos enviado un correo con el enlace para cambiar la contraseña. Revisa también la carpeta de spam.',
+    'ok');
+};
 
 // --- Utilidades de interfaz ---
 function mostrarAviso(id, texto, tipo){

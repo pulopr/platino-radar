@@ -68,7 +68,6 @@ export async function pintarCabecera(){
 
   if(usuario){
     const nombre = usuario.nombre_usuario || 'Mi perfil';
-    const inicial = nombre.charAt(0).toUpperCase();
 
     fuera.classList.add('hidden');
     fuera.innerHTML = '';
@@ -77,7 +76,7 @@ export async function pintarCabecera(){
     dentro.style.display = 'flex';
     dentro.innerHTML = `
       <a class="btn" href="/perfil.html">${nombre}</a>
-      <button class="avatar" id="btn-salir" title="Cerrar sesión">${inicial}</button>`;
+      <button class="btn btn-salir" id="btn-salir" title="Cerrar sesión">Cerrar sesión</button>`;
 
     document.getElementById('btn-salir').onclick = cerrarSesion;
 
