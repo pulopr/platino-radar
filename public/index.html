@@ -158,16 +158,16 @@
     <section class="hero">
       <h1>¿Merece la pena ese platino?</h1>
       <p>Antes de lanzarte a por un platino, comprueba si el juego sigue vivo para sus trofeos online y cómo de tedioso es conseguirlo.</p>
-      <div class="search-wrap">
+      <form class="search-wrap" id="form-buscar" action="/buscar" method="get">
         <div class="search">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7f9bc0" stroke-width="2">
             <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/>
           </svg>
-          <input type="text" id="buscador" placeholder="Busca un juego… (p. ej. Dark Souls)" autocomplete="off">
-          <button class="go" onclick="buscar()">Buscar</button>
+          <input type="text" id="buscador" name="q" placeholder="Busca un juego… (p. ej. Dark Souls)" autocomplete="off">
+          <button class="go" type="submit">Buscar</button>
         </div>
         <div class="resultados" id="resultados"></div>
-      </div>
+      </form>
     </section>
 
     <div class="sec-head">
@@ -221,11 +221,13 @@ async function cargarDestacados(){
   }
 }
 
-// --- Buscador: consulta el endpoint de búsqueda y muestra resultados ---
+// --- Buscador: el desplegable sugiere; al enviar decide el servidor ---
+// (nombre exacto o un solo resultado → ficha; varios → página de resultados)
 let temporizador;
+const inputBuscar = document.getElementById('buscador');
 
-async function buscar(){
-  const texto = document.getElementById('buscador').value.trim();
+async function sugerir(){
+  const texto = inputBuscar.value.trim();
   const caja = document.getElementById('resultados');
 
   if(texto.length < 2){
@@ -255,27 +257,23 @@ async function buscar(){
   }
 }
 
-// Buscar según se escribe, con una pequeña pausa para no saturar
-const inputBuscar = document.getElementById('buscador');
+// Sugerir según se escribe, con una pequeña pausa para no saturar
 inputBuscar.addEventListener('input', () => {
   clearTimeout(temporizador);
-  temporizador = setTimeout(buscar, 250);
+  temporizador = setTimeout(sugerir, 250);
 });
 
-// Enter: ir directo al primer resultado
-inputBuscar.addEventListener('keydown', e => {
-  if(e.key === 'Enter'){
-    const primero = document.querySelector('.res-item');
-    if(primero) window.location.href = primero.getAttribute('href');
-  }
-});
-
-// Cerrar resultados al pulsar fuera
+// Cerrar sugerencias al pulsar fuera
 document.addEventListener('click', e => {
   const caja = document.getElementById('resultados');
   if(!caja.contains(e.target) && e.target !== inputBuscar){
     caja.classList.remove('show');
   }
+});
+
+// No enviar el formulario si el campo está vacío
+document.getElementById('form-buscar').addEventListener('submit', e => {
+  if(!inputBuscar.value.trim()) e.preventDefault();
 });
 
 cargarDestacados();

@@ -147,28 +147,83 @@ app.get('/api/destacados', async (req, res) => {
   res.json(resultado);
 });
 
-// --- Endpoint: búsqueda de juegos por nombre ---
+// --- Normaliza texto para buscar: minúsculas y sin acentos ---
+function normalizar(texto) {
+  return (texto || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
+// --- Busca juegos por nombre. Devuelve la lista y si hay coincidencia exacta ---
+function buscarJuegos(consulta) {
+  const q = normalizar(consulta);
+  if (!q) return { resultados: [], exacto: null };
+
+  const juegos = leerJuegos();
+  const todos = Object.entries(juegos).map(([appid, j]) => ({
+    appid,
+    nombre: j.nombre,
+    plataforma: (j.plataformas && j.plataformas[0]) || '',
+    sin_steam: !!j.sin_steam
+  }));
+
+  const resultados = todos.filter(j => normalizar(j.nombre).includes(q));
+  // Coincidencia exacta con el nombre completo del juego
+  const exacto = todos.find(j => normalizar(j.nombre) === q) || null;
+
+  return { resultados: resultados.slice(0, 20), exacto };
+}
+
+// --- Endpoint: búsqueda de juegos por nombre (para el desplegable) ---
 app.get('/api/buscar', (req, res) => {
-  const q = (req.query.q || '').trim().toLowerCase();
-  if (!q) return res.json([]);
-
-  let juegos;
   try {
-    juegos = leerJuegos();
+    const { resultados } = buscarJuegos(req.query.q);
+    res.json(resultados.slice(0, 8));
   } catch (e) {
-    return res.status(500).json({ error: 'No se pudieron leer los datos de juegos' });
+    console.error('Error buscando:', e.message);
+    res.status(500).json({ error: 'No se pudieron leer los datos de juegos' });
   }
+});
 
-  const resultados = Object.entries(juegos)
-    .filter(([, j]) => j.nombre.toLowerCase().includes(q))
-    .slice(0, 10)
-    .map(([appid, j]) => ({
-      appid,
-      nombre: j.nombre,
-      plataforma: (j.plataformas && j.plataformas[0]) || ''
+// --- Endpoint: resultados completos de una búsqueda ---
+app.get('/api/resultados', async (req, res) => {
+  try {
+    const { resultados } = buscarJuegos(req.query.q);
+
+    // Añadimos jugadores y estado, en paralelo
+    const conEstado = await Promise.all(resultados.map(async (j) => {
+      const juego = leerJuegos()[j.appid];
+      const jugadores = juego.sin_steam ? null : await consultarJugadores(j.appid);
+      return { ...j, jugadores, ...calcularVeredicto(juego, jugadores) };
     }));
 
-  res.json(resultados);
+    res.json(conEstado);
+  } catch (e) {
+    console.error('Error en resultados:', e.message);
+    res.status(500).json({ error: 'Error al buscar' });
+  }
+});
+
+// --- Ruta: decide a dónde llevar al buscar ---
+// Exacto o un solo resultado → ficha del juego. Varios o ninguno → página de resultados.
+app.get('/buscar', (req, res) => {
+  const q = (req.query.q || '').trim();
+  if (!q) return res.redirect('/');
+
+  try {
+    const { resultados, exacto } = buscarJuegos(q);
+
+    if (exacto) return res.redirect(`/juego/${exacto.appid}`);
+    if (resultados.length === 1) return res.redirect(`/juego/${resultados[0].appid}`);
+
+    // Varios resultados o ninguno: página de resultados
+    res.sendFile(path.join(__dirname, 'public', 'resultados.html'));
+  } catch (e) {
+    console.error('Error en /buscar:', e.message);
+    res.redirect('/');
+  }
 });
 
 // --- Proxy de carátulas (Steam, URL externa o archivo local del JSON) ---

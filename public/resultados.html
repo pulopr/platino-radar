@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/logo.png">
+<title>Resultados · Platino Radar</title>
+<style>
+  :root{
+    --bg:#0a1420; --panel:#122744; --panel-2:#15325a;
+    --line:#265a95;
+    --plata:#dbe6f2; --plata-bril:#ffffff; --plata-med:#b8cae0; --plata-sombra:#7f9bc0;
+    --ink:#eef4fb; --ink-soft:#a7c0e0;
+    --azul-claro:#2b8ae8;
+    --vivo:#3fd98f; --moribundo:#e8c05a; --muerto:#e8683a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1100px 560px at 50% -10%, #123a6b 0%, transparent 60%),
+      linear-gradient(168deg, #0c1d33 0%, #0a1627 45%, #091628 100%);
+    background-attachment:fixed;
+    color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    min-height:100dvh;line-height:1.5;padding:0 clamp(14px,4vw,32px);
+  }
+  .container{width:100%;max-width:1120px;margin:0 auto}
+  @media (min-width:800px){ body{padding:0 clamp(24px,5vw,60px);font-size:1.06rem} }
+
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 0 18px;margin-bottom:26px}
+  .brand{display:flex;align-items:center;min-width:0;text-decoration:none;transition:opacity .15s}
+  .brand:hover{opacity:.85}
+  .logo-img{height:64px;width:auto;display:block}
+  @media(min-width:800px){.logo-img{height:88px}}
+  .nav{display:flex;align-items:center;gap:8px;flex:none}
+  .btn{font-weight:700;font-size:.84rem;padding:9px 15px;border-radius:10px;cursor:pointer;
+    border:1px solid var(--line);background:var(--panel);color:var(--ink);white-space:nowrap;
+    font-family:inherit}
+  a.btn{text-decoration:none;display:inline-block}
+  .btn:hover{border-color:var(--azul-claro)}
+  .btn-salir{color:var(--plata-sombra)}
+  .btn-salir:hover{border-color:var(--muerto);color:var(--muerto)}
+  .hidden{display:none !important}
+
+  /* Buscador */
+  .search-wrap{position:relative;max-width:560px;margin:0 0 30px}
+  .search{
+    display:flex;align-items:center;gap:10px;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:6px 6px 6px 16px;box-shadow:0 14px 40px -24px #000;
+  }
+  .search:focus-within{border-color:var(--azul-claro)}
+  .search svg{flex:none;opacity:.6}
+  .search input{flex:1;background:none;border:none;outline:none;color:var(--ink);
+    font-size:1rem;padding:11px 0;font-family:inherit;min-width:0}
+  .search input::placeholder{color:var(--plata-sombra)}
+  .search .go{
+    background:linear-gradient(180deg,#0a6ec9,#084b9e);color:#fff;border:1px solid #2b8ae8;
+    font-weight:700;padding:11px 20px;border-radius:10px;cursor:pointer;font-size:.92rem;
+    white-space:nowrap;font-family:inherit;
+    box-shadow:0 2px 0 rgba(255,255,255,.2) inset;
+  }
+  .search .go:hover{filter:brightness(1.1)}
+
+  h1{font-size:clamp(1.3rem,4vw,1.7rem);font-weight:800;margin-bottom:6px}
+  h1 span{color:var(--azul-claro)}
+  .cuenta{color:var(--plata-sombra);font-size:.88rem;margin-bottom:24px}
+
+  /* Lista de resultados */
+  .lista{display:flex;flex-direction:column;gap:12px;padding-bottom:44px}
+  .item{
+    display:flex;align-items:center;gap:16px;text-decoration:none;color:inherit;
+    background:linear-gradient(158deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);border-radius:14px;padding:14px 16px;
+    box-shadow:0 16px 40px -32px #000;transition:transform .15s,border-color .15s;
+  }
+  .item:hover{transform:translateY(-2px);border-color:var(--azul-claro)}
+  .cover{
+    width:56px;height:76px;border-radius:9px;flex:none;overflow:hidden;
+    background:linear-gradient(145deg,#1e3a5c,#141f2b);border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--plata-sombra);font-weight:800;font-size:.72rem;
+  }
+  .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .info{flex:1;min-width:0}
+  .nombre{font-weight:700;font-size:1rem;line-height:1.25}
+  .plataforma{color:var(--plata-sombra);font-size:.78rem;margin-top:4px}
+  .estado-box{flex:none;text-align:right}
+  .tag{
+    display:inline-block;font-size:.72rem;font-weight:800;
+    padding:4px 11px;border-radius:8px;border:1px solid currentColor;
+  }
+  .tag.vivo{color:var(--vivo);background:rgba(63,217,143,.10)}
+  .tag.moribundo{color:var(--moribundo);background:rgba(232,192,90,.10)}
+  .tag.muerto{color:var(--muerto);background:rgba(232,104,58,.10)}
+  .jugadores{color:var(--plata-sombra);font-size:.74rem;margin-top:6px}
+
+  .vacio{text-align:center;padding:50px 20px;color:var(--ink-soft)}
+  .vacio h2{color:var(--ink);font-size:1.15rem;margin-bottom:10px}
+  .vacio p{max-width:44ch;margin:0 auto 22px}
+  .cargando{text-align:center;padding:44px 20px;color:var(--ink-soft)}
+  .spinner{width:28px;height:28px;border:3px solid var(--line);border-top-color:var(--azul-claro);
+    border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  footer{border-top:1px solid var(--line);padding:22px 0 32px;text-align:center;
+    color:var(--plata-sombra);font-size:.74rem;line-height:1.7}
+  footer a{color:inherit}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a class="brand" href="/"><img src="/logo.png" alt="Platino Radar" class="logo-img"></a>
+      <nav class="nav">
+        <div id="logged-out"></div>
+        <div id="logged-in" class="hidden"></div>
+      </nav>
+    </header>
+
+    <form class="search-wrap" id="form-buscar" action="/buscar" method="get">
+      <div class="search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7f9bc0" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/>
+        </svg>
+        <input type="text" id="buscador" name="q" placeholder="Busca un juego…" autocomplete="off">
+        <button class="go" type="submit">Buscar</button>
+      </div>
+    </form>
+
+    <div id="contenido">
+      <div class="cargando"><div class="spinner"></div>Buscando…</div>
+    </div>
+
+    <footer>
+      Valoraciones aportadas por el autor y la comunidad<br>
+      <a href="/legal.html">Aviso legal, privacidad y cookies</a>
+    </footer>
+  </div>
+
+<script type="module">
+import { pintarCabecera } from '/auth.js';
+
+const params = new URLSearchParams(window.location.search);
+const consulta = (params.get('q') || '').trim();
+const contenido = document.getElementById('contenido');
+
+// Dejamos la búsqueda escrita en el campo
+document.getElementById('buscador').value = consulta;
+
+function escapar(t){
+  return String(t).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function cargar(){
+  if(!consulta){ window.location.href = '/'; return; }
+
+  try {
+    const r = await fetch(`/api/resultados?q=${encodeURIComponent(consulta)}`);
+    if(!r.ok) throw new Error('error');
+    const juegos = await r.json();
+
+    if(!juegos.length){
+      contenido.innerHTML = `
+        <div class="vacio">
+          <h2>Sin resultados para "${escapar(consulta)}"</h2>
+          <p>Todavía no hay ninguna ficha que coincida con esa búsqueda.
+             Platino Radar va creciendo poco a poco: puede que ese juego llegue pronto.</p>
+          <a class="btn" href="/">Ver los juegos disponibles</a>
+        </div>`;
+      return;
+    }
+
+    const items = juegos.map(j => {
+      const ini = j.nombre.split(' ').slice(0,2).map(w => w[0]).join('');
+      const jugadores = j.sin_steam
+        ? 'Exclusivo PlayStation'
+        : (j.jugadores !== null ? `${j.jugadores.toLocaleString('es-ES')} jugando ahora` : '');
+      return `
+        <a class="item" href="/juego/${j.appid}">
+          <div class="cover">
+            <img src="/api/caratula/${j.appid}" alt="${escapar(j.nombre)}"
+                 onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','${ini}');">
+          </div>
+          <div class="info">
+            <div class="nombre">${escapar(j.nombre)}</div>
+            <div class="plataforma">${escapar(j.plataforma || '')}</div>
+          </div>
+          <div class="estado-box">
+            <span class="tag ${j.estado}">${j.etiqueta}</span>
+            <div class="jugadores">${jugadores}</div>
+          </div>
+        </a>`;
+    }).join('');
+
+    contenido.innerHTML = `
+      <h1>Resultados para <span>"${escapar(consulta)}"</span></h1>
+      <p class="cuenta">${juegos.length} juego${juegos.length === 1 ? '' : 's'} encontrado${juegos.length === 1 ? '' : 's'}</p>
+      <div class="lista">${items}</div>`;
+
+  } catch(e){
+    console.error(e);
+    contenido.innerHTML = `
+      <div class="vacio">
+        <h2>No se ha podido buscar</h2>
+        <p>Ha ocurrido un error. Inténtalo de nuevo en un momento.</p>
+        <a class="btn" href="/">Volver al inicio</a>
+      </div>`;
+  }
+}
+
+pintarCabecera();
+cargar();
+</script>
+</body>
+</html>
