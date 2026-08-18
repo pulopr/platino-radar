@@ -222,8 +222,10 @@
 import { pintarCabecera, usuarioActual, supabase,
          platinosDe, guardarPlatino, borrarPlatino, destacarPlatino, nivelPorPlatinos } from '/auth.js';
 
+// Admite /perfil/pulopr (URL bonita) y /perfil.html?u=pulopr (antiguo)
 const params = new URLSearchParams(window.location.search);
-const usuarioPedido = params.get('u');   // /perfil.html?u=nombre
+const rutaBonita = window.location.pathname.match(/^\/perfil\/([a-z0-9_-]+)/i);
+const usuarioPedido = rutaBonita ? rutaBonita[1] : params.get('u');
 
 let yo = null;          // usuario con sesión
 let perfilMostrado = null;
@@ -283,7 +285,7 @@ async function pintar(){
                    onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','${ini}');">
             </div>
             <div class="plat-info">
-              <a class="plat-name" href="/juego.html?id=${p.juego_id}">${nombreJuego}</a>
+              <a class="plat-name" href="/juego/${p.juego_id}">${nombreJuego}</a>
               <div class="plat-sub">🏆 Platino conseguido</div>
             </div>
             <div class="tedio-vote">
@@ -318,7 +320,7 @@ async function pintar(){
       const ini = nombreJuego.split(' ').slice(0,2).map(w => w[0]).join('');
       return `
         <div class="exp-item">
-          <a class="exp-cover" href="/juego.html?id=${p.juego_id}">
+          <a class="exp-cover" href="/juego/${p.juego_id}">
             <img src="/api/caratula/${p.juego_id}" alt="${nombreJuego}"
                  onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','${ini}');">
           </a>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/logo.png">
+<title>Página no encontrada · Platino Radar</title>
+<style>
+  :root{
+    --panel:#122744; --panel-2:#15325a; --line:#265a95;
+    --plata:#dbe6f2; --plata-bril:#ffffff; --plata-med:#b8cae0; --plata-sombra:#7f9bc0;
+    --ink:#eef4fb; --ink-soft:#a7c0e0; --azul-claro:#2b8ae8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1100px 560px at 50% -10%, #123a6b 0%, transparent 60%),
+      linear-gradient(168deg, #0c1d33 0%, #0a1627 45%, #091628 100%);
+    background-attachment:fixed;
+    color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    min-height:100dvh;line-height:1.6;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:40px clamp(16px,4vw,32px);text-align:center;
+  }
+  .logo-link{display:block;margin-bottom:26px;transition:opacity .15s}
+  .logo-link:hover{opacity:.85}
+  .logo-img{height:90px;width:auto;display:block}
+  @media(min-width:800px){.logo-img{height:110px}}
+
+  .codigo{
+    font-size:clamp(3.4rem,14vw,5.5rem);font-weight:800;line-height:1;letter-spacing:-.04em;
+    background:linear-gradient(180deg,var(--plata-bril),var(--plata) 50%,var(--plata-med));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    margin-bottom:6px;
+  }
+  h1{font-size:clamp(1.2rem,4vw,1.6rem);font-weight:800;margin-bottom:12px}
+  p{color:var(--ink-soft);font-size:.98rem;max-width:44ch;margin:0 auto 28px}
+
+  .acciones{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  .btn{
+    font-weight:700;font-size:.9rem;padding:12px 22px;border-radius:11px;
+    text-decoration:none;display:inline-block;
+    border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  }
+  .btn:hover{border-color:var(--azul-claro)}
+  .btn.primary{
+    background:linear-gradient(180deg,#0a6ec9,#084b9e);border-color:#2b8ae8;color:#fff;
+    box-shadow:0 2px 0 rgba(255,255,255,.2) inset,0 8px 20px -10px rgba(0,80,180,.7);
+  }
+  .btn.primary:hover{filter:brightness(1.1)}
+</style>
+</head>
+<body>
+  <a href="/" class="logo-link"><img src="/logo.png" alt="Platino Radar" class="logo-img"></a>
+
+  <div class="codigo">404</div>
+  <h1>Esta página no existe</h1>
+  <p>El enlace que has seguido no lleva a ninguna parte, o la ficha que buscas
+     todavía no está en Platino Radar.</p>
+
+  <div class="acciones">
+    <a class="btn primary" href="/">Volver al inicio</a>
+    <a class="btn" href="/legal.html">Aviso legal</a>
+  </div>
+</body>
+</html>

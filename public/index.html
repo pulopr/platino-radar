@@ -204,7 +204,7 @@ async function cargarDestacados(){
         ? j.plataforma
         : (j.jugadores !== null ? `${j.jugadores.toLocaleString('es-ES')} jugando ahora` : j.plataforma);
       return `
-        <a class="game" href="/juego.html?id=${j.appid}">
+        <a class="game" href="/juego/${j.appid}">
           <div class="cover">
             <span class="state-tag ${j.estado}">${j.etiqueta}</span>
             <img src="/api/caratula/${j.appid}" alt="${j.nombre}"
@@ -244,7 +244,7 @@ async function buscar(){
     }
 
     caja.innerHTML = juegos.map(j => `
-      <a class="res-item" href="/juego.html?id=${j.appid}">
+      <a class="res-item" href="/juego/${j.appid}">
         <span class="res-nombre">${j.nombre}</span>
         <span class="res-plat">${j.plataforma}</span>
       </a>`).join('');

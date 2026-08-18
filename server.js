@@ -3,14 +3,33 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const path = require('path');
 const fs = require('fs');
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const { createClient } = require('@supabase/supabase-js');
 
-// Cliente con clave secreta: SOLO se usa en el servidor, nunca en el navegador
-const supabaseAdmin = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SECRET_KEY
-);
+// --- Cliente de Supabase (clave secreta: SOLO en el servidor) ---
+// Si faltan las variables, el servidor arranca igualmente: la web funciona
+// y solo fallan los endpoints que necesitan Supabase, con un error claro.
+let supabaseAdmin = null;
+const faltan = ['SUPABASE_URL', 'SUPABASE_SECRET_KEY'].filter(v => !process.env[v]);
+
+if (faltan.length) {
+  console.warn('⚠️  Faltan variables de entorno: ' + faltan.join(', '));
+  console.warn('   El sitio funcionará, pero el login por nombre de usuario y el');
+  console.warn('   registro no estarán disponibles. Revisa el .env (local) o las');
+  console.warn('   variables de entorno del alojamiento (producción).');
+} else {
+  supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SECRET_KEY);
+}
+
+// Middleware para los endpoints que sí necesitan Supabase
+function exigeSupabase(req, res, next) {
+  if (!supabaseAdmin) {
+    return res.status(503).json({
+      error: 'Servicio de cuentas no disponible temporalmente. Inténtalo más tarde.'
+    });
+  }
+  next();
+}
 
 // Para leer JSON en las peticiones POST
 app.use(express.json());
@@ -200,7 +219,7 @@ app.get('/api/caratula/:appid', async (req, res) => {
 });
 
 // --- Traduce nombre de usuario → correo, para poder hacer login con usuario ---
-app.post('/api/resolver-usuario', async (req, res) => {
+app.post('/api/resolver-usuario', exigeSupabase, async (req, res) => {
   const { usuario } = req.body || {};
   if (!usuario || typeof usuario !== 'string') {
     return res.status(400).json({ error: 'Falta el usuario' });
@@ -241,7 +260,7 @@ app.post('/api/resolver-usuario', async (req, res) => {
 });
 
 // --- Comprueba si un nombre de usuario está libre ---
-app.get('/api/usuario-libre', async (req, res) => {
+app.get('/api/usuario-libre', exigeSupabase, async (req, res) => {
   const nombre = (req.query.nombre || '').trim();
   if (nombre.length < 3) {
     return res.json({ libre: false, motivo: 'Mínimo 3 caracteres' });
@@ -263,6 +282,27 @@ app.get('/api/usuario-libre', async (req, res) => {
     console.error('Error comprobando usuario:', e.message);
     res.status(500).json({ error: 'Error interno' });
   }
+});
+
+// --- URLs bonitas: /juego/570940 y /perfil/pulopr ---
+// Sirven los mismos HTML; el propio archivo lee el id de la ruta.
+app.get('/juego/:id', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'juego.html'));
+});
+
+app.get('/perfil/:usuario', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'perfil.html'));
+});
+
+// --- Página no encontrada ---
+app.use((req, res) => {
+  // Si pedían un endpoint de API, respondemos en JSON
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'Endpoint no encontrado' });
+  }
+  res.status(404).sendFile(path.join(__dirname, 'public', '404.html'), (err) => {
+    if (err) res.status(404).send('Página no encontrada');
+  });
 });
 
 app.listen(PORT, () => {

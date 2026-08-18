@@ -230,9 +230,12 @@
 <script type="module">
 import { pintarCabecera, usuarioActual, guardarPlatino, tedioComunidad, supabase } from '/auth.js';
 
-// Lee el id del juego de la URL: /juego.html?id=570940
+// Lee el id del juego de la URL. Admite dos formatos:
+//   /juego/570940         (URL bonita)
+//   /juego.html?id=570940 (formato antiguo, se mantiene por compatibilidad)
 const params = new URLSearchParams(window.location.search);
-const APPID = params.get('id');
+const rutaBonita = window.location.pathname.match(/^\/juego\/([a-z0-9_-]+)/i);
+const APPID = rutaBonita ? rutaBonita[1] : params.get('id');
 
 const wrap = document.getElementById('wrap');
 
