@@ -228,7 +228,7 @@
   </div>
 
 <script type="module">
-import { pintarCabecera, usuarioActual, guardarPlatino, tedioComunidad, supabase } from '/auth.js';
+import { pintarCabecera, usuarioActual, actualizarVoto, tedioComunidad, supabase } from '/auth.js';
 
 // Lee el id del juego de la URL. Admite dos formatos:
 //   /juego/570940         (URL bonita)
@@ -396,6 +396,7 @@ window.toggleInfo = function(e){
 
 let yo = null;
 let miVoto = null;
+let tengoPlatino = false;
 
 // --- Pinta la media de la comunidad ---
 async function pintarComunidad(){
@@ -437,7 +438,18 @@ async function pintarZonaVoto(){
     return;
   }
 
-  // Verificado: cuadritos pulsables
+  // Verificado, pero este juego no está entre sus platinos importados de PSN
+  if(!tengoPlatino){
+    zona.innerHTML = `
+      <div class="mi-voto">
+        <div class="mi-voto-lab">Este juego no está entre tus platinos</div>
+        <div class="voto-info">Solo puedes votar el tedio de los juegos que tengas platinados de verdad en PlayStation. Si acabas de conseguirlo, sincroniza tu perfil.</div>
+        <a class="btn-votar" href="/perfil.html">Ir a mi perfil</a>
+      </div>`;
+    return;
+  }
+
+  // Tiene el platino: cuadritos pulsables
   let html = '';
   for(let i=1;i<=5;i++){
     const clase = (miVoto && miVoto >= i) ? 'pip mio votable' : 'pip votable';
@@ -446,18 +458,16 @@ async function pintarZonaVoto(){
 
   zona.innerHTML = `
     <div class="mi-voto">
-      <div class="mi-voto-lab">${miVoto ? 'Tu voto' : '¿Lo has platinado? Vota su tedio'}</div>
+      <div class="mi-voto-lab">${miVoto ? 'Tu voto' : '¿Qué tedioso te pareció?'}</div>
       <div class="pips">${html}</div>
-      <div class="voto-info">${miVoto
-        ? `Votaste <b>${num(miVoto)}/5</b> · pulsa para cambiarlo`
-        : 'Al votar se añadirá a tus platinos'}</div>
+      <div class="voto-info">${miVoto ? `Votaste <b>${num(miVoto)}/5</b> · pulsa para cambiarlo` : ''}</div>
     </div>`;
 
   zona.querySelectorAll('.pip.votable').forEach(pip => {
     pip.onclick = async () => {
       const valor = Number(pip.dataset.valor);
       zona.querySelector('.voto-info').textContent = 'Guardando…';
-      const ok = await guardarPlatino(yo.id, APPID, valor);
+      const ok = await actualizarVoto(yo.id, APPID, valor);
       if(ok){
         miVoto = valor;
         await pintarZonaVoto();
@@ -478,6 +488,7 @@ async function cargarMiVoto(){
     .eq('usuario_id', yo.id)
     .eq('juego_id', APPID)
     .maybeSingle();
+  tengoPlatino = !!data;
   miVoto = data?.tedio_voto ? Number(data.tedio_voto) : null;
 }
 

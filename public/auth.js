@@ -126,6 +126,28 @@ export async function guardarPlatino(usuarioId, juegoId, tedioVoto = null){
 }
 
 /**
+ * Actualiza el voto de tedio de un platino que el usuario YA tiene
+ * (no lo crea si no existe). Se usa al votar desde la ficha del juego,
+ * donde los platinos solo deben llegar por sincronización con PSN, nunca
+ * por el hecho de votar. Devuelve false si no había ningún platino que
+ * actualizar.
+ */
+export async function actualizarVoto(usuarioId, juegoId, tedioVoto){
+  const { data, error } = await supabase
+    .from('platinos')
+    .update({ tedio_voto: tedioVoto })
+    .eq('usuario_id', usuarioId)
+    .eq('juego_id', juegoId)
+    .select('juego_id');
+
+  if(error){
+    console.error('Error actualizando el voto:', error.message);
+    return false;
+  }
+  return !!(data && data.length);
+}
+
+/**
  * Marca o desmarca un platino como destacado en el expositor.
  * Máximo 3 destacados por usuario.
  * Devuelve { ok, motivo }.
