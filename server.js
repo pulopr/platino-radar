@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config({ quiet: true });
 const { createClient } = require('@supabase/supabase-js');
+const psn = require('./psn');
 
 // --- Cliente de Supabase (clave secreta: SOLO en el servidor) ---
 // Si faltan las variables, el servidor arranca igualmente: la web funciona
@@ -147,12 +148,29 @@ app.get('/api/destacados', async (req, res) => {
   res.json(resultado);
 });
 
-// --- Normaliza texto para buscar: minúsculas y sin acentos ---
+// --- Normaliza texto para comparar nombres de juegos ---
+// Quita acentos, símbolos de marca, numerales romanos Unicode, signos de
+// puntuación y espacios sobrantes. PSN escribe "DARK SOULS™ Ⅱ: Scholar..."
+// donde nuestro catálogo dice "Dark Souls II: Scholar...".
+const ROMANOS = {
+  'Ⅰ':'I','Ⅱ':'II','Ⅲ':'III','Ⅳ':'IV','Ⅴ':'V','Ⅵ':'VI','Ⅶ':'VII','Ⅷ':'VIII','Ⅸ':'IX','Ⅹ':'X',
+  'ⅰ':'i','ⅱ':'ii','ⅲ':'iii','ⅳ':'iv','ⅴ':'v','ⅵ':'vi','ⅶ':'vii','ⅷ':'viii','ⅸ':'ix','ⅹ':'x'
+};
+
 function normalizar(texto) {
-  return (texto || '')
+  let t = (texto || '');
+
+  // Numerales romanos Unicode → letras normales
+  t = t.replace(/[ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹ]/g, c => ROMANOS[c] || c);
+
+  return t
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')      // acentos
+    .replace(/[™®©]/g, '')                  // símbolos de marca
+    .replace(/['’‘`´]/g, '')                // apóstrofos de todo tipo
+    .replace(/[^a-z0-9]+/g, ' ')            // puntuación → espacio
+    .replace(/\s+/g, ' ')                   // espacios múltiples
     .trim();
 }
 
@@ -337,6 +355,263 @@ app.get('/api/usuario-libre', exigeSupabase, async (req, res) => {
     console.error('Error comprobando usuario:', e.message);
     res.status(500).json({ error: 'Error interno' });
   }
+});
+
+// ============================================================
+//  VINCULACIÓN Y SINCRONIZACIÓN CON PLAYSTATION NETWORK
+// ============================================================
+
+// Intervalo mínimo entre sincronizaciones del mismo usuario (evita gastar
+// peticiones: la API de Sony limita a ~300 cada 15 minutos)
+const MINUTOS_ENTRE_SINCRONIZACIONES = 60;
+
+/** Comprueba el token de sesión de Supabase y devuelve el id del usuario. */
+async function usuarioDeLaPeticion(req) {
+  const cabecera = req.headers.authorization || '';
+  const token = cabecera.startsWith('Bearer ') ? cabecera.slice(7) : null;
+  if (!token || !supabaseAdmin) return null;
+
+  const { data, error } = await supabaseAdmin.auth.getUser(token);
+  if (error || !data?.user) return null;
+  return data.user.id;
+}
+
+/** Traduce un error de PSN a un mensaje comprensible. */
+function errorPsn(e) {
+  if (e.message === 'FALTA_NPSSO') {
+    return { codigo: 503, mensaje: 'La conexión con PlayStation no está configurada. Inténtalo más tarde.' };
+  }
+  const texto = String(e.message || '');
+  if (texto.includes('429')) {
+    return { codigo: 429, mensaje: 'Demasiadas consultas a PlayStation ahora mismo. Prueba en unos minutos.' };
+  }
+  console.error('Error PSN:', texto);
+  return { codigo: 502, mensaje: 'No se ha podido consultar PlayStation. Inténtalo más tarde.' };
+}
+
+// --- PASO 1: el usuario dice su nombre de PSN y recibe un código ---
+app.post('/api/psn/iniciar', exigeSupabase, async (req, res) => {
+  const usuarioId = await usuarioDeLaPeticion(req);
+  if (!usuarioId) return res.status(401).json({ error: 'Debes iniciar sesión' });
+
+  const nombrePsn = (req.body?.psn_id || '').trim();
+  if (!nombrePsn || nombrePsn.length > 20) {
+    return res.status(400).json({ error: 'Nombre de PSN no válido' });
+  }
+
+  try {
+    const encontrado = await psn.buscarUsuario(nombrePsn);
+    if (!encontrado) {
+      return res.status(404).json({
+        error: 'No se ha encontrado ese usuario en PlayStation Network. Revisa que esté bien escrito.'
+      });
+    }
+
+    // Comprobamos que esa cuenta de PSN no esté ya vinculada a otro usuario
+    const { data: yaVinculada } = await supabaseAdmin
+      .from('perfiles')
+      .select('id')
+      .eq('psn_account_id', encontrado.accountId)
+      .neq('id', usuarioId)
+      .maybeSingle();
+
+    if (yaVinculada) {
+      return res.status(409).json({
+        error: 'Esa cuenta de PlayStation ya está vinculada a otro perfil.'
+      });
+    }
+
+    const codigo = psn.generarCodigo();
+
+    const { error } = await supabaseAdmin
+      .from('perfiles')
+      .update({
+        psn_id: encontrado.onlineId,
+        psn_codigo_verificacion: codigo,
+        psn_verificado: false
+      })
+      .eq('id', usuarioId);
+
+    if (error) throw error;
+
+    res.json({ psn_id: encontrado.onlineId, codigo });
+
+  } catch (e) {
+    const { codigo, mensaje } = errorPsn(e);
+    res.status(codigo).json({ error: mensaje });
+  }
+});
+
+// --- PASO 2: comprobamos que el código está en su "Acerca de mí" ---
+app.post('/api/psn/verificar', exigeSupabase, async (req, res) => {
+  const usuarioId = await usuarioDeLaPeticion(req);
+  if (!usuarioId) return res.status(401).json({ error: 'Debes iniciar sesión' });
+
+  try {
+    const { data: perfil } = await supabaseAdmin
+      .from('perfiles')
+      .select('psn_id, psn_codigo_verificacion')
+      .eq('id', usuarioId)
+      .maybeSingle();
+
+    if (!perfil?.psn_id || !perfil?.psn_codigo_verificacion) {
+      return res.status(400).json({ error: 'Primero indica tu nombre de PlayStation.' });
+    }
+
+    const acercaDe = await psn.leerAcercaDe(perfil.psn_id);
+
+    if (!acercaDe.includes(perfil.psn_codigo_verificacion)) {
+      return res.status(400).json({
+        error: 'No encontramos el código en tu perfil de PlayStation. Comprueba que lo has guardado y vuelve a intentarlo.',
+        acercaDe: acercaDe.slice(0, 100)
+      });
+    }
+
+    // ¡Verificado! Guardamos el accountId y sincronizamos
+    const encontrado = await psn.buscarUsuario(perfil.psn_id);
+
+    await supabaseAdmin
+      .from('perfiles')
+      .update({
+        psn_account_id: encontrado.accountId,
+        psn_verificado: true,
+        psn_codigo_verificacion: null
+      })
+      .eq('id', usuarioId);
+
+    const resumen = await sincronizarPlatinos(usuarioId, encontrado.accountId);
+
+    res.json({ verificado: true, ...resumen });
+
+  } catch (e) {
+    const { codigo, mensaje } = errorPsn(e);
+    res.status(codigo).json({ error: mensaje });
+  }
+});
+
+// --- Sincroniza los platinos de PSN con la base de datos ---
+async function sincronizarPlatinos(usuarioId, accountId) {
+  const platinosPsn = await psn.obtenerPlatinos(accountId);
+
+  // Nombres normalizados de los platinos que tiene en PSN
+  const nombresPsn = new Set(platinosPsn.map(p => normalizar(p.nombre)));
+
+  // Juegos de nuestro catálogo, para emparejarlos por nombre
+  const catalogo = leerJuegos();
+  const idsCatalogo = [];
+  for (const [id, j] of Object.entries(catalogo)) {
+    if (nombresPsn.has(normalizar(j.nombre))) idsCatalogo.push(id);
+  }
+
+  // Lo que tiene ahora en su perfil
+  const { data: actuales } = await supabaseAdmin
+    .from('platinos')
+    .select('juego_id, verificado')
+    .eq('usuario_id', usuarioId);
+
+  const tieneAhora = new Set((actuales || []).map(p => p.juego_id));
+  const yaVerificados = new Set((actuales || []).filter(p => p.verificado).map(p => p.juego_id));
+
+  // 1. Añadir/marcar como verificados los que constan en PSN
+  const aInsertar = idsCatalogo.map(id => ({
+    usuario_id: usuarioId,
+    juego_id: id,
+    verificado: true
+  }));
+
+  if (aInsertar.length) {
+    await supabaseAdmin
+      .from('platinos')
+      .upsert(aInsertar, { onConflict: 'usuario_id,juego_id', ignoreDuplicates: false });
+
+    // El upsert no debe borrar el voto existente: lo actualizamos aparte
+    await supabaseAdmin
+      .from('platinos')
+      .update({ verificado: true })
+      .eq('usuario_id', usuarioId)
+      .in('juego_id', idsCatalogo);
+  }
+
+  // 2. Eliminar los que NO constan en PSN y NO estaban ya verificados
+  //    (los verificados en el pasado se conservan: decisión tomada)
+  const aBorrar = [...tieneAhora].filter(id =>
+    !idsCatalogo.includes(id) && !yaVerificados.has(id)
+  );
+
+  if (aBorrar.length) {
+    await supabaseAdmin
+      .from('platinos')
+      .delete()
+      .eq('usuario_id', usuarioId)
+      .in('juego_id', aBorrar);
+  }
+
+  await supabaseAdmin
+    .from('perfiles')
+    .update({ psn_sincronizado_en: new Date().toISOString() })
+    .eq('id', usuarioId);
+
+  return {
+    total_psn: platinosPsn.length,
+    en_catalogo: idsCatalogo.length,
+    añadidos: idsCatalogo.filter(id => !tieneAhora.has(id)).length,
+    eliminados: aBorrar.length
+  };
+}
+
+// --- Sincronización manual o al entrar al perfil (con intervalo mínimo) ---
+app.post('/api/psn/sincronizar', exigeSupabase, async (req, res) => {
+  const usuarioId = await usuarioDeLaPeticion(req);
+  if (!usuarioId) return res.status(401).json({ error: 'Debes iniciar sesión' });
+
+  try {
+    const { data: perfil } = await supabaseAdmin
+      .from('perfiles')
+      .select('psn_account_id, psn_verificado, psn_sincronizado_en')
+      .eq('id', usuarioId)
+      .maybeSingle();
+
+    if (!perfil?.psn_verificado || !perfil?.psn_account_id) {
+      return res.status(400).json({ error: 'Tu cuenta de PlayStation no está vinculada.' });
+    }
+
+    // Intervalo mínimo, salvo que se fuerce explícitamente
+    if (!req.body?.forzar && perfil.psn_sincronizado_en) {
+      const minutos = (Date.now() - new Date(perfil.psn_sincronizado_en)) / 60000;
+      if (minutos < MINUTOS_ENTRE_SINCRONIZACIONES) {
+        return res.json({
+          omitido: true,
+          proxima_en_minutos: Math.ceil(MINUTOS_ENTRE_SINCRONIZACIONES - minutos)
+        });
+      }
+    }
+
+    const resumen = await sincronizarPlatinos(usuarioId, perfil.psn_account_id);
+    res.json(resumen);
+
+  } catch (e) {
+    const { codigo, mensaje } = errorPsn(e);
+    res.status(codigo).json({ error: mensaje });
+  }
+});
+
+// --- Desvincular la cuenta de PSN ---
+// Los platinos ya verificados se conservan como verificados (decisión tomada)
+app.post('/api/psn/desvincular', exigeSupabase, async (req, res) => {
+  const usuarioId = await usuarioDeLaPeticion(req);
+  if (!usuarioId) return res.status(401).json({ error: 'Debes iniciar sesión' });
+
+  const { error } = await supabaseAdmin
+    .from('perfiles')
+    .update({
+      psn_verificado: false,
+      psn_account_id: null,
+      psn_codigo_verificacion: null
+    })
+    .eq('id', usuarioId);
+
+  if (error) return res.status(500).json({ error: 'No se ha podido desvincular' });
+  res.json({ ok: true });
 });
 
 // --- URLs bonitas: /juego/570940 y /perfil/pulopr ---

@@ -87,6 +87,54 @@
   .bar span{display:block;height:100%;background:linear-gradient(90deg,#7dffc4,#ffffff);
     border-radius:99px;transition:width .5s}
 
+  /* Panel de vinculación con PSN */
+  .psn-panel{
+    background:linear-gradient(158deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);border-radius:16px;
+    padding:clamp(18px,4vw,24px);margin-bottom:26px;
+  }
+  .psn-panel h3{font-size:1rem;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:9px}
+  .psn-panel .desc{color:var(--ink-soft);font-size:.88rem;margin-bottom:16px;max-width:60ch}
+  .psn-paso{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;font-size:.9rem}
+  .psn-num{
+    width:24px;height:24px;border-radius:50%;flex:none;display:grid;place-items:center;
+    background:var(--azul-claro);color:#06182c;font-weight:800;font-size:.78rem;
+  }
+  .psn-paso div{flex:1;color:var(--ink-soft);line-height:1.5}
+  .psn-codigo{
+    display:block;margin:10px 0;padding:14px;border-radius:10px;text-align:center;
+    background:#0a1b30;border:1px dashed var(--oro);
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.3rem;font-weight:800;
+    letter-spacing:.12em;color:var(--oro);user-select:all;
+  }
+  .psn-form{display:flex;gap:9px;flex-wrap:wrap;margin-top:6px}
+  .psn-form input{
+    flex:1;min-width:170px;background:#0a1b30;border:1px solid var(--line);border-radius:10px;
+    padding:11px 14px;color:var(--ink);font-size:.94rem;font-family:inherit;outline:none;
+  }
+  .psn-form input:focus{border-color:var(--azul-claro)}
+  .psn-btn{
+    background:linear-gradient(180deg,#0a6ec9,#084b9e);color:#fff;border:1px solid #2b8ae8;
+    font-weight:700;font-size:.88rem;padding:11px 20px;border-radius:10px;cursor:pointer;
+    font-family:inherit;box-shadow:0 2px 0 rgba(255,255,255,.2) inset;white-space:nowrap;
+  }
+  .psn-btn:hover:not(:disabled){filter:brightness(1.1)}
+  .psn-btn:disabled{opacity:.6;cursor:not-allowed}
+  .psn-btn.sec{background:none;border-color:var(--line);color:var(--plata-sombra);box-shadow:none}
+  .psn-btn.sec:hover{border-color:var(--muerto);color:var(--muerto);filter:none}
+  .psn-aviso{margin-top:14px;padding:11px 14px;border-radius:10px;font-size:.86rem;display:none}
+  .psn-aviso.show{display:block}
+  .psn-aviso.error{background:rgba(232,104,58,.12);border:1px solid var(--muerto);color:#ffb59c}
+  .psn-aviso.ok{background:rgba(63,217,143,.12);border:1px solid var(--vivo);color:#9cffce}
+  .psn-estado{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between}
+  .psn-info{font-size:.88rem;color:var(--ink-soft)}
+  .psn-info b{color:var(--vivo)}
+  .verif-tag{
+    display:inline-flex;align-items:center;gap:5px;font-size:.68rem;font-weight:800;
+    padding:2px 8px;border-radius:6px;border:1px solid currentColor;margin-left:8px;
+    vertical-align:middle;color:var(--vivo);background:rgba(63,217,143,.10);
+  }
+
   /* Expositor de platinos destacados */
   .expositor{margin-bottom:30px}
   .exp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,2.5vw,18px)}
@@ -266,11 +314,9 @@ async function pintar(){
   const total = misPlatinos.length;
   const nv = nivelPorPlatinos(total);
 
-  const psnChip = perfilMostrado.psn_id
-    ? `<div class="psn-chip ${perfilMostrado.psn_verificado ? 'ok' : ''}">
-         ${perfilMostrado.psn_verificado ? '✓' : '○'} PSN: ${perfilMostrado.psn_id}
-       </div>`
-    : '';
+  const psnChip = perfilMostrado.psn_verificado
+    ? `<div class="psn-chip ok">✓ Verificado · PSN: ${perfilMostrado.psn_id}</div>`
+    : `<div class="psn-chip">○ Sin verificar</div>`;
 
   const listaHTML = total
     ? misPlatinos.map(p => {
@@ -286,7 +332,7 @@ async function pintar(){
             </div>
             <div class="plat-info">
               <a class="plat-name" href="/juego/${p.juego_id}">${nombreJuego}</a>
-              <div class="plat-sub">🏆 Platino conseguido</div>
+              <div class="plat-sub">🏆 Platino conseguido${p.verificado ? '<span class="verif-tag">✓ Verificado</span>' : ''}</div>
             </div>
             <div class="tedio-vote">
               <div class="tedio-lab">${esMiPerfil ? 'Tu tedio' : 'Su tedio'}</div>
@@ -301,13 +347,78 @@ async function pintar(){
             ${esMiPerfil ? `
               <button class="destacar-btn ${p.destacado ? 'on' : ''}" data-destacar="${p.juego_id}"
                 title="${p.destacado ? 'Quitar del expositor' : 'Destacar en el expositor'}">★</button>
-              <button class="quitar" data-borrar="${p.juego_id}" title="Quitar">✕</button>` : ''}
+              ${p.verificado ? '' : `<button class="quitar" data-borrar="${p.juego_id}" title="Quitar">✕</button>`}` : ''}
           </div>`;
       }).join('')
     : `<div class="vacio">
          <p>${esMiPerfil ? 'Todavía no has registrado ningún platino.' : 'Este usuario aún no ha registrado platinos.'}</p>
-         ${esMiPerfil ? '<button class="add-btn" id="btn-vacio">+ Añadir mi primer platino</button>' : ''}
+         ${esMiPerfil && !perfilMostrado.psn_verificado ? '<button class="add-btn" id="btn-vacio">+ Añadir mi primer platino</button>' : ''}
        </div>`;
+
+  // --- Panel de vinculación con PSN (solo en mi perfil) ---
+  let panelPsnHTML = '';
+  if(esMiPerfil){
+    if(perfilMostrado.psn_verificado){
+      panelPsnHTML = `
+        <div class="psn-panel">
+          <div class="psn-estado">
+            <div>
+              <h3>🎮 Cuenta de PlayStation vinculada</h3>
+              <p class="psn-info">Tus platinos se importan automáticamente desde
+                <b>${perfilMostrado.psn_id}</b>.</p>
+            </div>
+            <div style="display:flex;gap:9px;flex-wrap:wrap">
+              <button class="psn-btn" id="btn-sincronizar">Sincronizar ahora</button>
+              <button class="psn-btn sec" id="btn-desvincular">Desvincular</button>
+            </div>
+          </div>
+          <div class="psn-aviso" id="psn-aviso"></div>
+        </div>`;
+    } else {
+      panelPsnHTML = `
+        <div class="psn-panel">
+          <h3>🎮 Vincula tu cuenta de PlayStation</h3>
+          <p class="desc">Al vincularla importamos tus platinos automáticamente, tu perfil
+            queda <b style="color:var(--vivo)">verificado</b> y podrás votar lo tedioso que te
+            parecieron los juegos que has platinado.</p>
+
+          <div class="psn-paso">
+            <span class="psn-num">1</span>
+            <div>
+              Escribe tu nombre de usuario de PlayStation:
+              <div class="psn-form">
+                <input type="text" id="psn-nombre" placeholder="Tu ID de PSN" autocomplete="off"
+                       value="${perfilMostrado.psn_id || ''}">
+                <button class="psn-btn" id="btn-psn-iniciar">Continuar</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="psn-pasos-2-3" style="display:none">
+            <div class="psn-paso">
+              <span class="psn-num">2</span>
+              <div>
+                Copia este código y pégalo en el campo <b>"Acerca de mí"</b> de tu perfil de
+                PlayStation (puedes editarlo desde la consola o en playstation.com):
+                <code class="psn-codigo" id="psn-codigo"></code>
+              </div>
+            </div>
+            <div class="psn-paso">
+              <span class="psn-num">3</span>
+              <div>
+                Guarda los cambios en PlayStation y pulsa aquí para comprobarlo.
+                Después podrás borrar el código de tu perfil.
+                <div class="psn-form">
+                  <button class="psn-btn" id="btn-psn-verificar">Comprobar y vincular</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="psn-aviso" id="psn-aviso"></div>
+        </div>`;
+    }
+  }
 
   // --- Expositor de destacados (máximo 3) ---
   const destacados = misPlatinos.filter(p => p.destacado).slice(0, 3);
@@ -372,13 +483,20 @@ async function pintar(){
       </div>
     </div>
 
+    ${panelPsnHTML}
+
     ${expositorHTML}
 
     <div class="sec-head">
       <div class="sec-title">${esMiPerfil ? 'Mis platinos' : `Platinos de ${nombre}`}</div>
-      ${esMiPerfil ? '<button class="add-btn" id="btn-add">+ Añadir platino</button>' : ''}
+      ${esMiPerfil && !perfilMostrado.psn_verificado
+        ? '<button class="add-btn" id="btn-add">+ Añadir platino</button>'
+        : (esMiPerfil ? '<span class="sec-sub" style="color:var(--plata-sombra);font-size:.8rem">Se importan de PlayStation</span>' : '')}
     </div>
     <div class="plat-list">${listaHTML}</div>`;
+
+  // --- Eventos del panel de PSN ---
+  if(esMiPerfil) conectarEventosPsn();
 
   // Eventos
   const btnAdd = document.getElementById('btn-add');
@@ -414,6 +532,120 @@ async function pintar(){
         pintar();
       };
     });
+  }
+}
+
+// ============================================================
+//  Vinculación con PlayStation Network
+// ============================================================
+
+function avisoPsn(texto, tipo){
+  const el = document.getElementById('psn-aviso');
+  if(!el) return;
+  el.innerHTML = texto;
+  el.className = `psn-aviso show ${tipo}`;
+}
+
+/** Llama a la API con el token de sesión del usuario. */
+async function apiPsn(ruta, cuerpo = {}){
+  const { data: { session } } = await supabase.auth.getSession();
+  const r = await fetch(ruta, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session?.access_token || ''}`
+    },
+    body: JSON.stringify(cuerpo)
+  });
+  const datos = await r.json().catch(() => ({}));
+  return { ok: r.ok, datos };
+}
+
+function conectarEventosPsn(){
+  // --- Paso 1: comprobar el usuario y obtener el código ---
+  const btnIniciar = document.getElementById('btn-psn-iniciar');
+  if(btnIniciar){
+    btnIniciar.onclick = async () => {
+      const nombre = document.getElementById('psn-nombre').value.trim();
+      if(!nombre) return avisoPsn('Escribe tu nombre de usuario de PlayStation.', 'error');
+
+      btnIniciar.disabled = true;
+      btnIniciar.textContent = 'Buscando…';
+      avisoPsn('', '');
+
+      const { ok, datos } = await apiPsn('/api/psn/iniciar', { psn_id: nombre });
+
+      btnIniciar.disabled = false;
+      btnIniciar.textContent = 'Continuar';
+
+      if(!ok) return avisoPsn(datos.error || 'No se ha podido continuar.', 'error');
+
+      document.getElementById('psn-codigo').textContent = datos.codigo;
+      document.getElementById('psn-pasos-2-3').style.display = 'block';
+      avisoPsn(`Cuenta encontrada: <b>${datos.psn_id}</b>. Sigue los pasos 2 y 3.`, 'ok');
+    };
+  }
+
+  // --- Paso 2: comprobar el código y sincronizar ---
+  const btnVerificar = document.getElementById('btn-psn-verificar');
+  if(btnVerificar){
+    btnVerificar.onclick = async () => {
+      btnVerificar.disabled = true;
+      btnVerificar.textContent = 'Comprobando…';
+      avisoPsn('Comprobando tu perfil de PlayStation e importando platinos…', 'ok');
+
+      const { ok, datos } = await apiPsn('/api/psn/verificar');
+
+      if(!ok){
+        btnVerificar.disabled = false;
+        btnVerificar.textContent = 'Comprobar y vincular';
+        return avisoPsn(datos.error || 'No se ha podido verificar.', 'error');
+      }
+
+      avisoPsn(`✓ ¡Cuenta verificada! Tienes <b>${datos.total_psn}</b> platinos en PSN,
+                de los cuales <b>${datos.en_catalogo}</b> están en Platino Radar.
+                Ya puedes borrar el código de tu perfil de PlayStation.`, 'ok');
+
+      setTimeout(() => window.location.reload(), 3000);
+    };
+  }
+
+  // --- Sincronizar ---
+  const btnSinc = document.getElementById('btn-sincronizar');
+  if(btnSinc){
+    btnSinc.onclick = async () => {
+      btnSinc.disabled = true;
+      btnSinc.textContent = 'Sincronizando…';
+
+      const { ok, datos } = await apiPsn('/api/psn/sincronizar', { forzar: true });
+
+      btnSinc.disabled = false;
+      btnSinc.textContent = 'Sincronizar ahora';
+
+      if(!ok) return avisoPsn(datos.error || 'No se ha podido sincronizar.', 'error');
+
+      if(datos.omitido){
+        return avisoPsn(`Ya se sincronizó hace poco. Podrás volver a hacerlo en
+                         ${datos.proxima_en_minutos} minutos.`, 'ok');
+      }
+
+      avisoPsn(`Sincronizado: <b>${datos.en_catalogo}</b> platinos en Platino Radar
+                (${datos.añadidos} nuevos, ${datos.eliminados} retirados).`, 'ok');
+      misPlatinos = await platinosDe(yo.id);
+      pintar();
+    };
+  }
+
+  // --- Desvincular ---
+  const btnDesv = document.getElementById('btn-desvincular');
+  if(btnDesv){
+    btnDesv.onclick = async () => {
+      if(!confirm('¿Desvincular tu cuenta de PlayStation?\n\nTu perfil dejará de estar verificado y no podrás votar el tedio, pero conservarás los platinos ya verificados.')) return;
+
+      const { ok, datos } = await apiPsn('/api/psn/desvincular');
+      if(!ok) return avisoPsn(datos.error || 'No se ha podido desvincular.', 'error');
+      window.location.reload();
+    };
   }
 }
 
