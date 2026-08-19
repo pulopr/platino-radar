@@ -23,7 +23,34 @@
     ],
     "dificultad": "8/10",
     "duracion": "~70–120 h",
-    "trofeos_online": "Ninguno"
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Prayer of a Maiden",
+        "descripcion": "Consigue todos los milagros",
+        "porcentaje": 29.56,
+        "icono": "https://psn100.net/img/trophy/b68eeab6623f9c4ebf3e598eb34071c5.png"
+      },
+      {
+        "nombre": "Knight's Honor",
+        "descripcion": "Consigue todas las armas raras",
+        "porcentaje": 29.59,
+        "icono": "https://psn100.net/img/trophy/d996eb2a83204abe8e88e06c34b4eb72.png"
+      },
+      {
+        "nombre": "Fire Weapon",
+        "descripcion": "Mejora al máximo un arma con refuerzo de fuego",
+        "porcentaje": 30.80,
+        "icono": "https://psn100.net/img/trophy/fa77cafe25752ebccbec0d136dbe73bf.png"
+      }
+    ],
+    "guias_video": [
+      {
+        "titulo": "Dark Souls Remastered - Guía para el Trofeo de Platino / 100% Logros: Detallada, eficiente y offline",
+        "canal": "GameInTheHole",
+        "url": "https://www.youtube.com/watch?v=z9R436QcCic"
+      }
+    ]
   },
 
   "335300": {
@@ -187,6 +214,7 @@
 
   "astros-playroom": {
     "nombre": "Astro's Playroom",
+    "caratula": "/img/astros_playroom.png",
     "destacado": false,
     "sin_steam": true,
     "plataformas": ["PS5 · Exclusivo PlayStation (incluido con la consola)"],
@@ -210,6 +238,7 @@
 
   "demons-souls": {
     "nombre": "Demon's Souls",
+    "caratula": "/img/deamons_souls.png",
     "destacado": false,
     "sin_steam": true,
     "plataformas": ["PS5 · Exclusivo PlayStation"],

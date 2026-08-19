@@ -175,6 +175,31 @@
   .hard{margin-top:16px;display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;color:var(--plata-sombra)}
   .hard b{color:var(--ink-soft)}
 
+  .bloque{margin-top:22px}
+  .trofeos,.videos-box{background:linear-gradient(158deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);border-radius:16px;padding:clamp(16px,4vw,22px);
+    box-shadow:0 16px 40px -30px #000, 0 1px 0 rgba(250,252,254,.06) inset}
+  .trofeo-item{display:flex;gap:12px;align-items:center}
+  .trofeo-item+.trofeo-item{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+  .trofeo-ic{width:44px;height:44px;border-radius:8px;flex:none;object-fit:contain;
+    background:rgba(0,0,0,.2)}
+  .trofeo-nombre{font-size:.9rem;font-weight:700;color:var(--plata)}
+  .trofeo-pct{font-size:.78rem;color:var(--ink-soft);margin-top:2px}
+  .trofeos-fuente{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
+    font-size:.72rem;color:var(--plata-sombra)}
+
+  .videos{display:grid;gap:14px;grid-template-columns:1fr}
+  .video-card{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit;
+    border-radius:12px;padding:6px;transition:background .15s}
+  .video-card:hover{background:rgba(255,255,255,.05)}
+  .video-thumb{position:relative;flex:none;width:120px;aspect-ratio:16/9;border-radius:10px;
+    overflow:hidden;background:#0a1b30}
+  .video-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .video-play{position:absolute;inset:0;display:grid;place-items:center;color:#fff;
+    font-size:1.3rem;text-shadow:0 2px 6px rgba(0,0,0,.7);background:rgba(0,0,0,.15)}
+  .video-titulo{font-size:.88rem;font-weight:700;color:var(--plata);line-height:1.3}
+  .video-canal{font-size:.76rem;color:var(--plata-sombra);margin-top:3px}
+
   .foot{margin-top:24px;font-size:.7rem;color:var(--plata-sombra);text-align:center;line-height:1.7}
 
   /* Estados de carga y error */
@@ -208,6 +233,11 @@
     .tedio-note{font-size:.92rem}
     .plan-item{font-size:.98rem}
     .hard{font-size:.86rem}
+    .trofeo-nombre{font-size:1rem}
+    .trofeo-pct{font-size:.86rem}
+    .video-thumb{width:160px}
+    .video-titulo{font-size:.96rem}
+    .video-canal{font-size:.82rem}
     .foot{font-size:.78rem;margin-top:32px}
   }
   @media (max-width:799px){
@@ -263,6 +293,18 @@ function num(v){
   return (v ?? 0).toString().replace('.', ',');
 }
 
+// Saca el id de un vídeo a partir de su URL de YouTube (watch, youtu.be, shorts o embed)
+function idYoutube(url){
+  try {
+    const u = new URL(url);
+    if(u.hostname.includes('youtu.be')) return u.pathname.slice(1);
+    if(u.searchParams.get('v')) return u.searchParams.get('v');
+    const m = u.pathname.match(/\/(embed|shorts)\/([^/?]+)/);
+    if(m) return m[2];
+  } catch(e){ /* URL no válida, se ignora abajo */ }
+  return null;
+}
+
 function render(j){
   document.title = `${j.nombre} · Platino Radar`;
 
@@ -275,6 +317,29 @@ function render(j){
     </div>`).join('');
 
   const iniciales = j.nombre.split(' ').slice(0,2).map(w => w[0]).join('');
+
+  const trofeosHTML = (j.trofeos_dificiles || []).map(t => `
+    <div class="trofeo-item">
+      <img class="trofeo-ic" src="${t.icono}" alt="" loading="lazy"
+           onerror="this.style.visibility='hidden'">
+      <div>
+        <div class="trofeo-nombre">${t.nombre}${t.descripcion ? ` <span style="font-weight:400;color:var(--ink-soft)">— ${t.descripcion}</span>` : ''}</div>
+        <div class="trofeo-pct">${num(t.porcentaje)} % de los jugadores lo ha conseguido</div>
+      </div>
+    </div>`).join('');
+
+  const videosHTML = (j.guias_video || []).map(v => {
+    const id = idYoutube(v.url);
+    const thumb = id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '/logo.png';
+    return `
+      <a class="video-card" href="${v.url}" target="_blank" rel="noopener noreferrer">
+        <div class="video-thumb"><img src="${thumb}" alt="" loading="lazy"><span class="video-play">▶</span></div>
+        <div>
+          <div class="video-titulo">${v.titulo}</div>
+          ${v.canal ? `<div class="video-canal">${v.canal}</div>` : ''}
+        </div>
+      </a>`;
+  }).join('');
 
   wrap.innerHTML = `
     <header class="topbar">
@@ -367,6 +432,21 @@ function render(j){
         </div>
       </div>
     </div>
+
+    ${trofeosHTML ? `
+    <div class="bloque">
+      <div class="section-label">Los trofeos más difíciles</div>
+      <div class="trofeos">
+        ${trofeosHTML}
+        <div class="trofeos-fuente">Porcentaje de jugadores de PlayStation que ha conseguido cada trofeo. Dato de PlayStation, no de Steam.</div>
+      </div>
+    </div>` : ''}
+
+    ${videosHTML ? `
+    <div class="bloque">
+      <div class="section-label">Guías en vídeo recomendadas</div>
+      <div class="videos-box"><div class="videos">${videosHTML}</div></div>
+    </div>` : ''}
 
     <p class="foot">
       Valoraciones de tedio y avisos aportados por el autor y la comunidad.<br>

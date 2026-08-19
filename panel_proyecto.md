@@ -97,8 +97,8 @@ Panel para añadir juegos cómodamente, cuentas de usuario, perfiles, votación 
 - [x] **Buscador completo** ✅ El desplegable sugiere mientras escribes; al enviar, el servidor (`/buscar?q=`) decide: **coincidencia exacta o un solo resultado → ficha**; **varios o ninguno → `public/resultados.html`**. La búsqueda ignora acentos y mayúsculas. Funciona como formulario real (sirve sin JavaScript y la búsqueda queda en la URL, compartible). Texto escapado para evitar inyección desde la URL.
 - [x] `pagina_inicio.html` y `pagina_perfil.html` — resuelto. ✅ Confirmado que eran maquetas estáticas obsoletas (título antiguo "¿Sigue vivo?", sin `fetch` ni conexión a Supabase, no referenciadas en ningún otro archivo) ya sustituidas por `public/index.html` y `public/perfil.html`. **Borradas** (`git rm`, quedan en el historial de git). Pendiente: hacer `git push` para subir el borrado.
 - [ ] Empezar a **rellenar fichas** de los juegos favoritos del autor. 🟡 En marcha: **9 juegos** en el catálogo (`juegos.json`).
-  - **Astro's Playroom** (`astros-playroom`): sin Steam, offline, tedio 3/5, dificultad 2,5/10 (media entre el 2/10 de consenso comunitario y la percepción del autor), duración ~4-6 h. Sin destacar. **Falta la carátula.**
-  - **Demon's Souls** (`demons-souls`, remake PS5 2020): sin Steam, `con_amigos` (los 2 trofeos multijugador — fantasma azul/negro — son obligatorios pero se hacen con un amigo por contraseña, no dependen de población online), tedio 4,5/5 (objetos, anillos y hechizos/milagros perdibles ligados a la tendencia del mundo/personaje — dato de PowerPyx/PSNProfiles verificado antes de escribir el comentario), dificultad 7/10 y duración ~45-50 h de consenso. Sin destacar. **Falta la carátula.**
+  - **Astro's Playroom** (`astros-playroom`): sin Steam, offline, tedio 3/5, dificultad 2,5/10 (media entre el 2/10 de consenso comunitario y la percepción del autor), duración ~4-6 h. Sin destacar. Carátula ✅ (`public/img/astros_playroom.png`).
+  - **Demon's Souls** (`demons-souls`, remake PS5 2020): sin Steam, `con_amigos` (los 2 trofeos multijugador — fantasma azul/negro — son obligatorios pero se hacen con un amigo por contraseña, no dependen de población online), tedio 4,5/5 (objetos, anillos y hechizos/milagros perdibles ligados a la tendencia del mundo/personaje — dato de PowerPyx/PSNProfiles verificado antes de escribir el comentario), dificultad 7/10 y duración ~45-50 h de consenso. Sin destacar. Carátula ✅ (`public/img/deamons_souls.png` — ⚠️ el nombre de archivo tiene una errata, "deamons" en vez de "demons"; funciona igual, pero se puede renombrar si se quiere dejarlo prolijo).
 - [x] 🐛 **Bug encontrado y corregido:** al sincronizar PSN, los platinos de juegos que no están entre los 6 destacados de la portada aparecían en la lista del perfil con el `id` en bruto (p. ej. "astros-playroom") en vez del nombre real. Causa: `perfil.html` solo cargaba nombres desde `/api/destacados` (6 juegos) para resolverlos, más una llamada a `/api/buscar?q=` vacía que no devolvía nada. Arreglado con un endpoint nuevo, **`/api/catalogo`**, que devuelve el catálogo completo (id + nombre + plataforma) sin depender de qué esté destacado; `perfil.html` ya lo usa.
 - [x] Reservar dominio **Platino Radar** y apuntarlo a Render. ✅ Ya hecho (ver más abajo, sección "Dominio y correo"): `platinoradar.com` registrado y funcionando con HTTPS. Esta casilla estaba desactualizada.
 
@@ -184,13 +184,19 @@ El usuario destaca hasta **3 platinos** en una vitrina en la parte alta del perf
 - El bocadillo de estados ya no menciona umbrales de Steam; habla de "comunidad amplia" o "de capa caída", con nota al pie sobre la fuente.
 - Portada: *"Antes de lanzarte a por un platino, comprueba si el juego sigue vivo para sus trofeos online…"*
 
-### B) Los 3 trofeos más difíciles en la ficha del juego
-Mostrar los tres trofeos con **menor porcentaje de consecución**, con su icono.
-- **Fuente decidida: PlayStation**, sin extrapolar desde Steam.
-- Acceso vía `psn-api` (API interna no oficial) o `PSN Leaderboard` (de pago, datos preprocesados y con español).
-- Requiere guardar/consultar por juego: nombre del trofeo, icono, porcentaje y tipo (bronce/plata/oro/platino).
-- ⚠️ Los **iconos de trofeos son imágenes con derechos** de cada desarrolladora. Enlazarlas desde su origen en contexto informativo es la práctica habitual del sector (PSNProfiles), pero conviene tenerlo presente.
-- Pendiente: decidir si los datos se cachean (recomendable, para no depender de la API en cada visita ni saturarla).
+### B) Los 3 trofeos más difíciles en la ficha del juego ✅ HECHO (con enfoque distinto al original)
+Muestra los tres trofeos con **menor porcentaje de consecución**, con su icono y una breve descripción.
+- **Cambio de enfoque respecto a la idea original:** en vez de conectar `psn-api`/`PSN Leaderboard` en vivo (más complejo: hace falta `npCommunicationId` por juego, decidir caché, etc.), se rellena **a mano por juego**, igual que el resto de datos del catálogo (tedio, dificultad, planificación). Nuevo campo `trofeos_dificiles` en `juegos.json` (array de `{nombre, descripcion, porcentaje, icono}`), servido automáticamente por `/api/juego/:appid` (ya reenvía todo el objeto del juego) y pintado en una sección nueva de `public/juego.html`.
+- **Fuente de los datos:** PlayStation, sin extrapolar de Steam, tal y como estaba decidido. Se excluye siempre el propio trofeo de platino de la lista (por definición es el más raro, no aporta información).
+- **Iconos:** enlazados desde su origen (verificado que la URL responde con la imagen real antes de usarla) — práctica habitual del sector, igual que hace PSNProfiles.
+- **Primer ejemplo real:** Dark Souls Remastered — *Prayer of a Maiden* (29,56 %), *Knight's Honor* (29,59 %), *Fire Weapon* (30,80 %), verificados en psn100.net.
+- Sin caché: al ser datos fijos en `juegos.json` (no una llamada a API en cada visita), no hace falta.
+
+### B2) Guías en vídeo recomendadas en la ficha ✅ HECHO (funcionalidad nueva, no estaba en el plan original)
+El autor recomienda vídeos de YouTube que ha visto y le parecen prácticos, por juego.
+- Nuevo campo `guias_video` en `juegos.json` (array de `{titulo, canal, url}`).
+- `public/juego.html` saca automáticamente la miniatura del vídeo a partir de la URL de YouTube (sin API key: `https://i.ytimg.com/vi/ID/hqdefault.jpg`), y enlaza a YouTube al pulsar (se abre en pestaña nueva).
+- Primer ejemplo real: Dark Souls Remastered — vídeo de **GameInTheHole**.
 
 ---
 
