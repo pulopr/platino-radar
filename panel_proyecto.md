@@ -201,7 +201,7 @@ Mostrar los tres trofeos con **menor porcentaje de consecución**, con su icono.
 3. Solo se importan los platinos **con ficha en el catálogo**. Los que no la tienen son, de hecho, una **lista de trabajo priorizada por demanda real**.
 
 **Pendiente de esta parte:**
-- [ ] Añadir `PSN_NPSSO` a las variables de entorno de **Render** (si no, no funciona en producción). ⚠️ No verificable a distancia (es un ajuste del panel de Render, no del código) — confírmalo tú directamente ahí.
+- [x] Añadir `PSN_NPSSO` a las variables de entorno de **Render**. ✅ Confirmado por el autor directamente en el panel de Render: la variable está puesta.
 - [ ] ⏰ **Renovar el NPSSO cada ~2 meses** desde playstation.com con la cuenta del proyecto. (Tarea recurrente de mantenimiento, no un "pendiente" que se cierre una vez.)
 - [ ] Impedir votar a los no verificados (decidido, sin implementar). **Confirmado sin implementar:** en `public/juego.html` cualquier usuario con sesión puede votar el tedio, esté o no verificado por PSN (no hay ninguna comprobación de `psn_verificado` en la zona de voto).
 - [ ] Quitar el añadido automático de platino al votar (incompatible con este modelo). **Confirmado sin implementar:** `juego.html` sigue mostrando *"Al votar se añadirá a tus platinos"* y `guardarPlatino()` se llama igual para todos al pulsar un voto.
