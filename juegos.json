@@ -183,5 +183,28 @@
     "dificultad": "9/10",
     "duracion": "~60–80 h",
     "trofeos_online": "Ninguno"
+  },
+
+  "astros-playroom": {
+    "nombre": "Astro's Playroom",
+    "destacado": false,
+    "sin_steam": true,
+    "plataformas": ["PS5 · Exclusivo PlayStation (incluido con la consola)"],
+    "tipo_online": "offline",
+    "estado_forzado": "vivo",
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario.",
+    "tedio_autor": 3,
+    "tedio_comentario": "Un platino muy divertido y accesible: no exige mucha habilidad y se hace muy ameno de conseguir. Muy disfrutable y satisfactorio de completar.",
+    "planificacion": [
+      {
+        "icono": "🎮",
+        "titulo": "No hay nada perdible ni requiere gran planificación.",
+        "texto": "Basta con ir revisando los trofeos ya conseguidos desde la propia PlayStation para ver qué falta. Para algún trofeo puntual puede ayudar consultar una guía, pero no es imprescindible."
+      }
+    ],
+    "dificultad": "2.5/10",
+    "duracion": "~4-6 h",
+    "trofeos_online": "Ninguno"
   }
 }
