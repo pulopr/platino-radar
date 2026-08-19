@@ -206,5 +206,38 @@
     "dificultad": "2.5/10",
     "duracion": "~4-6 h",
     "trofeos_online": "Ninguno"
+  },
+
+  "demons-souls": {
+    "nombre": "Demon's Souls",
+    "destacado": false,
+    "sin_steam": true,
+    "plataformas": ["PS5 · Exclusivo PlayStation"],
+    "tipo_online": "con_amigos",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino exige ayudar a otro jugador como fantasma azul e invadir como fantasma negro, pero se puede hacer quedando con un amigo mediante contraseñas. No dependes de que haya multitud conectada.",
+    "nota_online": "<b>Online obligatorio (con amigos):</b> los trofeos de ayudar como fantasma azul e invadir como fantasma negro son obligatorios para el platino, pero se consiguen fácilmente quedando con un amigo por contraseña, sin depender de la población online general.",
+    "tedio_autor": 4.5,
+    "tedio_comentario": "Muy tedioso por la cantidad de anillos y hechizos/milagros perdibles ligados al sistema de tendencia del mundo y del personaje: según cómo vayas jugando, el mundo se inclina hacia una tendencia u otra y eso puede bloquear el acceso a ciertos objetos si no vas con cuidado.",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "El Anillo Providencial es el trofeo más perdible de toda la saga.",
+        "texto": "Se consigue nada más empezar. Si te lo dejas, tendrás que crear un personaje nuevo para completar 'Rey de los Anillos' (todos los anillos)."
+      },
+      {
+        "icono": "🌓",
+        "titulo": "La tendencia del mundo y del personaje condiciona lo que puedes conseguir.",
+        "texto": "Jugar de forma pacífica o agresiva mueve la tendencia hacia blanca o negra, y eso abre o cierra el acceso a ciertos objetos, jefes alternativos y tiendas. Conviene seguir una guía para no perderte nada."
+      },
+      {
+        "icono": "🔁",
+        "titulo": "Hacen falta varias partidas.",
+        "texto": "Los hechizos ('Trofeo del Sabio') y los milagros ('Trofeo del Santo') exigen más de un alma única de demonio, que solo cae una vez por partida. Cuenta con al menos 2-3 vueltas al juego."
+      }
+    ],
+    "dificultad": "7/10",
+    "duracion": "~45-50 h (menos si ya jugaste el original de PS3)",
+    "trofeos_online": "2 obligatorios (fantasma azul e invasor) — se pueden hacer con un amigo por contraseña"
   }
 }
