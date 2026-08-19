@@ -130,7 +130,7 @@ app.get('/api/destacados', async (req, res) => {
 
   const destacados = Object.entries(juegos)
     .filter(([, j]) => j.destacado)
-    .slice(0, 12);
+    .slice(0, 6);
 
   // Consultamos todos en paralelo para que sea rápido
   const resultado = await Promise.all(destacados.map(async ([appid, j]) => {

@@ -109,7 +109,7 @@
 
   "1501750": {
     "nombre": "Lords of the Fallen",
-    "destacado": true,
+    "destacado": false,
     "plataformas": ["Steam · PC", "También en PS5"],
     "tipo_online": "offline",
     "estado_forzado": null,
