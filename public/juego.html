@@ -426,7 +426,18 @@ async function pintarZonaVoto(){
     return;
   }
 
-  // Con sesión: cuadritos pulsables
+  // Con sesión pero sin verificar por PSN: no puede votar
+  if(!yo.psn_verificado){
+    zona.innerHTML = `
+      <div class="mi-voto">
+        <div class="mi-voto-lab">Solo los usuarios verificados pueden votar</div>
+        <div class="voto-info">Vincula tu cuenta de PlayStation en tu perfil para que tu voto cuente y nadie pueda falsear la media de la comunidad.</div>
+        <a class="btn-votar" href="/perfil.html">Verificar mi cuenta de PSN</a>
+      </div>`;
+    return;
+  }
+
+  // Verificado: cuadritos pulsables
   let html = '';
   for(let i=1;i<=5;i++){
     const clase = (miVoto && miVoto >= i) ? 'pip mio votable' : 'pip votable';

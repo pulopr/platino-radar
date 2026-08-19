@@ -203,7 +203,7 @@ Mostrar los tres trofeos con **menor porcentaje de consecución**, con su icono.
 **Pendiente de esta parte:**
 - [x] Añadir `PSN_NPSSO` a las variables de entorno de **Render**. ✅ Confirmado por el autor directamente en el panel de Render: la variable está puesta.
 - [ ] ⏰ **Renovar el NPSSO cada ~2 meses** desde playstation.com con la cuenta del proyecto. (Tarea recurrente de mantenimiento, no un "pendiente" que se cierre una vez.)
-- [ ] Impedir votar a los no verificados (decidido, sin implementar). **Confirmado sin implementar:** en `public/juego.html` cualquier usuario con sesión puede votar el tedio, esté o no verificado por PSN (no hay ninguna comprobación de `psn_verificado` en la zona de voto).
+- [x] Impedir votar a los no verificados. ✅ **Hecho por completo, en dos capas.** Interfaz: `public/juego.html` (`pintarZonaVoto`) comprueba `yo.psn_verificado` y, si es falso, muestra un aviso invitando a vincular PSN en vez de los cuadritos de voto. Base de datos: *trigger* `trg_impedir_voto_no_verificado` en la tabla `platinos` (ejecutado por el autor en el SQL Editor de Supabase), que rechaza cualquier `tedio_voto` si el perfil no tiene `psn_verificado = true` — cierra el hueco de saltarse la interfaz desde la consola del navegador.
 - [ ] Quitar el añadido automático de platino al votar (incompatible con este modelo). **Confirmado sin implementar:** `juego.html` sigue mostrando *"Al votar se añadirá a tus platinos"* y `guardarPlatino()` se llama igual para todos al pulsar un voto.
 - [ ] Valorar guardar el `npCommunicationId` en `juegos.json` para emparejar de forma exacta. Confirmado pendiente: ese campo no existe todavía en ningún juego del catálogo.
 
