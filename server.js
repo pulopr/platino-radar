@@ -174,18 +174,23 @@ function normalizar(texto) {
     .trim();
 }
 
-// --- Busca juegos por nombre. Devuelve la lista y si hay coincidencia exacta ---
-function buscarJuegos(consulta) {
-  const q = normalizar(consulta);
-  if (!q) return { resultados: [], exacto: null };
-
+// --- Lista básica (id, nombre, plataforma) de todos los juegos del catálogo ---
+function listarJuegos() {
   const juegos = leerJuegos();
-  const todos = Object.entries(juegos).map(([appid, j]) => ({
+  return Object.entries(juegos).map(([appid, j]) => ({
     appid,
     nombre: j.nombre,
     plataforma: (j.plataformas && j.plataformas[0]) || '',
     sin_steam: !!j.sin_steam
   }));
+}
+
+// --- Busca juegos por nombre. Devuelve la lista y si hay coincidencia exacta ---
+function buscarJuegos(consulta) {
+  const q = normalizar(consulta);
+  if (!q) return { resultados: [], exacto: null };
+
+  const todos = listarJuegos();
 
   const resultados = todos.filter(j => normalizar(j.nombre).includes(q));
   // Coincidencia exacta con el nombre completo del juego
@@ -201,6 +206,16 @@ app.get('/api/buscar', (req, res) => {
     res.json(resultados.slice(0, 8));
   } catch (e) {
     console.error('Error buscando:', e.message);
+    res.status(500).json({ error: 'No se pudieron leer los datos de juegos' });
+  }
+});
+
+// --- Endpoint: catálogo completo (id + nombre), para resolver nombres en el cliente ---
+app.get('/api/catalogo', (req, res) => {
+  try {
+    res.json(listarJuegos());
+  } catch (e) {
+    console.error('Error leyendo catálogo:', e.message);
     res.status(500).json({ error: 'No se pudieron leer los datos de juegos' });
   }
 });

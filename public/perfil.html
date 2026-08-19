@@ -302,10 +302,8 @@ function num(v){ return (v ?? 0).toString().replace('.', ','); }
 
 async function cargarCatalogo(){
   try {
-    const r = await fetch('/api/buscar?q=');   // vacío devuelve []
-    // Cargamos el catálogo completo mediante destacados + búsqueda amplia
-    const rd = await fetch('/api/destacados');
-    const juegos = await rd.json();
+    const r = await fetch('/api/catalogo');
+    const juegos = await r.json();
     juegos.forEach(j => catalogo[j.appid] = j);
   } catch(e){ console.error(e); }
 }
