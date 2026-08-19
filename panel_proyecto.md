@@ -201,7 +201,7 @@ Muestra los tres trofeos con **menor porcentaje de consecución**, con su icono 
 El autor recomienda vídeos de YouTube que ha visto y le parecen prácticos, por juego.
 - Nuevo campo `guias_video` en `juegos.json` (array de `{titulo, canal, url}`).
 - `public/juego.html` saca automáticamente la miniatura del vídeo a partir de la URL de YouTube (sin API key: `https://i.ytimg.com/vi/ID/hqdefault.jpg`), y enlaza a YouTube al pulsar (se abre en pestaña nueva).
-- Primer ejemplo real: Dark Souls Remastered — vídeo de **GameInTheHole**.
+- **Extendido a 8 de los 9 juegos** (sesión siguiente): Dark Souls Remastered, Dark Souls II, Sekiro, Bloodborne, Elden Ring, Lords of the Fallen y Demon's Souls con un vídeo de **GameInTheHole** cada uno; Dark Souls III con **dos** vídeos (GameInTheHole + **Acre**). Solo falta Astro's Playroom (el autor no ha pasado vídeo para este todavía).
 
 ---
 

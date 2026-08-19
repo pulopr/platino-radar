@@ -97,6 +97,13 @@
         "porcentaje": null,
         "icono": null
       }
+    ],
+    "guias_video": [
+      {
+        "titulo": "Dark Souls II SotFS - Guía para el Trofeo de Platino / 100% Logros: Al detalle y offline",
+        "canal": "GameInTheHole",
+        "url": "https://www.youtube.com/watch?v=mvgEIxZLRyM"
+      }
     ]
   },
 
@@ -143,6 +150,18 @@
         "descripcion": "Aprende todos los gestos (nombre pendiente de confirmar en castellano)",
         "porcentaje": 27.78,
         "icono": "https://psn100.net/img/trophy/a08a7e31eca6c1e64bc1dc796dabbfec.png"
+      }
+    ],
+    "guias_video": [
+      {
+        "titulo": "Dark Souls III - Guía para el Trofeo de Platino / 100% Logros: Paso a paso, eficiente y offline",
+        "canal": "GameInTheHole",
+        "url": "https://www.youtube.com/watch?v=oXZdsiE9J74"
+      },
+      {
+        "titulo": "EL PLATINO de DARK SOULS 3 es para MASOQUISTAS",
+        "canal": "Acre",
+        "url": "https://www.youtube.com/watch?v=qfnCWRqUxlk"
       }
     ]
   },
@@ -191,6 +210,13 @@
         "porcentaje": 37.88,
         "icono": "https://psn100.net/img/trophy/6f58ee875452585a38d207139b82f953.png"
       }
+    ],
+    "guias_video": [
+      {
+        "titulo": "Elden Ring - Guía para el Trofeo de Platino / 100% Logros: Paso a paso y al detalle",
+        "canal": "GameInTheHole",
+        "url": "https://www.youtube.com/watch?v=jpXJ5cC1eCQ"
+      }
     ]
   },
 
@@ -237,6 +263,13 @@
         "descripcion": "Derrota al Trío de Portadores en la Cisterna en modo Veterano (nombre pendiente de confirmar en castellano)",
         "porcentaje": 2.93,
         "icono": "https://psn100.net/img/trophy/d936ede5db10a248ad964bfdd8599bb2.png"
+      }
+    ],
+    "guias_video": [
+      {
+        "titulo": "Lords of the Fallen - Guía para el Trofeo de Platino / 100% Logros: Paso a paso y al detalle",
+        "canal": "GameInTheHole",
+        "url": "https://www.youtube.com/watch?v=jgU4HWxwbzs&t=1849s"
       }
     ]
   },
@@ -287,6 +320,13 @@
         "porcentaje": 32.53,
         "icono": "https://psn100.net/img/trophy/2048c1add220777e3e78c0cf7b6c9ff0.png"
       }
+    ],
+    "guias_video": [
+      {
+        "titulo": "Bloodborne - Guía para el Trofeo de Platino + DLC Antiguos Cazadores",
+        "canal": "GameInTheHole",
+        "url": "https://www.youtube.com/watch?v=WCFYJO4OWAs"
+      }
     ]
   },
 
@@ -328,6 +368,13 @@
         "descripcion": "Usa lapislázuli para mejorar cualquier herramienta al máximo (nombre pendiente de confirmar en castellano)",
         "porcentaje": 26.92,
         "icono": "https://psn100.net/img/trophy/a7969f18200f1f84c10a4506d0b9268b.png"
+      }
+    ],
+    "guias_video": [
+      {
+        "titulo": "Sekiro - Guía para el Trofeo de Platino / 100% Logros: Paso a paso y de manera eficiente",
+        "canal": "GameInTheHole",
+        "url": "https://www.youtube.com/watch?v=3obAxbj9VoQ&t=5049s"
       }
     ]
   },
@@ -426,6 +473,13 @@
         "descripcion": "Consigue todos los milagros",
         "porcentaje": 28.72,
         "icono": null
+      }
+    ],
+    "guias_video": [
+      {
+        "titulo": "Demon's Souls Remake - Guía para el Trofeo de Platino: Paso a paso, eficiente y offline",
+        "canal": "GameInTheHole",
+        "url": "https://www.youtube.com/watch?v=3xffTuqjQvU"
       }
     ]
   }
