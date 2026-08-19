@@ -323,8 +323,8 @@ function render(j){
       ${t.icono ? `<img class="trofeo-ic" src="${t.icono}" alt="" loading="lazy"
            onerror="this.style.visibility='hidden'">` : ''}
       <div>
-        <div class="trofeo-nombre">${t.nombre}${t.descripcion ? ` <span style="font-weight:400;color:var(--ink-soft)">— ${t.descripcion}</span>` : ''}</div>
-        <div class="trofeo-pct">${t.porcentaje != null ? `${num(t.porcentaje)} % de los jugadores lo ha conseguido` : 'Porcentaje exacto pendiente de confirmar'}</div>
+        <div class="trofeo-nombre">${t.nombre}</div>
+        ${t.descripcion ? `<div class="trofeo-pct">${t.descripcion}</div>` : ''}
       </div>
     </div>`).join('');
 
@@ -438,7 +438,7 @@ function render(j){
       <div class="section-label">Los trofeos más difíciles</div>
       <div class="trofeos">
         ${trofeosHTML}
-        <div class="trofeos-fuente">Porcentaje de jugadores de PlayStation que ha conseguido cada trofeo. Dato de PlayStation, no de Steam.</div>
+        <div class="trofeos-fuente">Selección del autor entre los trofeos menos conseguidos por la comunidad de PlayStation.</div>
       </div>
     </div>` : ''}
 

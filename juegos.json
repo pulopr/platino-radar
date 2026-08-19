@@ -2,7 +2,10 @@
   "570940": {
     "nombre": "Dark Souls Remastered",
     "destacado": true,
-    "plataformas": ["Steam · PC", "También en PS4"],
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4"
+    ],
     "tipo_online": "con_amigos",
     "estado_forzado": null,
     "explicacion_estado": "El platino se consigue <b>al 100 % en solitario</b>. No dependes de que haya nadie conectado.",
@@ -28,19 +31,16 @@
       {
         "nombre": "Rezo de una dama",
         "descripcion": "Consigue todos los milagros",
-        "porcentaje": 29.56,
         "icono": "https://psn100.net/img/trophy/b68eeab6623f9c4ebf3e598eb34071c5.png"
       },
       {
         "nombre": "Honor del Caballero",
         "descripcion": "Consigue todas las armas raras",
-        "porcentaje": 29.59,
         "icono": "https://psn100.net/img/trophy/d996eb2a83204abe8e88e06c34b4eb72.png"
       },
       {
         "nombre": "Arma de Fuego",
         "descripcion": "Mejora al máximo un arma con refuerzo de fuego",
-        "porcentaje": 30.80,
         "icono": "https://psn100.net/img/trophy/fa77cafe25752ebccbec0d136dbe73bf.png"
       }
     ],
@@ -56,7 +56,10 @@
   "335300": {
     "nombre": "Dark Souls II: Scholar of the First Sin",
     "destacado": true,
-    "plataformas": ["Steam · PC", "También en PS4"],
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4"
+    ],
     "tipo_online": "con_amigos",
     "estado_forzado": null,
     "explicacion_estado": "El platino se consigue <b>en solitario</b>. La dificultad está en el juego en sí, no en depender de otros jugadores.",
@@ -82,19 +85,16 @@
       {
         "nombre": "Maestro de los milagros",
         "descripcion": "Consigue todos los milagros",
-        "porcentaje": 4.6,
         "icono": null
       },
       {
         "nombre": "Maestro de la piromancia",
         "descripcion": "Consigue todas las piromancias",
-        "porcentaje": null,
         "icono": null
       },
       {
         "nombre": "Maestro de la magia",
         "descripcion": "Consigue todas las hechicerías",
-        "porcentaje": null,
         "icono": null
       }
     ],
@@ -110,7 +110,10 @@
   "374320": {
     "nombre": "Dark Souls III",
     "destacado": true,
-    "plataformas": ["Steam · PC", "También en PS4"],
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4"
+    ],
     "tipo_online": "con_amigos",
     "estado_forzado": null,
     "explicacion_estado": "El platino se puede conseguir <b>en solitario</b>, pero el farmeo de objetos de pacto offline es lo que lo vuelve muy pesado.",
@@ -135,20 +138,17 @@
     "trofeos_dificiles": [
       {
         "nombre": "Master of Miracles",
-        "descripcion": "Consigue todos los milagros (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 27.12,
+        "descripcion": "Consigue todos los milagros",
         "icono": "https://psn100.net/img/trophy/8f845bf513856879e17c46109ff4e64c.png"
       },
       {
         "nombre": "Master of Pyromancies",
-        "descripcion": "Consigue todas las piromancias (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 27.39,
+        "descripcion": "Consigue todas las piromancias",
         "icono": "https://psn100.net/img/trophy/ea0906edf357fe7b46dfad8ee0a4192b.png"
       },
       {
         "nombre": "Master of Expression",
-        "descripcion": "Aprende todos los gestos (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 27.78,
+        "descripcion": "Aprende todos los gestos",
         "icono": "https://psn100.net/img/trophy/a08a7e31eca6c1e64bc1dc796dabbfec.png"
       }
     ],
@@ -169,7 +169,10 @@
   "1245620": {
     "nombre": "Elden Ring",
     "destacado": true,
-    "plataformas": ["Steam · PC", "También en PS4/PS5"],
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4/PS5"
+    ],
     "tipo_online": "offline",
     "estado_forzado": null,
     "explicacion_estado": "El platino es <b>completamente offline</b>. La dificultad está en el propio juego, no en depender de otros jugadores.",
@@ -194,20 +197,17 @@
     "trofeos_dificiles": [
       {
         "nombre": "Lord of Frenzied Flame",
-        "descripcion": "Consigue el final del Señor de la Llama Enloquecida (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 37.57,
+        "descripcion": "Consigue el final del Señor de la Llama Enloquecida",
         "icono": "https://psn100.net/img/trophy/f78cbb23bf7c46d1782c9b63c9af471a.png"
       },
       {
         "nombre": "Legendary Sorceries and Incantations",
-        "descripcion": "Consigue todos los hechizos y conjuros legendarios (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 37.88,
+        "descripcion": "Consigue todos los hechizos y conjuros legendarios",
         "icono": "https://psn100.net/img/trophy/6402e8e30a06962deffe98d4bd877b9c.png"
       },
       {
         "nombre": "Legendary Ashen Remains",
-        "descripcion": "Consigue todos los restos de ceniza legendarios (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 37.88,
+        "descripcion": "Consigue todos los restos de ceniza legendarios",
         "icono": "https://psn100.net/img/trophy/6f58ee875452585a38d207139b82f953.png"
       }
     ],
@@ -223,7 +223,10 @@
   "1501750": {
     "nombre": "Lords of the Fallen",
     "destacado": false,
-    "plataformas": ["Steam · PC", "También en PS5"],
+    "plataformas": [
+      "Steam · PC",
+      "También en PS5"
+    ],
     "tipo_online": "offline",
     "estado_forzado": null,
     "explicacion_estado": "El platino es <b>offline</b>, pero muy exigente: hay que conseguir prácticamente todos los objetos del juego.",
@@ -248,20 +251,17 @@
     "trofeos_dificiles": [
       {
         "nombre": "The Worm Stirs",
-        "descripcion": "Derrota a Elianne la Famélica en modo Veterano (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 2.61,
+        "descripcion": "Derrota a Elianne la Famélica en modo Veterano",
         "icono": "https://psn100.net/img/trophy/7a6647f118be27fa962a0a7e36b9f241.png"
       },
       {
         "nombre": "Adyr's Chosen",
-        "descripcion": "Derrota al general Engstrom en modo Veterano (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 2.65,
+        "descripcion": "Derrota al general Engstrom en modo Veterano",
         "icono": "https://psn100.net/img/trophy/19205f2af439abecd326b207344fc12e.png"
       },
       {
         "nombre": "Brought Low",
-        "descripcion": "Derrota al Trío de Portadores en la Cisterna en modo Veterano (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 2.93,
+        "descripcion": "Derrota al Trío de Portadores en la Cisterna en modo Veterano",
         "icono": "https://psn100.net/img/trophy/d936ede5db10a248ad964bfdd8599bb2.png"
       }
     ],
@@ -279,7 +279,9 @@
     "caratula": "/img/bloodborne.avif",
     "destacado": true,
     "sin_steam": true,
-    "plataformas": ["PS4 · Exclusivo PlayStation"],
+    "plataformas": [
+      "PS4 · Exclusivo PlayStation"
+    ],
     "tipo_online": "offline",
     "estado_forzado": "vivo",
     "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
@@ -304,20 +306,17 @@
     "trofeos_dificiles": [
       {
         "nombre": "Old Hunter's Essence",
-        "descripcion": "Consigue todas las armas de cazador antiguo (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 31.73,
+        "descripcion": "Consigue todas las armas de cazador antiguo",
         "icono": "https://psn100.net/img/trophy/db51098e85cd3ed7779bf9a671c92faf.png"
       },
       {
         "nombre": "Laurence, the First Vicar",
-        "descripcion": "Derrota a la bestia que fue Laurence, el primer vicario (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 32.27,
+        "descripcion": "Derrota a la bestia que fue Laurence, el primer vicario",
         "icono": "https://psn100.net/img/trophy/6810a1537d01744de63dda982c907d0a.png"
       },
       {
         "nombre": "Orphan of Kos",
-        "descripcion": "Derrota al Gran Uno: Huérfano de Kos (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 32.53,
+        "descripcion": "Derrota al Gran Uno: Huérfano de Kos",
         "icono": "https://psn100.net/img/trophy/2048c1add220777e3e78c0cf7b6c9ff0.png"
       }
     ],
@@ -333,13 +332,16 @@
   "814380": {
     "nombre": "Sekiro: Shadows Die Twice",
     "destacado": true,
-    "plataformas": ["Steam · PC", "También en PS4"],
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4"
+    ],
     "tipo_online": "offline",
     "estado_forzado": null,
     "explicacion_estado": "El platino es <b>completamente offline</b>. No hay ningún trofeo que dependa de otros jugadores.",
     "nota_online": "<b>Sin componente online:</b> todo el platino se consigue en solitario, así que da igual cuánta gente esté jugando.",
     "tedio_autor": 3,
-    "tedio_comentario": "Pendiente de valorar por el autor.",
+    "tedio_comentario": "Un platino muy disfrutable, completamente offline. La dificultad del platino reside en la propia dificultad del juego. Hay que dedicar un poco de tiempo a farmear, pero no se hace muy pesado. Con una buena estrategia de copias de seguridad te evitas dar vueltas innecesarias al juego.",
     "planificacion": [
       {
         "icono": "⚠️",
@@ -353,20 +355,17 @@
     "trofeos_dificiles": [
       {
         "nombre": "Father Surpassed",
-        "descripcion": "Derrota a \"Gran Shinobi - Búho\" en la finca Hirata (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 26.46,
+        "descripcion": "Derrota a \"Gran Shinobi - Búho\" en la finca Hirata",
         "icono": "https://psn100.net/img/trophy/f4b9e6574333061f4da27fdba908dbdd.png"
       },
       {
         "nombre": "Immortal Severance",
-        "descripcion": "Consigue el final \"Ruptura Inmortal\" (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 26.83,
+        "descripcion": "Consigue el final \"Ruptura Inmortal\"",
         "icono": "https://psn100.net/img/trophy/beb6f03f1d80ddb0a32c1b392e5e49b7.png"
       },
       {
         "nombre": "Lazuline Upgrade",
-        "descripcion": "Usa lapislázuli para mejorar cualquier herramienta al máximo (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 26.92,
+        "descripcion": "Usa lapislázuli para mejorar cualquier herramienta al máximo",
         "icono": "https://psn100.net/img/trophy/a7969f18200f1f84c10a4506d0b9268b.png"
       }
     ],
@@ -384,7 +383,9 @@
     "caratula": "/img/astros_playroom.png",
     "destacado": false,
     "sin_steam": true,
-    "plataformas": ["PS5 · Exclusivo PlayStation (incluido con la consola)"],
+    "plataformas": [
+      "PS5 · Exclusivo PlayStation (incluido con la consola)"
+    ],
     "tipo_online": "offline",
     "estado_forzado": "vivo",
     "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
@@ -404,20 +405,17 @@
     "trofeos_dificiles": [
       {
         "nombre": "Four The Players",
-        "descripcion": "Rescata a los cuatro bots especiales ocultos (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 45.38,
+        "descripcion": "Rescata a los cuatro bots especiales ocultos",
         "icono": "https://psn100.net/img/trophy/36bc9a782c75947ec8341bc5ef9a63b9.png"
       },
       {
         "nombre": "No escape!",
-        "descripcion": "Rescata al bot especial atrapado en Memory Meadow (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 45.45,
+        "descripcion": "Rescata al bot especial atrapado en Memory Meadow",
         "icono": "https://psn100.net/img/trophy/d6478f2866efd26a78bc0053a17267d1.png"
       },
       {
         "nombre": "Grand tourist",
-        "descripcion": "Rescata al bot especial atrapado en Cooling Springs (nombre pendiente de confirmar en castellano)",
-        "porcentaje": 45.67,
+        "descripcion": "Rescata al bot especial atrapado en Cooling Springs",
         "icono": "https://psn100.net/img/trophy/175818b87da322ea1400f85936b8c990.png"
       }
     ]
@@ -428,7 +426,9 @@
     "caratula": "/img/demons_souls.png",
     "destacado": false,
     "sin_steam": true,
-    "plataformas": ["PS5 · Exclusivo PlayStation"],
+    "plataformas": [
+      "PS5 · Exclusivo PlayStation"
+    ],
     "tipo_online": "con_amigos",
     "estado_forzado": null,
     "explicacion_estado": "El platino exige ayudar a otro jugador como fantasma azul e invadir como fantasma negro, pero se puede hacer quedando con un amigo mediante contraseñas. No dependes de que haya multitud conectada.",
@@ -459,20 +459,17 @@
       {
         "nombre": "Trofeo del Sabio",
         "descripcion": "Consigue todos los hechizos",
-        "porcentaje": 27.70,
-        "icono": null
+        "icono": "https://np.sentl.com/images/games/875c624e/s/a0d02027735.png"
       },
       {
         "nombre": "Rey de los Anillos",
         "descripcion": "Consigue todos los anillos",
-        "porcentaje": 27.97,
-        "icono": null
+        "icono": "https://np.sentl.com/images/games/875c624e/s/3fc72027737.png"
       },
       {
         "nombre": "Trofeo de la Santa",
         "descripcion": "Consigue todos los milagros",
-        "porcentaje": 28.72,
-        "icono": null
+        "icono": "https://np.sentl.com/images/games/875c624e/s/7e832027736.png"
       }
     ],
     "guias_video": [
