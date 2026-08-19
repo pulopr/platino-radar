@@ -238,7 +238,7 @@
 
   "demons-souls": {
     "nombre": "Demon's Souls",
-    "caratula": "/img/deamons_souls.png",
+    "caratula": "/img/demons_souls.png",
     "destacado": false,
     "sin_steam": true,
     "plataformas": ["PS5 · Exclusivo PlayStation"],
