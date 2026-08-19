@@ -189,10 +189,10 @@ Muestra los tres trofeos con **menor porcentaje de consecución**, con su icono 
 - **Cambio de enfoque respecto a la idea original:** en vez de conectar `psn-api`/`PSN Leaderboard` en vivo (más complejo: hace falta `npCommunicationId` por juego, decidir caché, etc.), se rellena **a mano por juego**, igual que el resto de datos del catálogo (tedio, dificultad, planificación). Nuevo campo `trofeos_dificiles` en `juegos.json` (array de `{nombre, descripcion, porcentaje, icono}`), servido automáticamente por `/api/juego/:appid` (ya reenvía todo el objeto del juego) y pintado en una sección nueva de `public/juego.html`.
 - **Fuente de los datos:** PlayStation, sin extrapolar de Steam, tal y como estaba decidido. Se excluye siempre el propio trofeo de platino de la lista (por definición es el más raro, no aporta información).
 - **Iconos:** enlazados desde su origen (verificado que la URL responde con la imagen real antes de usarla) — práctica habitual del sector, igual que hace PSNProfiles.
-- **Primer ejemplo real:** Dark Souls Remastered — *Prayer of a Maiden* (29,56 %), *Knight's Honor* (29,59 %), *Fire Weapon* (30,80 %), verificados en psn100.net.
+- **Primer ejemplo real:** Dark Souls Remastered — *Rezo de una dama* (29,56 %), *Honor del Caballero* (29,59 %), *Arma de Fuego* (30,80 %). Porcentajes verificados en psn100.net; nombres en **castellano** (no español latinoamericano), confirmados por el autor directamente desde su lista de trofeos en PS5, ya que las traducciones fan encontradas por la web eran contradictorias entre sí.
 - Sin caché: al ser datos fijos en `juegos.json` (no una llamada a API en cada visita), no hace falta.
 
-### B2) Guías en vídeo recomendadas en la ficha ✅ HECHO (funcionalidad nueva, no estaba en el plan original)
+### B2) Guías recomendadas en la ficha ✅ HECHO (funcionalidad nueva, no estaba en el plan original)
 El autor recomienda vídeos de YouTube que ha visto y le parecen prácticos, por juego.
 - Nuevo campo `guias_video` en `juegos.json` (array de `{titulo, canal, url}`).
 - `public/juego.html` saca automáticamente la miniatura del vídeo a partir de la URL de YouTube (sin API key: `https://i.ytimg.com/vi/ID/hqdefault.jpg`), y enlaza a YouTube al pulsar (se abre en pestaña nueva).
@@ -258,6 +258,7 @@ El autor recomienda vídeos de YouTube que ha visto y le parecen prácticos, por
 - Llamar a Steam desde el navegador está bloqueado (CORS) → hace falta servidor propio.
 - El **perfil de usuario** es la parte más compleja del proyecto (cuentas, login, seguridad). Valorar si es necesario para la v1 o puede esperar.
 - Datos de trofeos PS (a futuro): librería de comunidad `psn-api` (no oficial) o API de pago `PSN Leaderboard`.
+- **Nombres de trofeos: siempre en castellano (España), nunca español latinoamericano, y verificados por el autor desde su propia lista de trofeos en PS5** cuando tenga el juego platinado — no fiarse de traducciones fan encontradas por la web, que resultaron contradictorias entre sí (para Dark Souls Remastered, unas fuentes decían "Oración de una doncella" y otras "Rezo de una dama" para el mismo trofeo; la fuente fiable fue el propio autor). PSNProfiles, Exophase, TrueTrophies y el wiki de Dark Souls bloquean el acceso automático (403/402), así que tampoco sirven como fuente directa para esto.
 - **No dar por hecho que "destacados" = "catálogo completo".** El bug de los nombres en crudo en el perfil (ver más arriba) salió porque una parte del cliente usaba `/api/destacados` (solo 6 juegos) como si fuera la lista completa de juegos. Cualquier funcionalidad nueva que necesite conocer **todos** los juegos (no solo los destacados de portada) debe usar `/api/catalogo`, no `/api/destacados`.
 
 ---

@@ -26,19 +26,19 @@
     "trofeos_online": "Ninguno",
     "trofeos_dificiles": [
       {
-        "nombre": "Prayer of a Maiden",
+        "nombre": "Rezo de una dama",
         "descripcion": "Consigue todos los milagros",
         "porcentaje": 29.56,
         "icono": "https://psn100.net/img/trophy/b68eeab6623f9c4ebf3e598eb34071c5.png"
       },
       {
-        "nombre": "Knight's Honor",
+        "nombre": "Honor del Caballero",
         "descripcion": "Consigue todas las armas raras",
         "porcentaje": 29.59,
         "icono": "https://psn100.net/img/trophy/d996eb2a83204abe8e88e06c34b4eb72.png"
       },
       {
-        "nombre": "Fire Weapon",
+        "nombre": "Arma de Fuego",
         "descripcion": "Mejora al máximo un arma con refuerzo de fuego",
         "porcentaje": 30.80,
         "icono": "https://psn100.net/img/trophy/fa77cafe25752ebccbec0d136dbe73bf.png"
