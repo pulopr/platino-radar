@@ -320,11 +320,11 @@ function render(j){
 
   const trofeosHTML = (j.trofeos_dificiles || []).map(t => `
     <div class="trofeo-item">
-      <img class="trofeo-ic" src="${t.icono}" alt="" loading="lazy"
-           onerror="this.style.visibility='hidden'">
+      ${t.icono ? `<img class="trofeo-ic" src="${t.icono}" alt="" loading="lazy"
+           onerror="this.style.visibility='hidden'">` : ''}
       <div>
         <div class="trofeo-nombre">${t.nombre}${t.descripcion ? ` <span style="font-weight:400;color:var(--ink-soft)">— ${t.descripcion}</span>` : ''}</div>
-        <div class="trofeo-pct">${num(t.porcentaje)} % de los jugadores lo ha conseguido</div>
+        <div class="trofeo-pct">${t.porcentaje != null ? `${num(t.porcentaje)} % de los jugadores lo ha conseguido` : 'Porcentaje exacto pendiente de confirmar'}</div>
       </div>
     </div>`).join('');
 
