@@ -250,6 +250,7 @@ Mostrar los tres trofeos con **menor porcentaje de consecución**, con su icono.
 - Llamar a Steam desde el navegador está bloqueado (CORS) → hace falta servidor propio.
 - El **perfil de usuario** es la parte más compleja del proyecto (cuentas, login, seguridad). Valorar si es necesario para la v1 o puede esperar.
 - Datos de trofeos PS (a futuro): librería de comunidad `psn-api` (no oficial) o API de pago `PSN Leaderboard`.
+- **No dar por hecho que "destacados" = "catálogo completo".** El bug de los nombres en crudo en el perfil (ver más arriba) salió porque una parte del cliente usaba `/api/destacados` (solo 6 juegos) como si fuera la lista completa de juegos. Cualquier funcionalidad nueva que necesite conocer **todos** los juegos (no solo los destacados de portada) debe usar `/api/catalogo`, no `/api/destacados`.
 
 ---
 
