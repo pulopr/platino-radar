@@ -107,6 +107,8 @@
     font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.3rem;font-weight:800;
     letter-spacing:.12em;color:var(--oro);user-select:all;
   }
+  .psn-nota{display:block;font-size:.8rem;color:var(--plata-sombra);
+    margin-top:-4px;margin-bottom:8px;font-style:italic}
   .psn-form{display:flex;gap:9px;flex-wrap:wrap;margin-top:6px}
   .psn-form input{
     flex:1;min-width:170px;background:#0a1b30;border:1px solid var(--line);border-radius:10px;
@@ -365,7 +367,8 @@ async function pintar(){
             <div>
               <h3>🎮 Cuenta de PlayStation vinculada</h3>
               <p class="psn-info">Tus platinos se importan automáticamente desde
-                <b>${perfilMostrado.psn_id}</b>.</p>
+                <b>${perfilMostrado.psn_id}</b>. No necesitas mantener ningún código
+                en tu perfil de PlayStation.</p>
             </div>
             <div style="display:flex;gap:9px;flex-wrap:wrap">
               <button class="psn-btn" id="btn-sincronizar">Sincronizar ahora</button>
@@ -398,16 +401,19 @@ async function pintar(){
             <div class="psn-paso">
               <span class="psn-num">2</span>
               <div>
-                Copia este código y pégalo en el campo <b>"Acerca de mí"</b> de tu perfil de
+                Copia este código y pégalo en el campo <b>"Acerca de"</b> de tu perfil de
                 PlayStation (puedes editarlo desde la consola o en playstation.com):
                 <code class="psn-codigo" id="psn-codigo"></code>
+                <span class="psn-nota">Es temporal: en cuanto verifiquemos la cuenta podrás
+                borrarlo y dejar tu "Acerca de" como quieras.</span>
               </div>
             </div>
             <div class="psn-paso">
               <span class="psn-num">3</span>
               <div>
                 Guarda los cambios en PlayStation y pulsa aquí para comprobarlo.
-                Después podrás borrar el código de tu perfil.
+                <b>Solo lo comprobamos una vez:</b> después puedes borrar el código,
+                la sincronización seguirá funcionando igual.
                 <div class="psn-form">
                   <button class="psn-btn" id="btn-psn-verificar">Comprobar y vincular</button>
                 </div>
@@ -602,9 +608,10 @@ function conectarEventosPsn(){
         return avisoPsn(datos.error || 'No se ha podido verificar.', 'error');
       }
 
-      avisoPsn(`✓ ¡Cuenta verificada! Tienes <b>${datos.total_psn}</b> platinos en PSN,
-                de los cuales <b>${datos.en_catalogo}</b> están en Platino Radar.
-                Ya puedes borrar el código de tu perfil de PlayStation.`, 'ok');
+      avisoPsn(`✓ <b>¡Cuenta verificada!</b> Tienes <b>${datos.total_psn}</b> platinos en PSN,
+                de los cuales <b>${datos.en_catalogo}</b> están en Platino Radar.<br><br>
+                🧹 <b>Ya puedes borrar el código</b> del campo "Acerca de" de tu perfil de
+                PlayStation y poner lo que quieras. La sincronización seguirá funcionando.`, 'ok');
 
       setTimeout(() => window.location.reload(), 3000);
     };
