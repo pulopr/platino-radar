@@ -528,5 +528,146 @@
         "icono": "https://psn100.net/img/trophy/8cb88869652369c73a2476406eeb4e4c.png"
       }
     ]
+  },
+
+  "883710": {
+    "nombre": "Resident Evil 2 Remake",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4/PS5 y Xbox"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario.",
+    "tedio_autor": 4,
+    "tedio_comentario": "Bastante exigente: obliga a completar la partida en la dificultad más alta dentro de un tiempo límite y con muy pocos guardados disponibles. Se hace disfrutable si sigues una guía para hacer el rango S+ en Hardcore en el menor tiempo posible.",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "Muchos trofeos perdibles y ligados a rutas.",
+        "texto": "Requiere completar las 4 campañas (Leon A, Claire B y viceversa) más trofeos exclusivos de cada personaje. Consulta una guía desde el principio para no rejugar de más."
+      },
+      {
+        "icono": "⏱️",
+        "titulo": "Rango S+ en Hardcore: contrarreloj y con guardados limitados.",
+        "texto": "Hay que completar la partida en Hardcore en menos de 2h30 (Leon/Escenario A) o 2h (Claire/Escenario B), usando como máximo 3 guardados (cintas de tinta). Muy recomendable hacerlo siguiendo una guía paso a paso."
+      }
+    ],
+    "dificultad": "6/10",
+    "duracion": "~30 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Hell of a Sheriff",
+        "descripcion": "Completa el escenario \"No Way Out\" (sin modo entrenamiento)",
+        "icono": "https://psn100.net/img/trophy/5a5576e66fbbc95504cc3c746a4a0ee7.png"
+      },
+      {
+        "nombre": "Got 'Em",
+        "descripcion": "Destruye todos los Mr. Raccoon escondidos en el modo Superviviente Fantasma",
+        "icono": "https://psn100.net/img/trophy/ca7ca025f99f20a502bb75c163b0cf32.png"
+      },
+      {
+        "nombre": "One Slick Super-spy",
+        "descripcion": "Completa el segmento de Ada usando solo el visualizador EMF",
+        "icono": "https://psn100.net/img/trophy/24c3a59481309f3d88c1d6c897091f27.png"
+      }
+    ]
+  },
+
+  "952060": {
+    "nombre": "Resident Evil 3 Remake",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4/PS5 y Xbox"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario. El modo multijugador Resident Evil Resistance viene incluido pero no aporta trofeos para este platino.",
+    "tedio_autor": 3,
+    "tedio_comentario": "Parecido al 2 pero más corto y menos exigente. También pide completarlo en la dificultad más alta (Inferno) dentro de un tiempo límite, aunque las mejoras que se compran en la tienda del juego lo hacen mucho más asequible.",
+    "planificacion": [
+      {
+        "icono": "⏱️",
+        "titulo": "Hay que completar el juego en Inferno con S-rank.",
+        "texto": "En menos de 2 horas y con un máximo de 5 guardados manuales. Las muertes no penalizan el rango: solo cuentan el tiempo y el número de guardados."
+      },
+      {
+        "icono": "🛒",
+        "titulo": "Farmea puntos para comprar mejoras antes de Inferno.",
+        "texto": "Con los puntos conseguidos en la primera partida puedes comprar en la tienda del juego objetos como el lanzacohetes infinito, que facilita mucho las dificultades más altas. Aviso aparte: el trofeo \"Minimalist\" exige evitar el baúl de objetos por completo, así que no se pueden usar ahí las mejoras compradas."
+      }
+    ],
+    "dificultad": "4/10",
+    "duracion": "~25 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Jill Valentine",
+        "descripcion": "Completa el juego con rango S en Inferno",
+        "icono": "https://psn100.net/img/trophy/a142e924ad3f4ccd87764e97f18ddd95.png"
+      },
+      {
+        "nombre": "Dominator",
+        "descripcion": "Completa el juego en Inferno",
+        "icono": "https://psn100.net/img/trophy/c0be99b1787b3d9574e1d4417a82b5d5.png"
+      },
+      {
+        "nombre": "Veteran",
+        "descripcion": "Completa el juego en Hardcore o superior",
+        "icono": "https://psn100.net/img/trophy/ddbeb7341d5be2ea20e9657c692a2b8a.png"
+      }
+    ]
+  },
+
+  "2050650": {
+    "nombre": "Resident Evil 4 Remake",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4/PS5 y Xbox"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario. El DLC de pago \"Separate Ways\" no hace falta para este platino: tiene su propia lista de trofeos aparte.",
+    "tedio_autor": 4,
+    "tedio_comentario": "Obliga a rejugar varias veces para desbloquear armas infinitas (como el lanzacohetes) que facilitan las dificultades más altas. La dificultad viene sobre todo del propio juego, no de artificios: apenas hay perdibles, salvo los tesoros, que sí se hacen tediosos de encontrar todos.",
+    "planificacion": [
+      {
+        "icono": "🔫",
+        "titulo": "Varias partidas para desbloquear armas infinitas.",
+        "texto": "Completar el juego en partida nueva con rango S+ en Standard y en Hardcore desbloquea armas especiales infinitas que hacen mucho más llevaderas las dificultades más altas. El rango S+ solo existe en partida nueva, no en NG+."
+      },
+      {
+        "icono": "💎",
+        "titulo": "Los tesoros son lo más tedioso de completar al 100%.",
+        "texto": "No hay selección de capítulo: los trofeos de historia no automáticos son perdibles si no los consigues en su momento. Encontrar todos los tesoros de cada partida es lo que más se puede alargar."
+      }
+    ],
+    "dificultad": "6/10",
+    "duracion": "~30-40 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Mission Accomplished S+",
+        "descripcion": "Completa la campaña en Standard con rango S+",
+        "icono": "https://psn100.net/img/trophy/a598d49a27472aad4379870f7a238ff2.png"
+      },
+      {
+        "nombre": "S+ Rank Investigator",
+        "descripcion": "Completa la campaña en Hardcore con rango S+",
+        "icono": "https://psn100.net/img/trophy/20ddc00470fbf1e4a8e2cb31147c887d.png"
+      },
+      {
+        "nombre": "Gun Fanatic",
+        "descripcion": "Consigue todas las armas disponibles",
+        "icono": "https://psn100.net/img/trophy/868bf4e484430c6d44cbd18e82c0dd1b.png"
+      }
+    ]
   }
 }
