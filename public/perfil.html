@@ -206,6 +206,14 @@
     font-size:1.1rem;padding:4px 6px;flex:none;font-family:inherit;line-height:1}
   .quitar:hover{color:var(--muerto)}
 
+  /* Lista de "próximos platinos" */
+  .estado-badge{font-size:.75rem;font-weight:700;display:inline-flex;align-items:center;gap:5px}
+  .estado-badge::before{content:"●";font-size:.6rem}
+  .estado-badge.vivo{color:var(--vivo)}
+  .estado-badge.moribundo{color:var(--moribundo)}
+  .estado-badge.muerto{color:var(--muerto)}
+  .deseo-tedio{color:var(--plata-sombra)}
+
   .cargando,.vacio{text-align:center;padding:44px 20px;color:var(--ink-soft)}
   .vacio p{margin-bottom:14px}
   .spinner{width:28px;height:28px;border:3px solid var(--line);border-top-color:var(--azul-claro);
@@ -260,8 +268,8 @@
   <!-- Ventana para añadir platino -->
   <div class="modal" id="modal">
     <div class="modal-card">
-      <h2>Añadir un platino</h2>
-      <p class="sub">Busca el juego que has platinado.</p>
+      <h2 id="modal-titulo">Añadir un platino</h2>
+      <p class="sub" id="modal-sub">Busca el juego que has platinado.</p>
       <input type="text" id="buscar-juego" placeholder="Escribe el nombre del juego…" autocomplete="off">
       <div class="res-lista" id="res-lista"></div>
       <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
@@ -270,7 +278,8 @@
 
 <script type="module">
 import { pintarCabecera, usuarioActual, supabase,
-         platinosDe, guardarPlatino, borrarPlatino, destacarPlatino, nivelPorPlatinos } from '/auth.js';
+         platinosDe, guardarPlatino, borrarPlatino, destacarPlatino, nivelPorPlatinos,
+         deseadosDe, añadirDeseado, quitarDeseado } from '/auth.js';
 
 // Admite /perfil/pulopr (URL bonita) y /perfil.html?u=pulopr (antiguo)
 const params = new URLSearchParams(window.location.search);
@@ -281,7 +290,10 @@ let yo = null;          // usuario con sesión
 let perfilMostrado = null;
 let esMiPerfil = false;
 let misPlatinos = [];
+let misDeseados = [];
+let deseadosEstado = {}; // estado/tedio de cada deseado, por juego_id
 let catalogo = {};      // juegos disponibles, por id
+let modoModal = 'platino'; // 'platino' | 'deseado'
 
 const contenido = document.getElementById('contenido');
 
@@ -307,6 +319,20 @@ async function cargarCatalogo(){
     juegos.forEach(j => catalogo[j.appid] = j);
   } catch(e){ console.error(e); }
 }
+
+async function cargarDeseadosEstado(){
+  deseadosEstado = {};
+  if(!misDeseados.length) return;
+  try {
+    const ids = misDeseados.map(d => d.juego_id).join(',');
+    const r = await fetch(`/api/deseados?ids=${encodeURIComponent(ids)}`);
+    const datos = await r.json();
+    datos.forEach(d => deseadosEstado[d.appid] = d);
+  } catch(e){ console.error(e); }
+}
+
+// Orden de urgencia para priorizar: muerto primero, vivo al final
+const ORDEN_ESTADO = { muerto: 0, moribundo: 1, vivo: 2 };
 
 async function pintar(){
   const nombre = perfilMostrado.nombre_usuario || 'Sin nombre';
@@ -463,6 +489,48 @@ async function pintar(){
     }
   }
 
+  // --- Lista de "próximos platinos" ---
+  const deseadosOrdenados = [...misDeseados].sort((a, b) => {
+    const ea = deseadosEstado[a.juego_id]?.estado;
+    const eb = deseadosEstado[b.juego_id]?.estado;
+    return (ORDEN_ESTADO[ea] ?? 9) - (ORDEN_ESTADO[eb] ?? 9);
+  });
+
+  const deseadosHTML = deseadosOrdenados.length
+    ? deseadosOrdenados.map(d => {
+        const info = deseadosEstado[d.juego_id];
+        const nombreJuego = info?.nombre || catalogo[d.juego_id]?.nombre || d.juego_id;
+        const ini = nombreJuego.split(' ').slice(0,2).map(w => w[0]).join('');
+        const estado = info?.estado || 'vivo';
+        const etiqueta = info?.etiqueta || '';
+        const tedio = info?.tedio_autor;
+        return `
+          <div class="plat-item">
+            <div class="mini-cover">
+              <img src="/api/caratula/${d.juego_id}" alt="${nombreJuego}"
+                   onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','${ini}');">
+            </div>
+            <div class="plat-info">
+              <a class="plat-name" href="/juego/${d.juego_id}">${nombreJuego}</a>
+              <div class="plat-sub">
+                <span class="estado-badge ${estado}">${etiqueta}</span>
+                ${tedio ? `<span class="deseo-tedio"> · Tedio ${num(tedio)}/5</span>` : ''}
+              </div>
+            </div>
+            ${esMiPerfil ? `<button class="quitar" data-quitar-deseado="${d.juego_id}" title="Quitar de la lista">✕</button>` : ''}
+          </div>`;
+      }).join('')
+    : `<div class="vacio">
+         <p>${esMiPerfil ? 'Todavía no tienes juegos en tu lista de próximos platinos.' : 'Este usuario no tiene juegos pendientes en su lista.'}</p>
+       </div>`;
+
+  const deseadosSeccionHTML = (deseadosOrdenados.length || esMiPerfil) ? `
+    <div class="sec-head">
+      <div class="sec-title">${esMiPerfil ? 'Próximos platinos' : `Próximos platinos de ${nombre}`}</div>
+      ${esMiPerfil ? '<button class="add-btn" id="btn-add-deseado">+ Añadir a la lista</button>' : ''}
+    </div>
+    <div class="plat-list">${deseadosHTML}</div>` : '';
+
   contenido.innerHTML = `
     <div class="profile">
       <div class="profile-top">
@@ -497,16 +565,31 @@ async function pintar(){
         ? '<button class="add-btn" id="btn-add">+ Añadir platino</button>'
         : (esMiPerfil ? '<span class="sec-sub" style="color:var(--plata-sombra);font-size:.8rem">Se importan de PlayStation</span>' : '')}
     </div>
-    <div class="plat-list">${listaHTML}</div>`;
+    <div class="plat-list">${listaHTML}</div>
+
+    ${deseadosSeccionHTML}`;
 
   // --- Eventos del panel de PSN ---
   if(esMiPerfil) conectarEventosPsn();
 
   // Eventos
   const btnAdd = document.getElementById('btn-add');
-  if(btnAdd) btnAdd.onclick = abrirModal;
+  if(btnAdd) btnAdd.onclick = () => abrirModal('platino');
   const btnVacio = document.getElementById('btn-vacio');
-  if(btnVacio) btnVacio.onclick = abrirModal;
+  if(btnVacio) btnVacio.onclick = () => abrirModal('platino');
+  const btnAddDeseado = document.getElementById('btn-add-deseado');
+  if(btnAddDeseado) btnAddDeseado.onclick = () => abrirModal('deseado');
+
+  if(esMiPerfil){
+    document.querySelectorAll('[data-quitar-deseado]').forEach(btn => {
+      btn.onclick = async () => {
+        await quitarDeseado(yo.id, btn.dataset.quitarDeseado);
+        misDeseados = await deseadosDe(yo.id);
+        await cargarDeseadosEstado();
+        pintar();
+      };
+    });
+  }
 
   if(esMiPerfil){
     document.querySelectorAll('.pip.editable').forEach(pip => {
@@ -654,10 +737,16 @@ function conectarEventosPsn(){
   }
 }
 
-// --- Ventana de añadir platino ---
+// --- Ventana de añadir platino / próximo platino ---
 window.cerrarModal = () => document.getElementById('modal').classList.remove('show');
 
-function abrirModal(){
+function abrirModal(modo){
+  modoModal = modo;
+  document.getElementById('modal-titulo').textContent =
+    modo === 'deseado' ? 'Añadir a próximos platinos' : 'Añadir un platino';
+  document.getElementById('modal-sub').textContent =
+    modo === 'deseado' ? 'Busca el juego que quieres platinar más adelante.' : 'Busca el juego que has platinado.';
+  document.getElementById('buscar-juego').value = '';
   document.getElementById('modal').classList.add('show');
   document.getElementById('buscar-juego').focus();
   buscarJuegos('');
@@ -681,21 +770,38 @@ async function buscarJuegos(texto){
       return;
     }
 
-    const yaTengo = new Set(misPlatinos.map(p => p.juego_id));
+    const yaTengoPlatino = new Set(misPlatinos.map(p => p.juego_id));
+    const yaEnDeseados = new Set(misDeseados.map(d => d.juego_id));
 
     lista.innerHTML = juegos.map(j => {
-      const tiene = yaTengo.has(String(j.appid));
+      const id = String(j.appid);
+      let etiqueta = null;
+      if(modoModal === 'deseado'){
+        if(yaTengoPlatino.has(id)) etiqueta = 'Ya lo tienes platinado';
+        else if(yaEnDeseados.has(id)) etiqueta = 'Ya está en tu lista';
+      } else if(yaTengoPlatino.has(id)){
+        etiqueta = 'Ya lo tienes';
+      }
+      const bloqueado = !!etiqueta;
       return `
-        <div class="res-item" ${tiene ? '' : `data-add="${j.appid}"`} style="${tiene ? 'cursor:default;opacity:.6' : ''}">
+        <div class="res-item" ${bloqueado ? '' : `data-add="${id}"`} style="${bloqueado ? 'cursor:default;opacity:.6' : ''}">
           <span>${j.nombre}</span>
-          ${tiene ? '<span class="res-ya">✓ Ya lo tienes</span>' : `<span class="res-plat">${j.plataforma || ''}</span>`}
+          ${etiqueta ? `<span class="res-ya">✓ ${etiqueta}</span>` : `<span class="res-plat">${j.plataforma || ''}</span>`}
         </div>`;
     }).join('');
 
     lista.querySelectorAll('[data-add]').forEach(el => {
       el.onclick = async () => {
-        await guardarPlatino(yo.id, el.dataset.add, null);
-        misPlatinos = await platinosDe(yo.id);
+        if(modoModal === 'deseado'){
+          await añadirDeseado(yo.id, el.dataset.add);
+          misDeseados = await deseadosDe(yo.id);
+          await cargarDeseadosEstado();
+        } else {
+          await guardarPlatino(yo.id, el.dataset.add, null);
+          misPlatinos = await platinosDe(yo.id);
+          misDeseados = await deseadosDe(yo.id);
+          await cargarDeseadosEstado();
+        }
         await cargarCatalogo();
         cerrarModal();
         pintar();
@@ -726,6 +832,7 @@ async function buscarJuegos(texto){
     perfilMostrado = data;
     esMiPerfil = yo && yo.id === data.id;
     misPlatinos = await platinosDe(data.id);
+    misDeseados = await deseadosDe(data.id);
 
   } else {
     // Mi propio perfil
@@ -733,8 +840,10 @@ async function buscarJuegos(texto){
     perfilMostrado = yo;
     esMiPerfil = true;
     misPlatinos = await platinosDe(yo.id);
+    misDeseados = await deseadosDe(yo.id);
   }
 
+  await cargarDeseadosEstado();
   pintar();
 })();
 </script>

@@ -239,6 +239,36 @@ app.get('/api/resultados', async (req, res) => {
   }
 });
 
+// --- Endpoint: estado y tedio de una lista de juegos por id (para "próximos platinos") ---
+app.get('/api/deseados', async (req, res) => {
+  const ids = (req.query.ids || '').split(',').map(s => s.trim()).filter(Boolean);
+  if (!ids.length) return res.json([]);
+
+  let juegos;
+  try {
+    juegos = leerJuegos();
+  } catch (e) {
+    console.error('Error leyendo juegos.json:', e.message);
+    return res.status(500).json({ error: 'No se pudieron leer los datos de juegos' });
+  }
+
+  const resultado = await Promise.all(ids.map(async (appid) => {
+    const juego = juegos[appid];
+    if (!juego) return null;
+    const jugadores = juego.sin_steam ? null : await consultarJugadores(appid);
+    return {
+      appid,
+      nombre: juego.nombre,
+      plataforma: (juego.plataformas && juego.plataformas[0]) || '',
+      tedio_autor: juego.tedio_autor ?? null,
+      jugadores,
+      ...calcularVeredicto(juego, jugadores)
+    };
+  }));
+
+  res.json(resultado.filter(Boolean));
+});
+
 // --- Ruta: decide a dónde llevar al buscar ---
 // Exacto o un solo resultado → ficha del juego. Varios o ninguno → página de resultados.
 app.get('/buscar', (req, res) => {
@@ -543,6 +573,13 @@ async function sincronizarPlatinos(usuarioId, accountId) {
     await supabaseAdmin
       .from('platinos')
       .update({ verificado: true })
+      .eq('usuario_id', usuarioId)
+      .in('juego_id', idsCatalogo);
+
+    // Si ya lo tiene platinado, ya no tiene sentido que siga en "próximos platinos"
+    await supabaseAdmin
+      .from('deseados')
+      .delete()
       .eq('usuario_id', usuarioId)
       .in('juego_id', idsCatalogo);
   }

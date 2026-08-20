@@ -122,6 +122,57 @@ export async function guardarPlatino(usuarioId, juegoId, tedioVoto = null){
     console.error('Error guardando platino:', error.message);
     return false;
   }
+  // Si estaba en "próximos platinos", ya no tiene sentido que siga ahí
+  await quitarDeseado(usuarioId, juegoId);
+  return true;
+}
+
+/**
+ * Devuelve la lista de "próximos platinos" (juegos por platinar) del
+ * usuario indicado. Si no se pasa id, no hay usuario con sesión.
+ */
+export async function deseadosDe(usuarioId){
+  const { data, error } = await supabase
+    .from('deseados')
+    .select('juego_id, creado_en')
+    .eq('usuario_id', usuarioId)
+    .order('creado_en', { ascending: false });
+
+  if(error){
+    console.error('Error leyendo deseados:', error.message);
+    return [];
+  }
+  return data || [];
+}
+
+/** Añade un juego a la lista de "próximos platinos" del usuario. */
+export async function añadirDeseado(usuarioId, juegoId){
+  const { error } = await supabase
+    .from('deseados')
+    .upsert(
+      { usuario_id: usuarioId, juego_id: juegoId },
+      { onConflict: 'usuario_id,juego_id' }
+    );
+
+  if(error){
+    console.error('Error añadiendo deseado:', error.message);
+    return false;
+  }
+  return true;
+}
+
+/** Quita un juego de la lista de "próximos platinos" del usuario. */
+export async function quitarDeseado(usuarioId, juegoId){
+  const { error } = await supabase
+    .from('deseados')
+    .delete()
+    .eq('usuario_id', usuarioId)
+    .eq('juego_id', juegoId);
+
+  if(error){
+    console.error('Error quitando deseado:', error.message);
+    return false;
+  }
   return true;
 }
 
