@@ -669,5 +669,94 @@
         "icono": "https://psn100.net/img/trophy/868bf4e484430c6d44cbd18e82c0dd1b.png"
       }
     ]
+  },
+
+  "2215430": {
+    "nombre": "Ghost of Tsushima",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4/PS5"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario. El modo cooperativo Legends tiene su propia lista de trofeos aparte y no hace falta para este platino.",
+    "tedio_autor": 2.5,
+    "tedio_comentario": "No conserva muchos recuerdos concretos de este platino, pero encaja con el perfil de la mayoría: coger todo lo del mapa sin prisa, sin trofeos perdibles ni exigencias de dificultad, así que el tedio es bajo.",
+    "planificacion": [
+      {
+        "icono": "🗺️",
+        "titulo": "Nada perdible ni exigente: solo hay que explorar.",
+        "texto": "No hay trofeos de dificultad ni nada que se pierda para siempre: todo lo que falte al terminar la historia se puede rematar después en mundo abierto. Consiste en liberar regiones, completar misiones secundarias y encontrar coleccionables (santuarios, faros, altares, aguas termales, haikus, bambú)."
+      }
+    ],
+    "dificultad": "3/10",
+    "duracion": "~30-40 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Honor the Unseen",
+        "descripcion": "Inclínate ante 10 altares ocultos de Tsushima",
+        "icono": "https://psn100.net/img/trophy/9b160202369a92ab3b8396ada0134fea.png"
+      },
+      {
+        "nombre": "Body, Mind, and Spirit",
+        "descripcion": "Completa todas las aguas termales, haikus, santuarios Inari y retos de bambú",
+        "icono": "https://psn100.net/img/trophy/0b8d12cf2ceba35fd957e3f01d86454d.png"
+      },
+      {
+        "nombre": "Favor of the Kami",
+        "descripcion": "Encuentra y honra todos los santuarios sintoístas de Tsushima",
+        "icono": "https://psn100.net/img/trophy/dba5f9a191b157e4d904a39f1acee7d5.png"
+      }
+    ]
+  },
+
+  "3764200": {
+    "nombre": "Resident Evil Requiem",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4/PS5 y Xbox"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario.",
+    "tedio_autor": 3.5,
+    "tedio_comentario": "Hay que completarlo varias veces, pero no es el platino más duro de la saga: con paciencia y una buena estrategia, la dificultad más alta (Insanity) se vuelve bastante llevadera comprando munición y armas infinitas con los puntos de desafío acumulados tras la primera partida.",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "Casi todo es perdible, salvo 9 trofeos de historia.",
+        "texto": "Conviene guardar en huecos distintos justo después de cada trofeo de historia, a modo de \"selección de capítulo\" improvisada, para no tener que rehacer partes enteras si se te escapa algo."
+      },
+      {
+        "icono": "🎯",
+        "titulo": "Insanity se hace mucho más fácil en la segunda vuelta.",
+        "texto": "Tras la primera partida se puede comprar munición y armas infinitas (como el lanzacohetes) con los puntos de desafío acumulados. Con eso, superar la dificultad más alta deja de ser un problema de habilidad y pasa a ser cuestión de constancia."
+      }
+    ],
+    "dificultad": "4/10",
+    "duracion": "~20 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Remarkable Agent",
+        "descripcion": "Completa la historia principal en dificultad Insanity",
+        "icono": "https://psn100.net/img/trophy/19639dd29c1c08a64ef4d22a5f8c7452.png"
+      },
+      {
+        "nombre": "Speed Demon",
+        "descripcion": "Completa la historia principal en menos de 4 horas",
+        "icono": "https://psn100.net/img/trophy/8feca525bdc63d2cd1e2d5a774dcf395.png"
+      },
+      {
+        "nombre": "Minimalist",
+        "descripcion": "Completa la historia principal sin usar el recolector de sangre (Grace)",
+        "icono": "https://psn100.net/img/trophy/fc80031d7c490ad5a5210dbb05c66728.png"
+      }
+    ]
   }
 }

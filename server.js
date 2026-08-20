@@ -333,6 +333,27 @@ app.get('/api/caratula/:appid', async (req, res) => {
       }
     } catch (e) { /* prueba la siguiente */ }
   }
+
+  // Último recurso: los juegos de Steam más nuevos ya no usan la ruta
+  // predecible de arriba (Valve movió esos assets a una URL con hash).
+  // Consultamos la API pública de la tienda para sacar la URL real.
+  if (/^\d+$/.test(appid)) {
+    try {
+      const r = await fetch(`https://store.steampowered.com/api/appdetails?appids=${appid}`);
+      const datos = await r.json();
+      const urlReal = datos?.[appid]?.data?.header_image;
+      if (urlReal) {
+        const rImg = await fetch(urlReal);
+        if (rImg.ok) {
+          res.set('Content-Type', rImg.headers.get('content-type') || 'image/jpeg');
+          res.set('Cache-Control', 'public, max-age=86400');
+          const buffer = Buffer.from(await rImg.arrayBuffer());
+          return res.send(buffer);
+        }
+      }
+    } catch (e) { /* no hay carátula disponible */ }
+  }
+
   res.status(404).send('Carátula no encontrada');
 });
 
