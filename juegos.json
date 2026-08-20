@@ -1,7 +1,7 @@
 {
   "570940": {
     "nombre": "Dark Souls Remastered",
-    "destacado": true,
+    "destacado": false,
     "plataformas": [
       "Steam · PC",
       "También en PS4"
@@ -484,6 +484,48 @@
         "titulo": "Demon's Souls Remake - Guía para el Trofeo de Platino: Paso a paso, eficiente y offline",
         "canal": "GameInTheHole",
         "url": "https://www.youtube.com/watch?v=3xffTuqjQvU"
+      }
+    ]
+  },
+
+  "2842040": {
+    "nombre": "Star Wars Outlaws",
+    "destacado": true,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS5 y Xbox Series X|S"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario, incluso después de terminar la historia.",
+    "tedio_autor": 3.5,
+    "tedio_comentario": "El mundo abierto lo hace ameno, pero buscar todos los materiales de mejora y coleccionables para desbloquear los aspectos se vuelve pesado: cuesta encontrar la ubicación exacta de algunas cosas. La dificultad no supone ningún problema para conseguirlo.",
+    "planificacion": [
+      {
+        "icono": "🗺️",
+        "titulo": "Prácticamente nada perdible.",
+        "texto": "Todo lo que no consigas durante la historia se puede rematar después en modo mundo abierto. Único matiz: el trofeo \"Good Listener\" tiene una ventana concreta en una misión secundaria — si te la saltas, tendrás que rehacerla más adelante (no se pierde del todo)."
+      }
+    ],
+    "dificultad": "3/10",
+    "duracion": "~30-40 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "All in",
+        "descripcion": "Encuentra la Morenia",
+        "icono": "https://psn100.net/img/trophy/7ac3ec0a789221744c3329d5978a5b22.png"
+      },
+      {
+        "nombre": "All out",
+        "descripcion": "Escapa de la Morenia",
+        "icono": "https://psn100.net/img/trophy/e7347d68c87522fea6a7f25a0d8baaee.png"
+      },
+      {
+        "nombre": "Take your own advice",
+        "descripcion": "Salva a Aksali Noll",
+        "icono": "https://psn100.net/img/trophy/8cb88869652369c73a2476406eeb4e4c.png"
       }
     ]
   }
