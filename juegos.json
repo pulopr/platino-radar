@@ -758,5 +758,314 @@
         "icono": "https://psn100.net/img/trophy/fc80031d7c490ad5a5210dbb05c66728.png"
       }
     ]
+  },
+
+  "1627720": {
+    "nombre": "Lies of P",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4/PS5, Xbox One/Series X|S y Switch 2"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario.",
+    "tedio_autor": 3.5,
+    "tedio_comentario": "Ni difícil ni tedioso: la dificultad reside en el propio juego, no en el platino en sí. Se saca cómodamente en dos vueltas — en la primera se consiguen todos los trofeos salvo el de escuchar todos los discos de vinilo, que se deja para la New Game+. Eso sí, conviene llevar una buena estrategia de copias de seguridad para no acabar haciendo más vueltas de las necesarias.",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "Trofeos ligados a los finales.",
+        "texto": "Hay varios finales y trofeos que dependen de decisiones concretas. Guarda copias de seguridad antes de las decisiones importantes para no tener que rejugar el juego entero por un final que se te escape."
+      },
+      {
+        "icono": "🎵",
+        "titulo": "Deja los discos de vinilo para la New Game+.",
+        "texto": "En la primera vuelta consigue el resto de trofeos con calma; el de escuchar todos los discos se completa sin prisa en la segunda vuelta."
+      }
+    ],
+    "dificultad": "6/10",
+    "duracion": "~50 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Golden Melody",
+        "descripcion": "Consigue y reproduce todos los discos de vinilo",
+        "icono": "https://psn100.net/img/trophy/5b5fd6fc319f4746e67c26a21bb55cdc.png"
+      },
+      {
+        "nombre": "Special Weapon Collector",
+        "descripcion": "Consigue todas las armas especiales",
+        "icono": "https://psn100.net/img/trophy/142602409dac498cc00b8118460a97ea.png"
+      },
+      {
+        "nombre": "The Story of a Stranger Girl",
+        "descripcion": "Descubre la última historia de Eugénie",
+        "icono": "https://psn100.net/img/trophy/d3c22be9a44d952ea2ba50afa1792bcf.png"
+      }
+    ]
+  },
+
+  "2561580": {
+    "nombre": "Horizon Zero Dawn Remastered",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS5"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario.",
+    "tedio_autor": 3,
+    "tedio_comentario": "[PENDIENTE DE REVISIÓN DEL AUTOR — dato de guías, no jugado por Alberto] Sin trofeos perdibles ni ligados a la dificultad: se puede platinar en el modo más fácil. El tedio viene del puro completismo en un mapa enorme — revelar el mapa entero, coleccionables repartidos por todas partes y, sobre todo, sacar \"Sol Radiante\" en todas las pruebas de las Zonas de Caza (incluidas las de Tierras Heladas), el reto más citado por la comunidad como el más pesado.",
+    "planificacion": [
+      {
+        "icono": "🗺️",
+        "titulo": "Nada perdible: todo se puede rematar después.",
+        "texto": "No hay trofeos de dificultad ni misables graves. Lo único que exige dedicación aparte son las pruebas de las Zonas de Caza en \"Sol Radiante\", bastante más exigentes que el resto del platino."
+      }
+    ],
+    "dificultad": "3/10",
+    "duracion": "~60-80 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "All Activities completed",
+        "descripcion": "Completa el Tallneck, el Campamento Bandido y la Zona de Caza en El Corte (Tierras Heladas)",
+        "icono": "https://psn100.net/img/trophy/b9ac62b0424b149d41b6fd46cce9506c.png"
+      },
+      {
+        "nombre": "All Quests completed",
+        "descripcion": "Completa todas las misiones secundarias y encargos de Tierras Heladas",
+        "icono": "https://psn100.net/img/trophy/416c7ccdc8d4e445f9539ee21e40cb5e.png"
+      },
+      {
+        "nombre": "Reached Level 60",
+        "descripcion": "Alcanza el nivel de jugador 60",
+        "icono": "https://psn100.net/img/trophy/8059f3b8adf67c29e1c57b3de3baf040.png"
+      }
+    ]
+  },
+
+  "2677660": {
+    "nombre": "Indiana Jones and the Great Circle",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS5 y Xbox Series X|S"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario, sin ningún modo multijugador.",
+    "tedio_autor": 3,
+    "tedio_comentario": "[PENDIENTE DE REVISIÓN DEL AUTOR — dato de guías, no jugado por Alberto] Un platino tranquilo según el consenso: no hay trofeos perdibles, todo se puede terminar en una sola partida (con viaje rápido a zonas ya visitadas) y cualquier dificultad vale. El tedio viene solo de los coleccionables masivos — sobre todo las 497 notas de diario repartidas por todos los capítulos — más que de ningún reto de habilidad.",
+    "planificacion": [
+      {
+        "icono": "📓",
+        "titulo": "Nada perdible: todo espera a que vuelvas.",
+        "texto": "Con el viaje rápido puedes rematar cualquier coleccionable o desafío después de terminar la historia. Lo único que exige tiempo real es encontrar las 497 notas de diario para \"Archivist\"."
+      }
+    ],
+    "dificultad": "2/10",
+    "duracion": "~30-50 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Archivist",
+        "descripcion": "Recopila las 497 notas de diario repartidas por todos los capítulos",
+        "icono": null
+      },
+      {
+        "nombre": "Bookman",
+        "descripcion": "Aprende todas las habilidades de los Libros de Aventura en cada capítulo",
+        "icono": null
+      },
+      {
+        "nombre": "Shadows out of Time",
+        "descripcion": "Reúne las 50 Reliquias Antiguas",
+        "icono": null
+      }
+    ]
+  },
+
+  "1110910": {
+    "nombre": "Mortal Shell",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS4/PS5, Xbox One/Series X|S y Switch"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario.",
+    "tedio_autor": 3.5,
+    "tedio_comentario": "[PENDIENTE DE REVISIÓN DEL AUTOR — dato de guías, no jugado por Alberto] Dificultad de consenso 6/10, con varios trofeos que exigen partidas concretas y planificadas: terminar el juego sin vincularte nunca a ninguna carcasa (\"Forever Alone\"), terminarlo en forma obsidiana (\"Life is Suffering\") y desbloquear todo el conocimiento secreto del juego. No son perdibles graves, pero sí obligan a organizar bien qué hacer en cada partida para no repetir de más.",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "Varias partidas con reglas concretas.",
+        "texto": "Trofeos como completar sin vincularte a ninguna carcasa o hacerlo en forma obsidiana exigen partidas dedicadas. Planifica desde el principio cuál vas a intentar en cada vuelta."
+      }
+    ],
+    "dificultad": "6/10",
+    "duracion": "~20-40 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Life is Suffering",
+        "descripcion": "Termina el juego en forma obsidiana",
+        "icono": "https://psn100.net/img/trophy/d207974c8381b9a92adbae5052fc9e61.png"
+      },
+      {
+        "nombre": "Forever Alone",
+        "descripcion": "Termina el juego sin vincularte nunca a ninguna carcasa",
+        "icono": "https://psn100.net/img/trophy/a803fc9cb45235f1921f642b104135cf.png"
+      },
+      {
+        "nombre": "Seeker of False Truths",
+        "descripcion": "Desbloquea todo el conocimiento secreto",
+        "icono": "https://psn100.net/img/trophy/b38ca136cf22d78fa1b864f80c5036c3.png"
+      }
+    ]
+  },
+
+  "2584270": {
+    "nombre": "Mortal Shell II",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS5 y Xbox Series X|S"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario.",
+    "tedio_autor": 3.5,
+    "tedio_comentario": "[PENDIENTE DE REVISIÓN DEL AUTOR — recién publicado el 20/08/2026, aún sin jugar; dato de guías] Dificultad de consenso 6/10. Tres trofeos perdibles, dos de ellos ya en el tramo inicial del juego (conviene estar atento desde el principio). El trofeo más citado como el más difícil exige hacer parry perfecto a una secuencia de ataques muy concreta de un jefe; el resto del tedio viene de coleccionables que obligan a llegar hasta la segunda o tercera vuelta (NG++).",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "Dos trofeos perdibles ya al principio del juego.",
+        "texto": "Consulta una guía desde el primer tramo para no perderte nada importante desde el arranque."
+      }
+    ],
+    "dificultad": "6/10",
+    "duracion": "~40-60 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Peter's Perfect Parry",
+        "descripcion": "Para a la perfección los golpes de cabeza de un jefe concreto usando el Sello Intachable",
+        "icono": null
+      },
+      {
+        "nombre": "Seeking the Past",
+        "descripcion": "Ve los 40 recuerdos de las conchas (exige llegar hasta la NG++)",
+        "icono": null
+      },
+      {
+        "nombre": "Stoned",
+        "descripcion": "Encuentra todas las Piedras de Alquitrán",
+        "icono": null
+      }
+    ]
+  },
+
+  "3321460": {
+    "nombre": "Crimson Desert",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS5 y Xbox Series X|S"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario, sin ningún requisito online.",
+    "tedio_autor": 4,
+    "tedio_comentario": "[PENDIENTE DE INVESTIGAR/JUGAR — Alberto no lo tiene todavía; dato de guías] Sin trofeos perdibles y con una sola partida basta, pero el consenso lo sitúa en 200-300+ horas para el platino: es un platino larguísimo por volumen, no por dificultad puntual. El trofeo más temido es completar los 64 retos de maestría de todas las armas y la montura.",
+    "planificacion": [
+      {
+        "icono": "⏳",
+        "titulo": "Nada perdible, pero muy largo.",
+        "texto": "El reto no está en no fastidiarla en ningún momento, sino en la cantidad bruta de contenido: completar la historia, explorar más de 200 objetivos y dominar 64 retos de maestría con todas las armas."
+      }
+    ],
+    "dificultad": "7/10",
+    "duracion": "~200-300 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Unvanquished Strategist",
+        "descripcion": "Completa los 64 retos de maestría de todas las armas y de la montura",
+        "icono": null
+      },
+      {
+        "nombre": "Expert Explorer",
+        "descripcion": "Completa más de 200 objetivos de exploración repartidos en 9 categorías",
+        "icono": null
+      },
+      {
+        "nombre": "Expert Storyteller",
+        "descripcion": "Completa toda la historia principal, incluidos numerosos jefes",
+        "icono": null
+      }
+    ]
+  },
+
+  "2124490": {
+    "nombre": "Silent Hill 2 Remake",
+    "destacado": false,
+    "plataformas": [
+      "Steam · PC",
+      "También en PS5 y Xbox Series X|S"
+    ],
+    "tipo_online": "offline",
+    "estado_forzado": null,
+    "explicacion_estado": "El platino es <b>completamente offline</b>. No dependes de otros jugadores en ningún momento.",
+    "nota_online": "<b>Sin dependencia online:</b> todo el platino se consigue en solitario.",
+    "tedio_autor": 4,
+    "tedio_comentario": "[PENDIENTE DE REVISIÓN DEL AUTOR — lo intentó hace tiempo sin terminarlo; dato de guías] Sin selección de capítulo y sin posibilidad de volver atrás: casi todo lo no automático es perdible dentro de una misma partida, incluidos los coleccionables. Hacen falta 6 de los 8 finales del juego (se pueden conseguir varios recargando partidas guardadas antes de las decisiones finales, sin rejugar entero), más pruebas de reto en New Game+: terminarlo en menos de 10 horas, sin usar la radio y sin matar con armas de fuego.",
+    "planificacion": [
+      {
+        "icono": "⚠️",
+        "titulo": "Todo lo no automático es perdible dentro de la partida.",
+        "texto": "No hay selección de capítulo ni forma de volver a zonas anteriores. Sigue una guía desde el minuto uno para no dejarte coleccionables ni finales por el camino."
+      },
+      {
+        "icono": "💾",
+        "titulo": "Guarda antes de cada decisión de final.",
+        "texto": "Los finales se guardan en el perfil general, no en la partida guardada, así que puedes recargar un guardado manual justo antes de la decisión final para conseguir varios finales sin rejugar el juego entero."
+      },
+      {
+        "icono": "🏃",
+        "titulo": "Las pruebas de reto son para la New Game+.",
+        "texto": "Terminar en menos de 10 horas, sin usar la radio y sin matar con armas de fuego son los retos más citados como los más duros — resérvalos para partidas de NG+ centradas solo en eso."
+      }
+    ],
+    "dificultad": "5/10",
+    "duracion": "~20-25 h",
+    "trofeos_online": "Ninguno",
+    "trofeos_dificiles": [
+      {
+        "nombre": "Faster Than Fog",
+        "descripcion": "Completa el juego en menos de 10 horas",
+        "icono": null
+      },
+      {
+        "nombre": "As Close as You Like",
+        "descripcion": "Completa el juego sin matar a ningún enemigo con armas a distancia",
+        "icono": null
+      },
+      {
+        "nombre": "Radio Silence",
+        "descripcion": "Completa el juego sin usar nunca la radio",
+        "icono": null
+      }
+    ]
   }
 }
